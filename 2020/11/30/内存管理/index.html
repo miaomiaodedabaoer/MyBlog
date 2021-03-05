@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>内存管理 | Mmddb</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="内存管理内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。 无存储器抽象最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存管理">
+<meta property="og:url" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Mmddb">
+<meta property="og:description" content="内存管理内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。 无存储器抽象最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.20.30.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.27.49.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.38.32.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.41.03.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.40.35.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%8810.19.03.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-04%20%E4%B8%8B%E5%8D%888.48.41.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-04%20%E4%B8%8B%E5%8D%889.35.47.png">
+<meta property="article:published_time" content="2020-11-30T21:08:59.589Z">
+<meta property="article:modified_time" content="2021-03-05T17:18:22.852Z">
+<meta property="article:author" content="Zhang Penghe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.20.30.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mmddb</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-内存管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2020-11-30T21:08:59.589Z" itemprop="datePublished">2020-11-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      内存管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。</p>
+<h3 id="无存储器抽象"><a href="#无存储器抽象" class="headerlink" title="无存储器抽象"></a>无存储器抽象</h3><p>最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会互相影响。</p>
+<h3 id="一种存储器抽象：地址空间"><a href="#一种存储器抽象：地址空间" class="headerlink" title="一种存储器抽象：地址空间"></a>一种存储器抽象：地址空间</h3><p>地址空间是一个进程可用于寻址内存的一套地址集合，每一个进程都有一个自己的地址空间，并且不同进程的地址空间相互独立。</p>
+<p>那么如何保证两个进程在访问它们地址空间中的相同位置（如进程1的地址28和进程2的地址28）不会冲突呢？</p>
+<p>我们需要使用<strong>动态重定位</strong>，简单地把每个进程的地址空间映射到物理内存的不同部分，可以简单的给每个CPU配置 <strong>基址寄存器</strong> 和 <strong>界限寄存器</strong>。当一个程序运行时，将他的起始物理地址装载到基址寄存器中，程序的长度装载到界限寄存器中，在进行寻址时，将地址空间的地址加上基址寄存器的值，就可以得到真实的物理地址，如果大于程序的最大长度，就会产生错误并中止访问。</p>
+<p>这种方式的缺点是每次访问内存都要进行加法和比较运算。加法运算由于进位传递时间的问题，会比较耗费时间。</p>
+<p><strong>交换技术</strong></p>
+<p>当计算机的内存不够使用时，我们可以使用<strong>交换技术</strong>，把运行一段时间的进程存到磁盘里，让他们进入睡眠状态，然后从磁盘中唤醒一些进程放入内存。</p>
+<p>因为进程在运行过程中所占用的内存空间有可能增长，在换入进程时要为他分配一些额外的内存，以免他增长的空间影响到其他进程；而将进程移动到磁盘里进入睡眠时，应仅仅分配内存实际使用的内存，将额外的内存交换出去是一种浪费。</p>
+<p><strong>空闲内存分配</strong></p>
+<p>我们可以使用 <strong>位图</strong> 进行存储管理，位图将存储空间分为一个个存储单元，对存储单元进行编码，0代表空虚，1代表占用（也可相反），如下图所示，ABCDE为5个进程，刻度代表内存单位，阴影部分表示空闲区域，编码为0。也可以采用链表的方式表示同样的信息。</p>
+<img src="typora-user-images/截屏2020-11-30 下午10.20.30.png" alt="截屏2020-11-30 下午10.20.30" style="zoom:50%;" />
+
+<p>位图的大小取决于内存空间的大小以及内存单元的粒度（细腻程度，也就是大小），这种方法主要问题是，在寻找空闲空间时要在位图中搜索连续 k 个 0 的串，这将十分耗时，并且该串还可能跨越字的边界。</p>
+<p>另一种记录内存的方法是，维护记录已分配内存和空闲 <strong>内存段链表</strong>。链表中的节点为进程或者空闲区。段链表可以按照地址排序，这样更新起来非常直接，如图所示，在进程x终止后，内存段链表的更新就只是相邻节点的合并或连接。</p>
+<img src="typora-user-images/截屏2020-11-30 下午10.27.49.png" alt="截屏2020-11-30 下午10.27.49" style="zoom:50%;" />
+
+<p>当按照地址顺序分配内存时，有几种算法，第一个是<strong>首次适配</strong>算法，沿着链表遍历，直到第一次找到合适的空闲位置，就分配。将每次找到的空闲位置都记录下来，下次就接着结束的位置找，叫做<strong>下次适配</strong>算法；</p>
+<p>另一个著名并广泛应用的是<strong>最佳适配</strong>算法，搜索整个链表，找出能容纳进程的最小空间，他趋向于找到一个最接近实际需要的空闲区，而不是随便找到一个就用，不会把潜在的较大空闲区拆分。但是这种方法较慢，并且比以上两种更浪费内存，因为他会产生很多非常小的空闲区。为避免这种问题，可以采用<strong>最差适配</strong>，即总是分配最大的可用空闲区，使新的空闲区比较大而可以继续使用。</p>
+<p>还有一种分配算法称为<strong>快速适配</strong>，它为那些常用大小的空闲区维护单独的链表。这样可以快速的找到制定大小的空闲区，但是问题在于当进程被换出时，寻找它相邻块并查看是否可以合并的过程是非常费时的。</p>
+<h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>当一个程序占用的内存大于计算机内存时，我们需要把该程序分割成许多个片段，每次只加载重要的一些片段，系统对内存中的片段和硬盘中的片段时不时的进行换入换出操作。这种方法叫做<strong>虚拟内存</strong>。这些独立的块或者片段称为页或 <strong>页面</strong>。</p>
+<p><strong>分页</strong></p>
+<p>大部分虚拟内存系统中都使用一种叫做<strong>分页</strong>的技术。在程序中产生的地址称为<strong>虚拟地址</strong>，它们构成了一个虚拟地址空间。在使用虚拟内存时，CPU获得一个地址后，不直接把地址送到内存总线上（因为并不是真正的物理地址），而被送到内存管理单元（MMU），由它来映射至物理内存地址。物理内存中的 *<em>页框 *</em>对应着虚拟内存中的页面。RAM和磁盘直接的交换总是以整个页面为单位进行的。</p>
+<img src="typora-user-images/截屏2020-12-01 下午9.38.32.png" alt="截屏2020-12-01 下午9.38.32" style="zoom:50%;" />
+
+<p>MMU 的内部维护着一个<strong>页表</strong>，其中包含了虚拟地址和物理地址的映射关系，如下图所示，虚拟页面1-7分别对应着几个物理内存（这些程序片段已经被加载进内存，因此有物理地址）。需要注意的是，因为不是所以页面都被加载进内存，这里并不是所有虚拟页面都有物理内存与其对应，例如 所有的虚拟内存片段 x。</p>
+<p>那么如果现在我们想寻找某个虚拟页面X的物理地址，MMU会注意到这个地址没有被映射，于是CPU陷入到操作系统，称为<strong>缺页中断</strong>，OS选择一个很少被使用的页框，将他的内容写进磁盘，然后把需要访问的页面放到刚刚回收的页框里，修改映射关系，然后重新启动引起陷阱的指令。</p>
+<img src="typora-user-images/截屏2020-12-01 下午9.41.03.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
+
+
+
+<p>下面是MMU的具体工作原理，下图的最下方是输入的虚拟内存指令，高4位是代表页号，低12位代表偏移量。而页表中每个表项的高三位代表对应的物理地址中最高的三位，最低的一位代表该地址是否在内存中。首先根据寻找对应页号的页表项，如下图所示找到 2 号表项，将虚拟地址的最高三位替换，保留剩下的位，即可得到物理地址。</p>
+<img src="typora-user-images/截屏2020-12-01 下午9.40.35.png" alt="截屏2020-12-01 下午9.40.35" style="zoom:50%;" />
+
+<p>页表项中还可以加入其他含有特定信息的位，如</p>
+<ul>
+<li>保护位：指出该页是否允许读，写和执行。</li>
+<li>修改位：当一个表项被修改过时，将该位标记，当表框被换出时，OS可以决定是简单的丢弃还是重新写入磁盘。</li>
+<li>访问位：在发生缺页中断时帮助OS选择该淘汰的页面，不再使用的页面更适合淘汰。</li>
+<li>高速缓存禁止位：在一些情况下保证硬件不断的从设备中读取数据，而不是访问高速缓存中旧的数据。</li>
+</ul>
+<p>![截屏2020-12-01 下午9.54.46](typora-user-images/截屏2020-12-01 下午9.54.46.png)</p>
+<p><strong>加速分页过程</strong></p>
+<p>在实现虚拟内存以及分页时，我们需要考虑映射速度，以及页表大小的问题。现代计算机至少有32位的虚拟地址，假设页面大小位4KB，32位的地址空间将有100万页，如何在这么大的页表里进行查询是个问题。</p>
+<p>一种方法是我们把每个进程的页表放到寄存器中，这样查询起来很快，但是在每次上下文切换也就是进程切换时会重新装载整个页表，代价高昂。另一种方法，那就放内存里白，但是这样速度又太慢。</p>
+<p>因此，还是那个老办法，缓存吧，给计算机加一个小硬件，<strong>转化检测缓冲区</strong>（Translation Lookaside Buffer），也叫<strong>快表</strong>，通常在MMU中，他存储少量但是经常被查询的表项，工作原理和高速缓存类似。也可以使用软件来模拟TLB，通过 TLB 找不到物理内存时称为TLB失效。</p>
+<ul>
+<li><strong>软失效</strong>：该页面不在TLB中，在内存中。这时更新一下TLB即可，耗时10—20个机器指令，几纳秒。</li>
+<li><strong>硬失效</strong>：不在TLB也不在内存中，这时需要通过磁盘中存取页面，并且需要页表遍历，耗时往往时软失效的百万倍。</li>
+<li><strong>次要缺页错误</strong>：所需页面就在内存中，但是没有记录在该进程的页表中，如该页面可能由其他进程从硬盘中调用内存，这时需要把所需页面正确映射到页表，不在从硬盘中调入。</li>
+<li><strong>严重缺页错误</strong>：需要从硬盘重新调入页面。</li>
+<li><strong>段错误</strong>：程序访问了一个非法地址，OS一般会报告段错误来终止程序。</li>
+</ul>
+<h4 id="针对大内存的页表"><a href="#针对大内存的页表" class="headerlink" title="针对大内存的页表"></a>针对大内存的页表</h4><p>针对非常大的内存，我们可以使用<strong>多极页表</strong>的形式，高级页表的表项指向低级页表的地址，类似套娃的形式，这样可以避免把全部页表一直保持在内存中。</p>
+<img src="typora-user-images/截屏2020-12-01 下午10.19.03.png" alt="截屏2020-12-01 下午10.19.03" style="zoom:50%;" />
+
+
+
+<p>不使用套娃的方法是<strong>倒排页表</strong>，这种设计中。实际内存的每个页框对应一个表项（而不是虚拟内存页对应表项），由于虚拟内存一般都比实际内存大很多，这样的方式可以节省大量的空间。</p>
+<p>但是问题是这样查询起来比较麻烦，当进程 n访问虚拟页面 p 时，不能仅仅通过 p 来找物理地址了，而需要遍历页表来查询表项 (n,p)。解决方法还是 TLB，把频繁使用的页面存起来，查的就快一点。还可以对整个页表建立散列表，当TLB失效时，查询起来就很快。</p>
+<h4 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h4><p>当发生缺页中断时，我们需要选择一个页面将其换出内存，以便腾出空间分配给新页面。当我们需要考虑到底选择换出哪些页面，需要考虑到页面在一段时间内还会被访问的可能性，如果换出被频繁访问的页面，就会降低系统性能，接下来介绍一些算法。</p>
+<p><strong>最优页面置换</strong></p>
+<p>最理想的情况是我们知道内存中各个页面下一次访问的时间，有些页面可以几条指令后就会被访问，有些则要经过几百万次，因此我们每次都换出下一次访问时间最长的。但是这种方法是不可能实现的，我们无法预知页面的下一次访问时间。</p>
+<p><strong>最近未使用页面置换</strong> NRU</p>
+<p>在页面被读取或者写入时设置 R 位，如果页面被修改，再设置 M 位。因此系统可以得知哪些页面在短时间内可能再被访问，避免置换出去。当发生缺页中断时，操作系统检测所有页面，根据它们 R 位和 M 位的值，把它们分为 4 类：</p>
+<ol>
+<li>没有被访问，没有被修改</li>
+<li>没有被访问，已被修改</li>
+<li>被访问，没有被修改</li>
+<li>被访问，被修改</li>
+</ol>
+<p>NRU（Not Recently Used）算法随机从类编号最小的页面中挑选一个页面淘汰，这种方法易于理解并且能够有效的实现。</p>
+<p><strong>先进先出页面置换算法</strong></p>
+<p>另一种开销较小的页面置换算法是 FIFO，原理是找到存在时间最长的页面并淘汰他，操作系统维护一个页面链表（或者是队列），将新进入的放在表尾，老的就被挤到表头，每次淘汰表头的页面，但是这样做可能会把频繁使用的页面置换出去。</p>
+<p><strong>第二次机会页面置换算法</strong></p>
+<p>这种算法对FIFO进行优化，检测最老的页面的R位，如果R位是0，代表又老又没人访问，就立刻置换出去，如果是1就把R位清零，并把该页面放到链表的尾端，也就是给他第二次机会。</p>
+<p><strong>时钟页面置换算法</strong></p>
+<p>第二次机会算法虽然不错，但是每次移动页面会降低效率，完全可以用循环链表完成，使用一个表针指向最老的页面，当发生缺页中断时，检测表针指向的页面，如果是 0 ，就淘汰，如果是 1，就清零并向前移动一格，重复这个过程知道找到一个 R 为0的页面为止。</p>
+<img src="typora-user-images/截屏2020-12-04 下午8.48.41.png" alt="截屏2020-12-04 下午8.48.41" style="zoom:50%;" />
+
+
+
+<p><strong>最近最少使用页面置换算法</strong></p>
+<p>LRU（Least Recently Used）致力于实现最优置换方法，通过记录各个页面在前几条指令中频繁使用的页面，这些页面很可能在之后的指令还要访问，这样每次置换时就淘汰那些<strong>未访问时间最长</strong>的页面。</p>
+<p>但是这种方法实现代价很高，在内存中维护一个所有页面的链表，最近使用最多的在表头，最少的在表位，而每次访问内存时都要更新整个链表。</p>
+<p>一种解决方式是在硬件中加入一个64位的计数器，每次执行一条指令都加1，页面项中加入一个域都记录这个值，发生缺页中断时，选择值最小，也就是最老的那个页面淘汰。</p>
+<p><strong>NFU</strong></p>
+<p>大部分电脑都没有这种硬件，一直软件解决方案 NFU（Not Frequently Used）给每个页面分配一个计数器，在每次缺页中断时，如果页面的 R 位为1，就给他的计数器加1。这样系统就大致掌握了每个页面被访问的频繁程度，发生中断时，置换计数器值最小的页面。</p>
+<p>对其的一种优化方法称为<strong>老化</strong>算法，在 R位加进计数器之前先将计数器右移一位，再将 R 位加到计数器最左边，发生缺页中断时还是置换值最小的页面。相比于之前的算法，这样的好处是，在两个页面访问次数相同时，可以判断哪个访问时间较早，</p>
+<p><strong>工作集页面置换算法</strong></p>
+<p>一个进程<strong>正在使用的页面</strong>的集合称为它的工作集，不少分页系统都会跟踪进程的工作集，以确保让进程运行前，它的工作集就已在内存中，这样可以大大减少缺页中断的概率。</p>
+<p>将每一个页面项设置上次访问时间和 R 位，发生缺页中断时，先扫描 R位如果等于 1，更新页面访问时间位当前时间，如果R位0，并且页面项纪录的访问时间和当前时间之差大于预设的一个数，就淘汰，如果小于等于，就把这一项作为候选项，整个扫描完成后如果没有淘汰页面，就在这些候选项中选一个未访问时间最长的。</p>
+<p><strong>工作集时钟页面置换算法</strong></p>
+<p>还是老问题，每次都扫描一个效率太低了，还是基于时钟算法。每次缺页中断时，首先检查R位，如果是1，该页面刚刚就被访问过，不适合淘汰，把R置0，指针移动一个，如果是0，如果页面的生存时间大于一个值，并且他没有被访问过，并在磁盘上有一个有效的副本，就把他置换出去，而如果被修改过，则不适合被置换，因为还要修改其磁盘上的副本，这时指针继续向前走，重复该过程。</p>
+<img src="typora-user-images/截屏2020-12-04 下午9.35.47.png" alt="截屏2020-12-04 下午9.35.47" style="zoom:50%;" />
+
+
+
+<p>总之，最好的两种算法是老化算法和工作集时钟算法，它们分别基于 LRU 和 工作集，一种纪录页面被访问的总次数，另一种直接纪录短时间内是否被访问，都具有良好的页面调度性能也可以有效的实现。</p>
+<h3 id="分页系统中的设计问题"><a href="#分页系统中的设计问题" class="headerlink" title="分页系统中的设计问题"></a><strong>分页系统中的设计问题</strong></h3><p>上面的内容仅仅讲述了一些基本的页面置换算法和如何实现它们，但是分页系统还要考虑一些事情。</p>
+<p><strong>局部分配与全局分配</strong></p>
+<p>内存中运行着不止一个进程，因此我们在进行页面置换时，完全可以分配那些其他进程中可以淘汰掉的页面，分配给每个进程的页框数是随时间 <strong>动态</strong> 变化的，这类算法称为 <strong>全局</strong> 页面置换算法。</p>
+<p>全局算法通常比局部算法更好，在工作集大小动态变化的过程中，即使有大量空闲页框存在，工作集的增长也会导致颠簸，如果分配的页框较多，也会造成空间浪费。</p>
+<p>在我们之前介绍过的算法中，大部分都适合于这两种方法，而工作集和WSClock算法只有采用局部策略才有意义。</p>
+<p><strong>页面大小</strong></p>
+<p>页面的大小需要平衡，如果分配的页面太大，那么进程的正文段，数据段或者堆栈段可能填不满一整个页面；并且在 TLB空间中，使用大页面可以占用更少的TLB表项，节省空间，小页面则更加精确。操作系统有时会位系统中不同部分使用不同的页面大小，内核使用大页面，用户进程使用小页面。</p>
+<p>如果分配的页面太小，则会生成更大的页表，并且内存于磁盘会产生更多的交互，而传输的大部分时间会花费在寻道和旋转延迟上，所以传输大页面和小页面花费时间基本相同。</p>
+<h3 id="分段"><a href="#分段" class="headerlink" title="分段"></a>分段</h3><p>目前为止讨论的虚拟内存都是一维的，虚拟地址连续的从0到最大，而对于内存动态变化的多进程来说，这可能会导致表与表之间发生碰撞。并且多个进程之间会产生一些闲置空间，造成浪费。因此引出了<strong>分段</strong>的思想。</p>
+<p>在机器上提供多个互相独立的称为段的地址空间，每个段从0到最大的线性地址序列构成，段的大小在运行期间可以动态改变。</p>
+<p>这样做的好处有3点，首先是段和段之间是独立增长和减小的，不会影响到其他的段，并且如果一个段被修改并重新编译，其他使用该段的段并不会受到影响，如果它们被放在一个连续的空间，则程序整体都要重新编译。并且分段有助于在不同进程间共享过程和数据。这样也有助于在几个进程间共享数据，一个常见的例子是<strong>共享库</strong>，可以把一些庞大的库放到一个单独的进程中由各个进程共享，从而不需要在各个进程的地址空间中都保存一份。其次，不同的段可以应用不同的保护模式，例如读写执行等权限。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" data-id="cklwkfc970000ta9khpind9ey" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/18/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">进程与线程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">进程与线程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/">计算机系统组成</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/05/Hello-miaomiao/">Hello, miaomiao~</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/05/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Zhang Penghe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
