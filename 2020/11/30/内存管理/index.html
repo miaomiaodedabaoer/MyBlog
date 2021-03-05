@@ -14,19 +14,20 @@
 <meta property="og:site_name" content="Mmddb">
 <meta property="og:description" content="内存管理内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。 无存储器抽象最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.20.30.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.27.49.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.38.32.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.41.03.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%889.40.35.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-01%20%E4%B8%8B%E5%8D%8810.19.03.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-04%20%E4%B8%8B%E5%8D%888.48.41.png">
-<meta property="og:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-12-04%20%E4%B8%8B%E5%8D%889.35.47.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/memoryAllocation.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/linkedListMap.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E5%88%86%E9%A1%B5.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E5%AF%B9%E5%BA%94.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E9%A1%B5%E8%A1%A8%E9%A1%B9.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E6%97%B6%E9%92%9F%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/30/images/%E5%B7%A5%E4%BD%9C%E9%9B%86%E6%97%B6%E9%92%9F%E7%BD%AE%E6%8D%A2.png">
 <meta property="article:published_time" content="2020-11-30T21:08:59.589Z">
-<meta property="article:modified_time" content="2021-03-05T17:18:22.852Z">
+<meta property="article:modified_time" content="2021-03-05T18:14:26.236Z">
 <meta property="article:author" content="Zhang Penghe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/11/30/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-30%20%E4%B8%8B%E5%8D%8810.20.30.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/11/30/images/memoryAllocation.png">
   
     <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
   
@@ -108,11 +109,11 @@
 <p>因为进程在运行过程中所占用的内存空间有可能增长，在换入进程时要为他分配一些额外的内存，以免他增长的空间影响到其他进程；而将进程移动到磁盘里进入睡眠时，应仅仅分配内存实际使用的内存，将额外的内存交换出去是一种浪费。</p>
 <p><strong>空闲内存分配</strong></p>
 <p>我们可以使用 <strong>位图</strong> 进行存储管理，位图将存储空间分为一个个存储单元，对存储单元进行编码，0代表空虚，1代表占用（也可相反），如下图所示，ABCDE为5个进程，刻度代表内存单位，阴影部分表示空闲区域，编码为0。也可以采用链表的方式表示同样的信息。</p>
-<img src="typora-user-images/截屏2020-11-30 下午10.20.30.png" alt="截屏2020-11-30 下午10.20.30" style="zoom:50%;" />
+<img src="../images/memoryAllocation.png" alt="截屏2020-11-30 下午10.20.30" style="zoom:50%;" />
 
 <p>位图的大小取决于内存空间的大小以及内存单元的粒度（细腻程度，也就是大小），这种方法主要问题是，在寻找空闲空间时要在位图中搜索连续 k 个 0 的串，这将十分耗时，并且该串还可能跨越字的边界。</p>
 <p>另一种记录内存的方法是，维护记录已分配内存和空闲 <strong>内存段链表</strong>。链表中的节点为进程或者空闲区。段链表可以按照地址排序，这样更新起来非常直接，如图所示，在进程x终止后，内存段链表的更新就只是相邻节点的合并或连接。</p>
-<img src="typora-user-images/截屏2020-11-30 下午10.27.49.png" alt="截屏2020-11-30 下午10.27.49" style="zoom:50%;" />
+<img src="../images/linkedListMap.png" />
 
 <p>当按照地址顺序分配内存时，有几种算法，第一个是<strong>首次适配</strong>算法，沿着链表遍历，直到第一次找到合适的空闲位置，就分配。将每次找到的空闲位置都记录下来，下次就接着结束的位置找，叫做<strong>下次适配</strong>算法；</p>
 <p>另一个著名并广泛应用的是<strong>最佳适配</strong>算法，搜索整个链表，找出能容纳进程的最小空间，他趋向于找到一个最接近实际需要的空闲区，而不是随便找到一个就用，不会把潜在的较大空闲区拆分。但是这种方法较慢，并且比以上两种更浪费内存，因为他会产生很多非常小的空闲区。为避免这种问题，可以采用<strong>最差适配</strong>，即总是分配最大的可用空闲区，使新的空闲区比较大而可以继续使用。</p>
@@ -120,16 +121,16 @@
 <h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>当一个程序占用的内存大于计算机内存时，我们需要把该程序分割成许多个片段，每次只加载重要的一些片段，系统对内存中的片段和硬盘中的片段时不时的进行换入换出操作。这种方法叫做<strong>虚拟内存</strong>。这些独立的块或者片段称为页或 <strong>页面</strong>。</p>
 <p><strong>分页</strong></p>
 <p>大部分虚拟内存系统中都使用一种叫做<strong>分页</strong>的技术。在程序中产生的地址称为<strong>虚拟地址</strong>，它们构成了一个虚拟地址空间。在使用虚拟内存时，CPU获得一个地址后，不直接把地址送到内存总线上（因为并不是真正的物理地址），而被送到内存管理单元（MMU），由它来映射至物理内存地址。物理内存中的 *<em>页框 *</em>对应着虚拟内存中的页面。RAM和磁盘直接的交换总是以整个页面为单位进行的。</p>
-<img src="typora-user-images/截屏2020-12-01 下午9.38.32.png" alt="截屏2020-12-01 下午9.38.32" style="zoom:50%;" />
+<img src="../images/分页.png" />
 
 <p>MMU 的内部维护着一个<strong>页表</strong>，其中包含了虚拟地址和物理地址的映射关系，如下图所示，虚拟页面1-7分别对应着几个物理内存（这些程序片段已经被加载进内存，因此有物理地址）。需要注意的是，因为不是所以页面都被加载进内存，这里并不是所有虚拟页面都有物理内存与其对应，例如 所有的虚拟内存片段 x。</p>
 <p>那么如果现在我们想寻找某个虚拟页面X的物理地址，MMU会注意到这个地址没有被映射，于是CPU陷入到操作系统，称为<strong>缺页中断</strong>，OS选择一个很少被使用的页框，将他的内容写进磁盘，然后把需要访问的页面放到刚刚回收的页框里，修改映射关系，然后重新启动引起陷阱的指令。</p>
-<img src="typora-user-images/截屏2020-12-01 下午9.41.03.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
+<img src="../images/对应.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
 
 
 
 <p>下面是MMU的具体工作原理，下图的最下方是输入的虚拟内存指令，高4位是代表页号，低12位代表偏移量。而页表中每个表项的高三位代表对应的物理地址中最高的三位，最低的一位代表该地址是否在内存中。首先根据寻找对应页号的页表项，如下图所示找到 2 号表项，将虚拟地址的最高三位替换，保留剩下的位，即可得到物理地址。</p>
-<img src="typora-user-images/截屏2020-12-01 下午9.40.35.png" alt="截屏2020-12-01 下午9.40.35" style="zoom:50%;" />
+<img src="../images/缺页中断.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
 
 <p>页表项中还可以加入其他含有特定信息的位，如</p>
 <ul>
@@ -138,7 +139,7 @@
 <li>访问位：在发生缺页中断时帮助OS选择该淘汰的页面，不再使用的页面更适合淘汰。</li>
 <li>高速缓存禁止位：在一些情况下保证硬件不断的从设备中读取数据，而不是访问高速缓存中旧的数据。</li>
 </ul>
-<p>![截屏2020-12-01 下午9.54.46](typora-user-images/截屏2020-12-01 下午9.54.46.png)</p>
+<p><img src="../images/%E9%A1%B5%E8%A1%A8%E9%A1%B9.png" alt=""></p>
 <p><strong>加速分页过程</strong></p>
 <p>在实现虚拟内存以及分页时，我们需要考虑映射速度，以及页表大小的问题。现代计算机至少有32位的虚拟地址，假设页面大小位4KB，32位的地址空间将有100万页，如何在这么大的页表里进行查询是个问题。</p>
 <p>一种方法是我们把每个进程的页表放到寄存器中，这样查询起来很快，但是在每次上下文切换也就是进程切换时会重新装载整个页表，代价高昂。另一种方法，那就放内存里白，但是这样速度又太慢。</p>
@@ -151,7 +152,7 @@
 <li><strong>段错误</strong>：程序访问了一个非法地址，OS一般会报告段错误来终止程序。</li>
 </ul>
 <h4 id="针对大内存的页表"><a href="#针对大内存的页表" class="headerlink" title="针对大内存的页表"></a>针对大内存的页表</h4><p>针对非常大的内存，我们可以使用<strong>多极页表</strong>的形式，高级页表的表项指向低级页表的地址，类似套娃的形式，这样可以避免把全部页表一直保持在内存中。</p>
-<img src="typora-user-images/截屏2020-12-01 下午10.19.03.png" alt="截屏2020-12-01 下午10.19.03" style="zoom:50%;" />
+<img src="../images/多级页表.png" />
 
 
 
@@ -175,7 +176,7 @@
 <p>这种算法对FIFO进行优化，检测最老的页面的R位，如果R位是0，代表又老又没人访问，就立刻置换出去，如果是1就把R位清零，并把该页面放到链表的尾端，也就是给他第二次机会。</p>
 <p><strong>时钟页面置换算法</strong></p>
 <p>第二次机会算法虽然不错，但是每次移动页面会降低效率，完全可以用循环链表完成，使用一个表针指向最老的页面，当发生缺页中断时，检测表针指向的页面，如果是 0 ，就淘汰，如果是 1，就清零并向前移动一格，重复这个过程知道找到一个 R 为0的页面为止。</p>
-<img src="typora-user-images/截屏2020-12-04 下午8.48.41.png" alt="截屏2020-12-04 下午8.48.41" style="zoom:50%;" />
+<img src="../images/时钟页面置换算法.png" />
 
 
 
@@ -191,7 +192,7 @@
 <p>将每一个页面项设置上次访问时间和 R 位，发生缺页中断时，先扫描 R位如果等于 1，更新页面访问时间位当前时间，如果R位0，并且页面项纪录的访问时间和当前时间之差大于预设的一个数，就淘汰，如果小于等于，就把这一项作为候选项，整个扫描完成后如果没有淘汰页面，就在这些候选项中选一个未访问时间最长的。</p>
 <p><strong>工作集时钟页面置换算法</strong></p>
 <p>还是老问题，每次都扫描一个效率太低了，还是基于时钟算法。每次缺页中断时，首先检查R位，如果是1，该页面刚刚就被访问过，不适合淘汰，把R置0，指针移动一个，如果是0，如果页面的生存时间大于一个值，并且他没有被访问过，并在磁盘上有一个有效的副本，就把他置换出去，而如果被修改过，则不适合被置换，因为还要修改其磁盘上的副本，这时指针继续向前走，重复该过程。</p>
-<img src="typora-user-images/截屏2020-12-04 下午9.35.47.png" alt="截屏2020-12-04 下午9.35.47" style="zoom:50%;" />
+<img src="../images/工作集时钟置换.png"/>
 
 
 

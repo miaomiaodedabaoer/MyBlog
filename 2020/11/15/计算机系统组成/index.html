@@ -7,19 +7,27 @@
   
   <title>计算机系统组成 | Mmddb</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="第二章 计算机组成 现代计算机是由处理器，存储器以及输入&#x2F;输出设备组成的互连系统，连接他们的设备叫做总线。 2.1 处理器处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。 2.1.1 CPU 组成 CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。">
+  <meta name="description" content="第二章 计算机组成 现代计算机是由处理器，存储器以及输入&#x2F;输出设备组成的互连系统，连接他们的设备叫做总线。 2.1 处理器处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。 2.1.1 CPU 组成CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。 控">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机系统组成">
 <meta property="og:url" content="http://yoursite.com/2020/11/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/index.html">
 <meta property="og:site_name" content="Mmddb">
-<meta property="og:description" content="第二章 计算机组成 现代计算机是由处理器，存储器以及输入&#x2F;输出设备组成的互连系统，连接他们的设备叫做总线。 2.1 处理器处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。 2.1.1 CPU 组成 CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。">
+<meta property="og:description" content="第二章 计算机组成 现代计算机是由处理器，存储器以及输入&#x2F;输出设备组成的互连系统，连接他们的设备叫做总线。 2.1 处理器处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。 2.1.1 CPU 组成CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。 控">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/2020/11/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-18%20%E4%B8%8B%E5%8D%888.26.41.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/components.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/ALU.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/parallel.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/memorycells.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/byteOrder.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/orderProblems.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/parityCode.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/cache.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/15/images/memorystructure.png">
 <meta property="article:published_time" content="2020-11-15T21:35:13.796Z">
-<meta property="article:modified_time" content="2021-03-05T17:20:37.182Z">
+<meta property="article:modified_time" content="2021-03-05T17:59:03.595Z">
 <meta property="article:author" content="Zhang Penghe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/11/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/typora-user-images/%E6%88%AA%E5%B1%8F2020-11-18%20%E4%B8%8B%E5%8D%888.26.41.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/11/15/images/components.png">
   
     <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
   
@@ -93,15 +101,13 @@
         <h1 id="第二章-计算机组成"><a href="#第二章-计算机组成" class="headerlink" title="第二章 计算机组成"></a>第二章 计算机组成</h1><hr>
 <p>现代计算机是由处理器，存储器以及输入/输出设备组成的互连系统，连接他们的设备叫做总线。</p>
 <h2 id="2-1-处理器"><a href="#2-1-处理器" class="headerlink" title="2.1 处理器"></a>2.1 处理器</h2><p>处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。</p>
-<p>2.1.1 CPU 组成</p>
-<p>CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。</p>
+<h3 id="2-1-1-CPU-组成"><a href="#2-1-1-CPU-组成" class="headerlink" title="2.1.1 CPU 组成"></a>2.1.1 CPU 组成</h3><p>CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。</p>
 <p>控制器用于从主存中取指令和分析（decode）指令。</p>
 <p>Arithmetic Logic Unit 接受来自寄存器中的数据，对数据进行加减法，逻辑运算等简单运算，并将结果存入寄存器中。ALU将两个操作数进行计算并返回结果的过程叫做<strong>数据通路周期</strong>（Data Path Cycle），DPC越小，计算机运行起来就越快。</p>
 <p>寄存器是小容量高速度的存储器，用来暂存一些控制信息，中间结果，CPU中包含多个寄存器，每个寄存器都有固定的容量和相应的功能，其中最重要的寄存器叫做 PC（Program Counter），并不像英文字面意思一样，他的任务是存贮下一条将要被取出执行的指令，同样重要的一个寄存器叫做 IR（Instruction Register）存贮当前正在执行的指令。</p>
-<p>![截屏2020-11-15 下午9.58.47](typora-user-images/截屏2020-11-15 下午9.58.47.png)</p>
-<p>![截屏2020-11-15 下午9.51.04](typora-user-images/截屏2020-11-15 下午9.51.04.png)</p>
-<p>2.1.2 指令执行</p>
-<p>CPU中一个指令的执行大致分为取指令，解码，执行，三个部分，根据是否要用到主存单元，较为具体的步骤如下：</p>
+<p><img src="../images/components.png" alt=""></p>
+<p><img src="../images/ALU.png" alt=""></p>
+<h3 id="2-1-2-指令执行"><a href="#2-1-2-指令执行" class="headerlink" title="2.1.2 指令执行"></a>2.1.2 指令执行</h3><p>CPU中一个指令的执行大致分为取指令，解码，执行，三个部分，根据是否要用到主存单元，较为具体的步骤如下：</p>
 <ol>
 <li>从主存中获取指令 </li>
 <li>将PC指向后面一条指令</li>
@@ -116,9 +122,9 @@
 <p>在第二个方法中，机器语言的规则可以做到十分简单，只用作类似数字的加减，把数据从一个位置移动到另一个位置，判断数据是否为0的工作。</p>
 <p>这样的好处是，在解释指令的过程中可以更改指令实现中的错误，甚至补偿基础硬件中的设计缺陷；结构化设计，以最小的代价增加新指令（通过对机器指令进行新的组合实现），</p>
 <p>翻译（translation）是与解释相对应的一种指令执行方式，它是指将L1语言编写的程序，将其转化为一个机器使用的L0语言的程序供计算机执行。</p>
-<p>RISC / CISC</p>
+<p><strong>RISC / CISC</strong></p>
 <p>RISC（Reduced Instruction Set Computer）是指精简指令计算机, 与之对应的 CISC（Complex Instruction Set Computer ）复杂指令计算机。RISC的指令集（也就是CPU能干的事）约为50条左右，而CISC大约200～300条，RISC支持者认为如果通过好几条指令快速完成CISC中一条指令完成的事情，RISC是占优势的，并且当时主存的速度以及很快，可以快速的取指令。但是RISC并没有击败CISC，原因是向后兼容的问题，很多公司已经在CISC架构的计算机软件上投入大量资金，难以轻易放弃。并且 Intel 的在其CISC的体系中也加入了RISC的思想，Intel 的 CPU 可以在一个 DPU 中执行一些最简单的指令，对复杂指令才使用 CISC 方式。</p>
-<p>现代计算机设计原则</p>
+<p><strong>现代计算机设计原则</strong></p>
 <p>所有指令由硬件直接执行：对于常用的指令不要再解释一遍，节省时间，</p>
 <p>最大限度提高指令启动速度：启动速度远高于执行速度</p>
 <p>指令应该容易解码：从主存中获取指令后，译码过程时间过长严重影响指令启动时间</p>
@@ -131,7 +137,7 @@
 <p><strong>处理器级并行</strong></p>
 <p>在CPU处理速度增加的同时，其产生的热量页越多，限制了单个CPU的发展，因此处理器并行出现了。</p>
 <p>数据并行计算机：在如物理学，工程学，计算机图形学等领域，经常要重复完成对不同数据集合的相同运算。数据的高度规则使得通过并行执行指令加速执行变得容易。SIMD（Single Instruction-stream Multiple Data-stream）处理器应运而生，如图所示，只有一个取指单元，非常多的运算核心（每个都包含ALU）组成。</p>
-<p>![截屏2020-11-15 下午11.14.36](typora-user-images/截屏2020-11-15 下午11.14.36.png)</p>
+<p><img src="../images/parallel.png" alt=""></p>
 <p>多处理器：多个处理器可以共享一块内存，同时对一个任务进行处理，实现更高的效率。</p>
 <h2 id="2-2-主存储器"><a href="#2-2-主存储器" class="headerlink" title="2.2 主存储器"></a>2.2 主存储器</h2><p>存储器是计算机用来存储程序和数据的地方，</p>
 <p><strong>1 存储位</strong></p>
@@ -140,32 +146,32 @@
 <p>存储器的理论结构类似单元楼的信箱，由许多可存放一段信息的单元组成。下面三个图表示了一个96位存储器的不同组织形式，每一行代表一个存储单元，每个单元有独立的地址，程序可以通访问单元的地址来获取数据。在a图中，一个单元有8位数字，那么每个单元可以存放 2^8 个不同位组合中的一种。相邻单元的地址是连续的。</p>
 <p>存储单元是计算机最小的可编址单位。8位是一个字节，两个字节组成一个字（word），32位计算机的寄存器为32位，指令的操作对象也是32位，也就是4个字节。</p>
 <p>地址位数表示我们需要一个几位的数字来表示内存地址。若地址为m位，我们则可以表示2^m个地址；a有12个地址，因此最少需要一个4位的地址来表达（4位最多可以表达16个数），b和c则只需要一个3位的地址。</p>
-<p>![截屏2020-11-17 下午2.43.43](typora-user-images/截屏2020-11-17 下午2.43.43.png)</p>
+<p><img src="../images/memorycells.png" alt=""></p>
 <p><strong>3 字节顺序</strong></p>
 <p>如下图所示，每个字（32位字中有4个字节）中的字节地址可以从左到右或者从右到左编排，分别叫做大端法和小端法，两种编排方式中对于数字的编码其实是一致的，例如数字6，110都是存放在最小地址位（大端法放在格子3，7，11，小端法放在0，4，8中），其余的0放在高位上。</p>
-<p>![截屏2020-11-17 下午3.06.00](typora-user-images/截屏2020-11-17 下午3.06.00.png)</p>
+<p><img src="../images/byteOrder.png" alt=""></p>
 <p>目前大部分计算机使用小端法存储，在不同编排方式的计算机之间传输信息需要注意一些问题。下图a,b表示大端法小端法存储的员工数据（字符串与整数混合），当数据从大端法机器按存储地址传输到小端法机器中，对字符串来说是正确的，但是数字却进行了颠倒（图c所示），如果将c中的数据全部转置（图d），但是这样以来字符串又不对了。</p>
-<p>![截屏2020-11-17 下午3.18.27](typora-user-images/截屏2020-11-17 下午3.18.27.png)</p>
+<p><img src="../images/orderProblems.png" alt=""></p>
 <p>一个解决方案是将每个数据项前加入额外的位说明数据类型，但是这样会增加额外的空间，</p>
 <p><strong>4 纠错码</strong></p>
 <p>由于硬件偶尔也会有不靠谱的时候，内存单元中的数据可能会被改变，如0变成了1，1变成了0；我们可以在数据中增加额外的纠错位来进行检测和纠正。</p>
 <p>两个码字中所有对应位置中含不同数据的位置个数称为海明码距（Hamming），如 10001001 和 10110001 有 3 位不同，他们的码距就为 3。 </p>
 <p>下面介绍海明算法对任意字长对内存建立纠错码，对于一个16位的数据，需要加入5位校验位（原因我还没搞懂。。）。成为21位字长的新字，所有2的整数幂位是校验位，这5个校验位的分别负责检查特定位置的数据的正确性。</p>
-<p>1、校验位检查谁：一般来说，第b位，由b代表的二进制数来检验，如第7位（0111），由第一个，第二个，第三个校验位来检验；第10位（1010），由第1个和第4个校验位来检验，每个校验位检查的位置如下图所示；![截屏2020-11-18 下午5.58.23](/Users/jon/Desktop/截屏2020-11-18 下午5.58.23.png)</p>
+<p>1、校验位检查谁：一般来说，第b位，由b代表的二进制数来检验，如第7位（0111），由第一个，第二个，第三个校验位来检验；第10位（1010），由第1个和第4个校验位来检验，每个校验位检查的位置如下图所示；</p>
+<p><img src="../images/parityCode.png" alt=""></p>
 <p>2、到底那些位置错了：在校验的位置中 1 的个数为偶数，就是正确的，反正说明这些位置中存在错误。</p>
 <p>3、如何确定哪个位置错了：以数据 001011100000101101110为例，根据上面的方法，可以确定是校验位 1 和 4 中的错误，因此错误一定是校验位1和4中共有的位置，也就是5，7，13，15，21。又因为校验位2，8，16校验的位置都是正确的，保证了7，13，15，21的正确。因此出错的一定是第 5 位，对他进行反转，就完成了纠错。</p>
-<p>![截屏2020-11-18 下午6.03.20](typora-user-images/截屏2020-11-18 下午6.03.20.png)</p>
 <p><strong>5 高速缓存</strong></p>
 <p>长久以来，CPU的执行速度一直比存储器快。CPU通过在芯片上放置更多的电路，进行流水线设计以及超标量运算，使CPU运算的更快，但是存储器的设计者却利用这些技术提高芯片的容量，而不是速度。这种不平衡越来越严重，导致CPU要经过多个CPU周期才能读到存储器的内容。</p>
 <p>工程师完全可以造出和CPU一样快的存储器，但是经济代价太高。因此使用高速缓存（cache）来平衡速度与价格，cache的速度仅次于CPU内部的寄存器，通常只需要几个CPU周期，但是造价远低于寄存器，高速缓存工作原理十分简单，将存储器中经常被CPU访问的内容存储在高速缓存中，当CPU需要读入存储器内容时，先在高速缓存中找，找到了就直接拿去用（称作缓存命中）找不到再去读内存。当cache中内容足够多时，CPU在大部分时间内就不用和存储器打交道了。</p>
 <p>【CPU周期：完成一个基本动作（取指令，解码指令，执行指令，）所耗时间】</p>
 <p>但是要把哪些内容放入高速缓存呢，这是个问题，科学家发现，在一小段时间内，CPU对存储器的访问总是局限在存储器的一小部分中，称为局部性原理。他构成了所有cache系统的基础。应用就是，在CPU访问存储器的某个字后，将该字和他的相邻单元存入cache，这样下次访问时就会快一些。CPU，Cache和主存的逻辑结构关系如下：</p>
-<p>![截屏2020-11-18 下午8.21.40](typora-user-images/截屏2020-11-18 下午8.21.40.png)</p>
+<p><img src="../images/cache.png" alt=""></p>
 <h2 id="2-3-层次存储结构"><a href="#2-3-层次存储结构" class="headerlink" title="2.3 层次存储结构"></a>2.3 层次存储结构</h2><p>由于人们期望存储的数据十分巨大，主存造价昂贵，难以存储所有的文件，因此计算机内也使用其他速度没有那么快但是较为经济的存储器来满足信息存储的要求，如下图的层次存储结构，从顶向下有以下特点：</p>
 <p>访问时间增加：CPU中的寄存器访问时间是1纳秒或者更少，高速缓存访问时间是寄存器的几倍，主存储器是10纳秒左右；固态硬盘的访问时间比主存至少慢10倍，磁盘则要慢数百倍；而磁带和光盘的访问时间几乎要以秒来计量。</p>
 <p>容量增大：寄存器也许有128个字节就很合适，高速缓存可以是几十M，主存可以是8g，16g，32g等，固态硬盘是数百G，而磁盘容量是TB级。</p>
 <p>单位造价降低：随着级别的下降，存储器每Mb的造价也显著降低。</p>
-<img src="typora-user-images/截屏2020-11-18 下午8.26.41.png" alt="截屏2020-11-18 下午8.26.41" style="zoom:50%;" />
+<img src="../images/memorystructure.png"  style="zoom:50%;" />
       
     </div>
     <footer class="article-footer">
