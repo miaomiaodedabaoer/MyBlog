@@ -64,6 +64,68 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Wireshark下HTTPS通信过程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2021-07-08T14:42:04.540Z" itemprop="datePublished">2021-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/">Wireshark下HTTPS通信过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>按照 《图解HTTP》上的定义， HTTPS 的通信步骤如下，1-4 步</p>
+<p>步骤 1： 客户端通过发送 Client Hello 报文开始 SSL 通信。报文中包 含客户端支持的 SSL 的指定版本、加密组件（Cipher Suite）列表（所 使用的加密算法及密钥长度等）。</p>
+<p>步骤 2： 服务器可进行 SSL 通信时，会以 Server Hello 报文作为应答。和客户端一样，在报文中包含 SSL 版本以及加密组件。服务器的 加密组件内容是从接收到的客户端加密组件内筛选出来的。</p>
+<p>步骤 3： 之后服务器发送 Certificate 报文。报文中包含公开密钥证 书。</p>
+<p>步骤 4： 最后服务器发送 Server Hello Done 报文通知客户端，最初阶段的 SSL 握手协商部分结束。</p>
+<p>步骤 5： SSL 第一次握手结束之后，客户端以 Client Key Exchange 报 文作为回应。报文中包含通信加密中使用的一种被称为 Pre-master secret 的随机密码串。该报文已用步骤 3 中的公开密钥进行加密。</p>
+<p>步骤 6： 接着客户端继续发送 Change Cipher Spec 报文。该报文会提 示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密。</p>
+<p>步骤 7： 客户端发送 Finished 报文。该报文包含连接至今全部报文的 整体校验值。这次握手协商是否能够成功，要以服务器是否能够正确 解密该报文作为判定标准。</p>
+<p>步骤 8： 服务器同样发送 Change Cipher Spec 报文。</p>
+<p>步骤 9： 服务器同样发送 Finished 报文。</p>
+<p>步骤 10： 服务器和客户端的 Finished 报文交换完毕之后，SSL 连接 就算建立完成。当然，通信会受到 SSL 的保护。从此处开始进行应用 层协议的通信，即发送 HTTP 请求。</p>
+<p>步骤 11： 应用层协议通信，即发送 HTTP 响应。</p>
+<p>步骤 12： 最后由客户端断开连接。断开连接时，发送 close_notify 报 文。上图做了一些省略，这步之后再发送 TCP FIN 报文来关闭与 TCP 的通信。</p>
+<p><img src="../images/https.png" alt="https"></p>
+<p>使用 Wireshark 抓包分析, filter 设置为 tls协议，浏览器点击 <a href="https://www.bing.com/" target="_blank" rel="noopener">https://www.bing.com/</a> 后的网络情况，前面一些包的情况如下：</p>
+<p><img src="../images/wireshark.png" alt="wireshark"></p>
+<p>现在把两者匹配一下：</p>
+<p>第一步： client -&gt; server，查看 667号包内的 TLS协议 相关信息，包含了客户端支持的 SSL 各种相关信息。    <img src="../images/clienthello.png" alt="clienthello"></p>
+<p>然后：server -&gt; client, 包675, 返回了多了个 握手信息，Server Hello, Certificate, Cerficate Status, Server Key Exchange 和 Server Hello Done, 除了Cerficate Status，对应第2，3，4 步。 </p>
+<p><img src="/Users/jon/myBlog/source/images/234.png" alt="tls"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">发送证书 Certificate 的包： 包含了复杂的证书信息：未展示完全</span><br><span class="line">Handshake Protocol: Certificate</span><br><span class="line">Certificates (3807 bytes)</span><br><span class="line">    Certificate Length: 2274</span><br><span class="line">    Certificate: 308208de308206c6a003020102021333001306f0f7f40a7ccc3369510000001306f0300d… (id-at-commonName&#x3D;graph.microsoft.com,id-at-organizationName&#x3D;Microsoft Corporation,id-at-localityName&#x3D;Redmond,id-at-stateOrProvinceName&#x3D;WA,id-at-count</span><br><span class="line">        &gt;signedCertificate</span><br><span class="line">        algorithmIdentifier (sha384WithRSAEncryption)</span><br><span class="line">            Algorithm Id: 1.2.840.113549.1.1.12 (sha384WithRSAEncryption) </span><br><span class="line">        Padding: 0</span><br><span class="line">        encrypted: 6c207a3574b01c1863c8f9ab262e2af48187801d134026900b41e4264d8b91ed3422ce7e…</span><br><span class="line">    Certificate Length: 1527</span><br><span class="line">    Certificate: 308205f3308204dba00302010202100c6ae97cced599838690a00a9ea53214300d06092a… (id-at-commonName&#x3D;Microsoft Azure TLS Issuing CA 02,id-at-organizationName&#x3D;Microsoft Corporation,id-at-countryName&#x3D;US)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>接着：client 向 server ， 对应5，6 ，7 步</p>
+<p><img src="../images/678.png" alt="678"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" data-id="ckqv2vche00008e9kahwibt10" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-迭代遍历二叉树" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-date">
@@ -853,6 +915,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/">Wireshark下HTTPS通信过程</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">迭代遍历二叉树</a>
           </li>
         
@@ -866,10 +932,6 @@
         
           <li>
             <a href="/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/19/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">进程与线程</a>
           </li>
         
       </ul>
