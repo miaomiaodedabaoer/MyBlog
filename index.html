@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-RDB 内存快照" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" class="article-date">
+  <time datetime="2021-07-22T13:39:47.273Z" itemprop="datePublished">2021-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。</p>
+<p>而 redis 的另一种恢复机制 <strong>内存快照</strong>，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 <strong>快速恢复</strong>；</p>
+<p>但是这张快照的拍摄要注意：</p>
+<p><strong>拍多少</strong></p>
+<p>提供所有数据的可靠性保证，reids 执行的是<strong>全量快照</strong>，redis 提供两个命令来生成 （阻塞主线程与否）</p>
+<p>​    save： 主线程中执行，阻塞</p>
+<p>​    <strong><u>bgsave</u></strong>：创建子线程，专门用于写入 RDB 文件，默认配置，非阻塞</p>
+<p><strong>人动怎么办</strong></p>
+<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong> 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
+<p><strong>拍摄频率</strong></p>
+<p>与 AOF 类似，拍的越频繁，宕机时丢失数据内容越少，但是也越影响性能，因为 fork 子线程时会阻塞主线程，并且也会给磁盘带来压力。那么我们在第一次拍摄全景之后，每次拍摄只拍摄动的东西（也就是被修改的数据）不就好了，为了记住那些数据做了修改，我们可以用 AOF 日志进行记录（Redis 4.0 提出，混合策略）</p>
+<p>AOF 和 RDB 的选择取决于 <strong>丢失容忍度</strong> 和 <strong>性能</strong> 两方面的考虑。如果数据不能丢失，可以结合内存快照和 AOF; 如果允许分钟级别的数据丢失，可以只使用 RDB; 如果只用 AOF，优先使用 everysec 的配置选项，因为它在可靠性和性能之间取了一个 平衡。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" data-id="ckrf0kgpm0000nv9k1dujdlms" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Redis AOF 日志 " class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" class="article-date">
@@ -907,55 +955,6 @@
 
 
   
-    <article id="post-Hello-miaomiao" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/05/Hello-miaomiao/" class="article-date">
-  <time datetime="2020-05-05T06:41:29.000Z" itemprop="datePublished">2020-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/05/Hello-miaomiao/">Hello, miaomiao~</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="我的第一篇-Blog"><a href="#我的第一篇-Blog" class="headerlink" title="我的第一篇 Blog"></a>我的第一篇 Blog</h1><h2 id="安装-hexo-遇到的问题"><a href="#安装-hexo-遇到的问题" class="headerlink" title="安装 hexo 遇到的问题"></a>安装 <code>hexo</code> 遇到的问题</h2><h3 id="使用-install-g-hexo-cli-无法安装-hexo"><a href="#使用-install-g-hexo-cli-无法安装-hexo" class="headerlink" title="使用 install -g hexo-cli 无法安装 hexo"></a>使用 <code>install -g hexo-cli</code> 无法安装 <code>hexo</code></h3><p>错误代码大概意思是没权限这样做。<code>The operation was rejected by your operating system.</code></p>
-<p>最后去 <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally" target="_blank" rel="noopener">hexo</a> 官网查找, 解决代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~&#x2F;.npm-global &#x2F;&#x2F; create a directory for global installations in home directory</span><br><span class="line">npm config set prefix &#39;~&#x2F;.npm-global&#39; &#x2F;&#x2F; configure npm to use the new directory</span><br><span class="line">export PATH&#x3D;~&#x2F;.npm-global&#x2F;bin:$PATH &#x2F;&#x2F; add npm-global to PATH environmental varibles</span><br></pre></td></tr></table></figure>
-<p>前几步可以用下面一行代替:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NPM_CONFIG_PREFIX&#x3D;~&#x2F;.npm-global</span><br></pre></td></tr></table></figure>
-<p>测试新配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.profile &#x2F;&#x2F; update system varibles</span><br><span class="line">npm install -g jshint &#x2F;&#x2F; test new configuration</span><br></pre></td></tr></table></figure>
-
-<h3 id="Hexo-command-not-found"><a href="#Hexo-command-not-found" class="headerlink" title="Hexo command not found"></a><code>Hexo command not found</code></h3><p>安装过程中每一步都好好的，在部署插件 <code>hexo-delplyer-git</code> 时不正常了，输入命令得到</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command not found</span><br></pre></td></tr></table></figure>
-<p>反复重装 hexo 还是没有效果，最后在 hexo 命令前加入 npx 才可以</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx hexo init myBlog</span><br></pre></td></tr></table></figure>
-<p>查了一些 npx 可以让任何 command 在 machine 的任何位置使用。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/Hello-miaomiao/" data-id="ckqnxj92h0000tv9k4oeldrkn" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -992,6 +991,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">Redis AOF 日志 </a>
           </li>
         
@@ -1005,10 +1008,6 @@
         
           <li>
             <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">迭代遍历二叉树</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/03/Https/">Https</a>
           </li>
         
       </ul>

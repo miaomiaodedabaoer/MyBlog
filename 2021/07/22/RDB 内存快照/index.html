@@ -5,17 +5,17 @@
   
 
   
-  <title>Hello World | Mmddb</title>
+  <title>RDB 内存快照 | Mmddb</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。 而 redis 的另一种恢复机制 内存快照，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2020/05/05/hello-world/index.html">
+<meta property="og:title" content="RDB 内存快照">
+<meta property="og:url" content="http://yoursite.com/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/index.html">
 <meta property="og:site_name" content="Mmddb">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。 而 redis 的另一种恢复机制 内存快照，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-05T02:32:51.309Z">
-<meta property="article:modified_time" content="2020-05-05T02:32:51.309Z">
+<meta property="article:published_time" content="2021-07-22T13:39:47.273Z">
+<meta property="article:modified_time" content="2021-07-22T14:32:08.809Z">
 <meta property="article:author" content="Zhang Penghe">
 <meta name="twitter:card" content="summary">
   
@@ -66,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-RDB 内存快照" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/05/hello-world/" class="article-date">
-  <time datetime="2020-05-05T02:32:51.309Z" itemprop="datePublished">2020-05-05</time>
+    <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" class="article-date">
+  <time datetime="2021-07-22T13:39:47.273Z" itemprop="datePublished">2021-07-22</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      RDB 内存快照
     </h1>
   
 
@@ -88,24 +88,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p>AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。</p>
+<p>而 redis 的另一种恢复机制 <strong>内存快照</strong>，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 <strong>快速恢复</strong>；</p>
+<p>但是这张快照的拍摄要注意：</p>
+<p><strong>拍多少</strong></p>
+<p>提供所有数据的可靠性保证，reids 执行的是<strong>全量快照</strong>，redis 提供两个命令来生成 （阻塞主线程与否）</p>
+<p>​    save： 主线程中执行，阻塞</p>
+<p>​    <strong><u>bgsave</u></strong>：创建子线程，专门用于写入 RDB 文件，默认配置，非阻塞</p>
+<p><strong>人动怎么办</strong></p>
+<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong> 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
+<p><strong>拍摄频率</strong></p>
+<p>与 AOF 类似，拍的越频繁，宕机时丢失数据内容越少，但是也越影响性能，因为 fork 子线程时会阻塞主线程，并且也会给磁盘带来压力。那么我们在第一次拍摄全景之后，每次拍摄只拍摄动的东西（也就是被修改的数据）不就好了，为了记住那些数据做了修改，我们可以用 AOF 日志进行记录（Redis 4.0 提出，混合策略）</p>
+<p>AOF 和 RDB 的选择取决于 <strong>丢失容忍度</strong> 和 <strong>性能</strong> 两方面的考虑。如果数据不能丢失，可以结合内存快照和 AOF; 如果允许分钟级别的数据丢失，可以只使用 RDB; 如果只用 AOF，优先使用 everysec 的配置选项，因为它在可靠性和性能之间取了一个 平衡。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/hello-world/" data-id="ckqnxj92o0002tv9kbesz76ya" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" data-id="ckrf0kgpm0000nv9k1dujdlms" class="article-share-link">Share</a>
       
       
     </footer>
@@ -114,15 +113,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/05/05/Hello-miaomiao/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Hello, miaomiao~
-        
-      </div>
-    </a>
   
+    <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Redis AOF 日志 </div>
+    </a>
   
 </nav>
 
