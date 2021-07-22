@@ -15,7 +15,7 @@
 <meta property="og:description" content="AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。 而 redis 的另一种恢复机制 内存快照，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-22T13:39:47.273Z">
-<meta property="article:modified_time" content="2021-07-22T14:32:08.809Z">
+<meta property="article:modified_time" content="2021-07-22T15:20:55.713Z">
 <meta property="article:author" content="Zhang Penghe">
 <meta name="twitter:card" content="summary">
   
@@ -96,7 +96,7 @@
 <p>​    save： 主线程中执行，阻塞</p>
 <p>​    <strong><u>bgsave</u></strong>：创建子线程，专门用于写入 RDB 文件，默认配置，非阻塞</p>
 <p><strong>人动怎么办</strong></p>
-<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong> 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
+<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong>（主线程在有写操作时，才会把这个新写或修改后的数据 写入到一个新的物理地址中，并修改自己的页表映射） 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
 <p><strong>拍摄频率</strong></p>
 <p>与 AOF 类似，拍的越频繁，宕机时丢失数据内容越少，但是也越影响性能，因为 fork 子线程时会阻塞主线程，并且也会给磁盘带来压力。那么我们在第一次拍摄全景之后，每次拍摄只拍摄动的东西（也就是被修改的数据）不就好了，为了记住那些数据做了修改，我们可以用 AOF 日志进行记录（Redis 4.0 提出，混合策略）</p>
 <p>AOF 和 RDB 的选择取决于 <strong>丢失容忍度</strong> 和 <strong>性能</strong> 两方面的考虑。如果数据不能丢失，可以结合内存快照和 AOF; 如果允许分钟级别的数据丢失，可以只使用 RDB; 如果只用 AOF，优先使用 everysec 的配置选项，因为它在可靠性和性能之间取了一个 平衡。</p>
