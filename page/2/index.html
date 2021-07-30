@@ -64,6 +64,89 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-JWT" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/01/JWT/" class="article-date">
+  <time datetime="2021-07-01T11:52:23.825Z" itemprop="datePublished">2021-07-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/01/JWT/">JWT</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>JSON Web Token （JWT）是一个 开放的 <strong>标准</strong>，以紧凑且 self-contained 的方式，使用 JSON 对象在 parties 间安全的传输信息。这些信息是可以被验证且信任的，JWT 可以使用一个 secret （借助HMAC算法）或者一个 public/private 钥匙 （借助 RSA 或者 ECDSA）</p>
+<p>JWT 主要用于 签名 token，签名 token 可以供他人验证其中包含的信息（claims）的完整性</p>
+<h1 id="什么时候用"><a href="#什么时候用" class="headerlink" title="什么时候用"></a>什么时候用</h1><h4 id="1-用户授权"><a href="#1-用户授权" class="headerlink" title="1. 用户授权"></a>1. 用户授权</h4><p>因为 HTTP 是开放的，且无状态，server 不知道用户的身份，就要做访问权限的控制，认证用户后，才允许调用 API。具体是，用户第一次登陆时，返回一个 JWT，里面包含用户的一些信息，用户之后的所有请求都带着 JWT，验证后允许其访问一些路径，服务，资源。使用 Token 的好处是不用每次都发送 账号密码，减小风险。</p>
+<p>由于 JWT 自身较小的<strong>开销？</strong>和 <strong>轻松跨域</strong>，Single Sing On 广泛应用了 JWT。</p>
+<h4 id="2-信息交换"><a href="#2-信息交换" class="headerlink" title="2. 信息交换"></a>2. 信息交换</h4><p>由于 JWT 可以被签名，使用 public key/ private key可以确定发送人的身份；并且，使用 JWT 内容中的 header 和 payload, 可以轻松的验证内容是否被篡改。</p>
+<h1 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h1><p>两种表现形式 JSON 和 压缩后的，都由三部分组成，</p>
+<p>三部分： 名字都是 3个 character (宣传为了紧凑)</p>
+<ul>
+<li><p>Header, （ token 的类型，签名算法）</p>
+<p><code>{  &quot;alg&quot;: &quot;HS256&quot;,  &quot;typ&quot;: &quot;JWT&quot; }</code>  </p>
+</li>
+<li><p>Payload （携带的有用的一些信息 claims，3类,</p>
+<ol>
+<li><p>Registered claims: 推荐的，预定义的属性，包括 <strong>iss</strong> (issuer),  (expiration time), <strong>sub</strong> (subject), <strong>aud</strong> (audience)</p>
+</li>
+<li><p>Public claims: 由使用 JWT 的人随意使用，尽量与标准中定义的不冲突</p>
+</li>
+<li><p>Private claims: 客制化定义，分享信息的人定义，更加私人化</p>
+<p>由于这些信息都是可读的，不建议在里面放一些 机密信息，除非他们是加密的，</p>
+<p><code>{  &quot;sub&quot;: &quot;1234567890&quot;,  &quot;name&quot;: &quot;John Doe&quot;,  &quot;admin&quot;: true }</code></p>
+</li>
+</ol>
+</li>
+<li><p>Signature （ 由以上两部分，以及你的 secret，使用 header中声明的算法，进行签名）</p>
+<p><code>HMACSHA256(base64UrlEncode(header) + &quot;.&quot; +  base64UrlEncode(payload),  secret)</code></p>
+</li>
+</ul>
+<p>把 header 和 payload 分别用 Base64url 编码，再加上 signature，三部分以点分隔就形成了压缩后的结构：<code>xxxxx.yyyyy.zzzzz</code> 。</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>无状态的验证机制，server 并不存储 JWT，当用户成功登陆时，返回一个 JWT，用户之后的请求都带上，使用 Bearer schema 放到 Authorization header 中，这样 CORS （Cross-Origin Resource Sharing）跨域问题就得到了解决。</p>
+<p>「 JWT 数据可以放到 HTTP 请求头部发送，不存在跨域问题。而原生 session 基于 cookie 发送，存在跨域问题」</p>
+<h1 id="为啥-JWT-呢"><a href="#为啥-JWT-呢" class="headerlink" title="为啥 JWT 呢"></a>为啥 JWT 呢</h1><p>官网上与 <strong>Simple Web Tokens (SWT)</strong> ，<strong>Security Assertion Markup Language Tokens (SAML)</strong> 做了比较。</p>
+<p>物理属性方面，对比与 SAML，JSON没有 XML 冗长，并且使用 JSON 编码起来体积更小，利于在http中传输</p>
+<p>安全性方面，对比 SWT，SWT 只能使用 HMAC 算法进行对称加密，JWT 和 SMAL 可以用 公钥/私钥进行签名，SMAL在这方面又比较困难。</p>
+<h1 id="与-Session的比较"><a href="#与-Session的比较" class="headerlink" title="与 Session的比较"></a>与 Session的比较</h1><p>主要区别就是存储的位置， session 保存在服务端，jwt 在客户端</p>
+<ol>
+<li><p>安全性</p>
+<p>jwt 使用 base64 编码，并没有加密，不能存放机密数据，而session在服务端，可以放敏感数据，更安全</p>
+</li>
+<li><p>性能</p>
+<p>jwt 太长，cookie 一般限制 4k，一般放在 localstorge 里面，放置在 HTTP 的请求头中，就导致 Header 可能比 Body 还大</p>
+<p>「超过了tomcat允许的最大值。默认情况下，tomcat（8.0版本）允许的http请求header的最大值是8024个字节（8KB）」</p>
+</li>
+<li><p>一次性</p>
+<p>无法废弃，续签</p>
+</li>
+</ol>
+<p>   因此，最好设置的有效时间短一点，只希望被使用 1次。网上看到的例子，激活账户的邮件，几小时内有效，标识该用户，无法篡改。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/01/JWT/" data-id="ckqnxj92p0003tv9k59c681pc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-内存管理" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
@@ -635,6 +718,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/"> Redis 内部的阻塞式操作</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/28/List%20%E5%92%8C%20Streams/">List 和 Streams</a>
           </li>
         
@@ -648,10 +735,6 @@
         
           <li>
             <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">Redis AOF 日志 </a>
           </li>
         
       </ul>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title> Redis 内部的阻塞式操作 | Mmddb</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Redis 变慢的原因主要有 5 大方面： 复杂度高的 CRUD 操作 （客户端交互）复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括全量查询，聚合统计操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会阻塞当前释放内存的应用程序，如果一下子释放大量内存，也就是 Big key 删除，redis 的主线程会被阻塞；同时，由于">
+<meta property="og:type" content="article">
+<meta property="og:title" content=" Redis 内部的阻塞式操作">
+<meta property="og:url" content="http://yoursite.com/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Mmddb">
+<meta property="og:description" content="Redis 变慢的原因主要有 5 大方面： 复杂度高的 CRUD 操作 （客户端交互）复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括全量查询，聚合统计操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会阻塞当前释放内存的应用程序，如果一下子释放大量内存，也就是 Big key 删除，redis 的主线程会被阻塞；同时，由于">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-07-30T00:49:28.464Z">
+<meta property="article:modified_time" content="2021-07-30T01:16:50.960Z">
+<meta property="article:author" content="Zhang Penghe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mmddb</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post- Redis 内部的阻塞式操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2021-07-30T00:49:28.464Z" itemprop="datePublished">2021-07-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+       Redis 内部的阻塞式操作
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Redis 变慢的原因主要有 5 大方面：</p>
+<h3 id="复杂度高的-CRUD-操作-（客户端交互）"><a href="#复杂度高的-CRUD-操作-（客户端交互）" class="headerlink" title="复杂度高的 CRUD 操作 （客户端交互）"></a><strong>复杂度高的 CRUD 操作</strong> （客户端交互）</h3><p>复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括<strong>全量查询</strong>，<strong>聚合统计</strong>操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会<strong>阻塞当前释放内存的应用程序</strong>，如果一下子释放大量内存，也就是 <strong>Big key 删除</strong>，redis 的主线程会被阻塞；同时，由于涉及大量的删除，*<em>清空数据库 *</em>（flushdb 和 flushall）也是一个阻塞点。</p>
+<h3 id="AOF-日志同步写，-RDB-文件加载（磁盘交互）"><a href="#AOF-日志同步写，-RDB-文件加载（磁盘交互）" class="headerlink" title="AOF 日志同步写， RDB 文件加载（磁盘交互）"></a><strong>AOF 日志同步写， RDB 文件加载</strong>（磁盘交互）</h3><p>redis 在 <strong>AOF 日志同步写</strong> 时，如果一个时间点内有大量的操作需要落盘，也会阻塞主线程；在从库收到主库发来的 RDB 文件时，如果文件太大，加载过程缓慢，就会阻塞从库。</p>
+<p>为了减小主线程阻塞对于 redis 的影响，我们可以把一些<strong>非关键路径操作</strong> ，也就是客户端不用等着 Redis 返回数据结果的操作，使用后台线程进行操作，释放主线程压力。这些操作包括数据的删除，清空数据库，记录 AOF 文件。</p>
+<p>主线程通过一个链表形式的<strong>任务队列</strong>和子线程进行交互。当收到键值对删除和清空数据库<br>的操作时，主线程会把这个操作封装成起来放入到任务队列中，然后给客户端返回一个完成信息，表明删除已经完成。But，直到后台子线程从任务队列中读取任务后，才开始实际删除键值对，并释放相应的内存空间。这种异步删除也称为<strong>惰性删除 (lazy free)</strong>。</p>
+<p> tips： 删除大量键值对，使用 UNLINK；清空数据库在命令后加 ASYNC；集合全量查询和聚合操作，使用 SCAN 命令，分批读取数据，再在客户端进行聚合计算; 从库加载 RDB 文件，把主库的数据量大小控制在 2~4GB 左右，以保证 RDB 文件能以 较快的速度加载。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/" data-id="ckrpnolu90000ek9kcfy1ge9a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/07/28/List%20%E5%92%8C%20Streams/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">List 和 Streams</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/"> Redis 内部的阻塞式操作</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/28/List%20%E5%92%8C%20Streams/">List 和 Streams</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/24/Redis%20%E7%9A%84%20String/">Redis 的 String</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">主从同步与哨兵</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Zhang Penghe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
