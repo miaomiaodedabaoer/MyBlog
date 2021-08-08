@@ -64,6 +64,71 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/03/Https/" class="article-date">
+  <time datetime="2021-07-03T14:30:17.868Z" itemprop="datePublished">2021-07-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/03/Https/">Https</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HTTP-的问题"><a href="#HTTP-的问题" class="headerlink" title="HTTP 的问题"></a>HTTP 的问题</h1><p>从 HTTP 协议本身来看，其存在几大问题：</p>
+<h3 id="可能被窃听"><a href="#可能被窃听" class="headerlink" title="可能被窃听"></a>可能被窃听</h3><p>HTTP 本身不具备加密的功能，在互联网的线路上传输时，可能会被人收集，这样就会看到通信内容。</p>
+<p>解决： 对信道加密（结合 SSL 和 TLS）； 对内容加密</p>
+<h3 id="内容可能被篡改"><a href="#内容可能被篡改" class="headerlink" title="内容可能被篡改"></a>内容可能被篡改</h3><p>HTTP 请求或响应在传输途中，可能遭到攻击者拦截并篡改，这种方式称为中间人攻击（Man-In-Middle attack). </p>
+<h3 id="不验证身份"><a href="#不验证身份" class="headerlink" title="不验证身份"></a>不验证身份</h3><p>只要知道 IP 和端口，任何人都可以发起请求，服务器也会响应。解决：使用 SSL ，查看证书 CA， 证书由第三方颁发，客户端通信前先确认证书。</p>
+<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><p>https 的出现正是解决了这些问题，https 并不是一种新的协议，只是 HTTP 通信接口部分用 <strong>SSL</strong>（Secure Socket Layer）和 <strong>TLS</strong><br>( Transport Layer Security)，其和 http 的区别简单来说就是：</p>
+<p><strong>HTTP + 加密 + 完整性保护 + 身份认证 = HTTPS</strong></p>
+<h3 id="SSL-的加密"><a href="#SSL-的加密" class="headerlink" title="SSL 的加密"></a>SSL 的加密</h3><p>SSL 的加密结合了 <strong>共享密钥</strong> 和 <strong>公开密钥</strong>。公开密钥更安全，但是通信效率比较低；因此 SSL 先使用 公开密钥加密方式来传输在后面的共享密钥加密使用的密钥，确保交换的密钥安全后，使用共享密钥加密方式进行通信。</p>
+<p>但是，在第一次通信时，客户端无法证明公开密钥本身的真实性；为解决这种问题，服务器可以向数字证书认证机构申请一个数字签名，在通信时一并发给客户端，客户端拿着签名去验证即可。</p>
+<h1 id="HTTPS-缺点"><a href="#HTTPS-缺点" class="headerlink" title="HTTPS 缺点"></a>HTTPS 缺点</h1><ol>
+<li><p>耗费资源</p>
+<p>与纯文本通信相比，加密通信会消耗服务器更多的资源</p>
+</li>
+<li><p>速度慢</p>
+<p>多了 SSL 通信部分，还有加密解密部分，整体速度比HTTP慢 2 到 100倍</p>
+</li>
+<li><p>证书贵</p>
+<p>要进行 HTTPS 通信，证书是必不可少的。而使用的证书必须向认 证机构（CA）购买。因此一些个人网站，可能无法负担这一开销</p>
+</li>
+</ol>
+<h1 id="各种加密方式"><a href="#各种加密方式" class="headerlink" title="各种加密方式"></a>各种加密方式</h1><h4 id="共享密钥加密"><a href="#共享密钥加密" class="headerlink" title="共享密钥加密"></a>共享密钥加密</h4><p>接收方和发送方使用同一把密钥进行解密和加密工作，发送方要把密钥发给接收方，在这个过程中 密钥 可能会泄漏，但是这种方式 加密，解密速度快</p>
+<h4 id="公开密钥加密"><a href="#公开密钥加密" class="headerlink" title="公开密钥加密"></a>公开密钥加密</h4><p>接收方生成，公钥和私钥，公钥发给发送方，发送方使用 <strong>公钥</strong> 进行 <strong>加密</strong>，再把密文发送给接收方，接收方使用 <strong>私钥</strong> 进行 <strong>解密</strong>。</p>
+<p>保证了 密钥 传递的安全，但是解密加密较慢，并且 公开密钥 在传递过程中可能被中间人截取，给发送方发一个错误的，中间人使用正确的公钥 加密 错误的信息给接收方，发送方，接收方并不知情（中间人攻击）</p>
+<h4 id="混合密钥加密"><a href="#混合密钥加密" class="headerlink" title="混合密钥加密"></a>混合密钥加密</h4><p>使用公开密钥的方式 传递 共享密钥，确保 共享密钥 传输正确，之后用共享密钥来通信。</p>
+<h4 id="消息认证码"><a href="#消息认证码" class="headerlink" title="消息认证码"></a>消息认证码</h4><p>防止密文被篡改，使用一个共享密钥对信息进行计算，得到（类似哈希值） MAC（message authentication code) 连同这个码发给接收方，接收方根据同样的密钥进行解密</p>
+<p>但是，由于两方都可以自己生成 MAC，这个信息是自己伪造的还是真正发过来的没办法识别，</p>
+<h4 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h4><p>数字签名可以解决该事后否认的问题：发送者在发送时给消息加上数字签名，数字签名的生成使用公开密钥加密，发送者通过私钥生成，接收者使用公钥对签名进行解密，这样就可以确认消息的发送者。</p>
+<p>但是无法保证公开密钥确实来自发送者，有可能被中间人替换</p>
+<h4 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h4><p>认证中心通过自己的私钥，对发送者的资料（发送者的公钥已经个人信息）生成数字签名，加上资料放到数字证书里，发给发送者，发送者再发给接收者，接收者通过认证中心的公钥对证书内对签名进行认证，来确认确实来自发送者。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/03/Https/" data-id="ckqnxj92n0001tv9k8txfdz4v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-JWT" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/07/01/JWT/" class="article-date">
@@ -705,7 +770,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
     </div>
   </div>
 
@@ -716,6 +781,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">缓存</a>
+          </li>
         
           <li>
             <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/"> Redis 内部的阻塞式操作</a>
@@ -731,10 +800,6 @@
         
           <li>
             <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">主从同步与哨兵</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
           </li>
         
       </ul>
