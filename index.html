@@ -64,6 +64,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-缓存的问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2021-08-12T01:21:26.074Z" itemprop="datePublished">2021-08-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">缓存的问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缓存不一致"><a href="#缓存不一致" class="headerlink" title="缓存不一致"></a><strong>缓存不一致</strong></h1><p>redis 用作缓存时，可能会产生和数据库数据不一致的问题。缓存的一致性根据缓存是否命中分为两方面：当缓存中有数据时，需要和数据库中保持一致；当没有数据时，要保证数据库中存在最新数据。</p>
+<p>对读写缓存来说，这个问题比较好解决，使用 <strong>同步直写</strong> 策略，结合事务，保证更新操作的原子性，如果没有更新成功则进行重试。</p>
+<p>对于只读缓存，当业务需要 <strong>更新或者删除</strong> 一个值时，要做两件事，一是删除缓存中的值，二是更新数据库的值。这两件事的先后顺序并不限制。增，查。</p>
+<p>在并发的情况下，如果业务 2 在 业务1删完缓存数据后，更新数据库前查询该数据，业务 2 发现缓存中没有，那就去数据库里找，取出这个还没更新的旧数据，又把它写回了缓存。这样一来，业务 2 拿到了旧数据还把缓存的值给整回来了。This is a problem。可以采用 <strong>延迟双删</strong> 的方法，让业务 1 睡眠一段时间后，再进行一次缓存删除。</p>
+<p>那么，如果 业务1 先改数据库，再删除缓存呢，也不行，这样在业务1没删除缓存之前，业务 2 还是会拿到旧数据。在并发请求不多时，这种影响较小。但是如果业务 1 删除失败，那缓存中就一直是旧数据。对于这种更新缓存或者数据库失败的情况，可以采用 <strong>重试机制</strong>，把需要更新的值写到消息队列里面，如果失败就重试。</p>
+<p>总的来看，先更新数据库再更新缓存会好一点。因为延迟双删的时间不好确定（读取数据库和写缓存的时间可能不好估算），并且有额外开销。此外，先删除缓存，会造成缓存缺失而访问数据库，带来一些压力。</p>
+<h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><p>指大量的请求在缓存中无法命中，大量的到达数据库，数据库压力激增。一般来说一个 redis instace 可以支持数万级别请求，单个数据库可能只支持数千，一旦雪崩，数据库可能承受 十倍的请求压力。</p>
+<h4 id="原因-1：-大量-key-同时过期"><a href="#原因-1：-大量-key-同时过期" class="headerlink" title="原因 1： 大量 key 同时过期"></a>原因 1： 大量 key 同时过期</h4><p>预防：用 EXPIRE 命令给每个数据增加一个较小的随机数</p>
+<p>处理：服务降级，对于非核心数据，从缓存中返回预设值，空值或者错误信息；对于核心数据仍允许。</p>
+<h4 id="原因-2：Redis-宕机"><a href="#原因-2：Redis-宕机" class="headerlink" title="原因 2：Redis 宕机"></a>原因 2：Redis 宕机</h4><p>预防：主从节点构造高可用集群</p>
+<p>处理：服务熔断（暂停缓存使用，保护数据库），请求限流</p>
+<h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1><p>针对某个<strong>热点数据</strong>的请求，无法在缓存中进行处理，全部发送到后端数据库。</p>
+<h4 id="原因：热点数据失效"><a href="#原因：热点数据失效" class="headerlink" title="原因：热点数据失效"></a>原因：热点数据失效</h4><p>处理：对于热点数据不设置 Expire </p>
+<h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><p>要访问的数据不在缓存中，也不再数据库中，导致数据库大量读请求，占用资源。</p>
+<h4 id="原因：业务层误删除，恶意攻击"><a href="#原因：业务层误删除，恶意攻击" class="headerlink" title="原因：业务层误删除，恶意攻击"></a>原因：业务层误删除，恶意攻击</h4><h4 id="处理：前端检测；缓存空值，缺省值；-布隆过滤器"><a href="#处理：前端检测；缓存空值，缺省值；-布隆过滤器" class="headerlink" title="处理：前端检测；缓存空值，缺省值； 布隆过滤器"></a>处理：前端检测；缓存空值，缺省值； 布隆过滤器</h4><p>布隆过滤器可以<strong>快速判断数据是否存在</strong>，由 N 个哈希函数，和一个初值为 0 的 bit 数组组成。</p>
+<p>标记过程：</p>
+<p>首先，用 N 个哈希函数对数据进行计算，得到 N 个哈希值。然后，把这 N 个哈希值对 bit 数组长度取模，set 数组中对应位置为 1。</p>
+<p>查找：还是计算 N 个哈希值，看 bit 数组对应位置是否<strong>全部为 1</strong>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="cks8a3gsm0000gt9k4yxq5rrp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-缓存" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/08/08/%E7%BC%93%E5%AD%98/" class="article-date">
@@ -540,81 +594,6 @@
 
 
   
-    <article id="post-迭代遍历二叉树" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-date">
-  <time datetime="2021-07-04T12:17:59.072Z" itemprop="datePublished">2021-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">迭代遍历二叉树</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>二叉树的遍历从深度遍历来看，分为前序遍历，中序遍历和后序遍历，其中的前中后指 <strong>根节点</strong> 在遍历时的相对位置，前序就是指 <strong>根 - 左 - 右</strong>，中序指 <strong>左 - 根 - 右</strong>；</p>
-<p>使用递归遍历二叉树十分简单, 中序遍历代码如下，前序和后序只需改变最后三行代码顺序即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  	List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">inorderTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        inorderTree(root.left);</span><br><span class="line">        list.add(root.val);</span><br><span class="line">        inorderTree(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>使用迭代遍历的话，首先想到借助 <strong>栈</strong> 模拟递归，其次在纸上设计一下节点应该怎么 <strong>入栈</strong>，<strong>取值</strong>，<strong>出栈</strong>， 即可；</p>
-<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>以中序遍历为例子，<strong>左 - 根 - 右</strong> 的方式下:</p>
-<ol>
-<li><p>把所有 <strong>左节点</strong> 全部 <strong>入栈</strong>，直到没有 右边的非NULL节点</p>
-</li>
-<li><p>取出最顶端节点（该节点就是树形图中最左下的元素，也就是应该第一个取到值的），加入列表</p>
-</li>
-<li><p>此时 <strong>左 - 根 - 右</strong> 中的 <strong>左，根</strong> 节点已经遍历完成，<strong>对右节点重复上两步</strong>操作即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">inorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">    List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">    Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    TreeNode curNode = root;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(!stack.isEmpty() || root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 1⃣️ travel(root.left);</span></span><br><span class="line">        <span class="keyword">while</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        stack.push(root);</span><br><span class="line">        root = root.left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 2⃣️ res.add(val);</span></span><br><span class="line">        root = stack.pop();</span><br><span class="line">        res.add(root.val);</span><br><span class="line">        <span class="comment">// 3⃣️ travel(root.right)</span></span><br><span class="line">        root = root.right;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>仔细看来，中序遍历的迭代遍历代码和递归有神似之处，划分为3块。</p>
-<h2 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h2><p>前序遍历的顺序为 <strong>根 - 左- 右</strong>，迭代遍历可以分为三步</p>
-<ol>
-<li><p><strong>取出栈顶</strong>元素（视为根元素），进行记录</p>
-</li>
-<li><p>把不是 NULL 的 <strong>子元素入栈</strong>，但是 <strong>右先左后</strong> （这样出栈时才是 根 - 左 - 右）</p>
-</li>
-<li><p><strong>重复</strong>上两步，<strong>直到栈空</strong></p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">        stack.push(root);</span><br><span class="line">        <span class="comment">// !! 注意无需 root ！= null</span></span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">            <span class="comment">// 1: 取出栈顶元素并记录：  根 —— ——</span></span><br><span class="line">            root = stack.pop();</span><br><span class="line">            res.add(root.val);</span><br><span class="line">            <span class="comment">// 2: push 子元素         根 左 —— </span></span><br><span class="line">            <span class="keyword">if</span>(root.right != <span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(root.right);</span><br><span class="line">            &#125; <span class="comment">//                     根 左 右</span></span><br><span class="line">            <span class="keyword">if</span>(root.left != <span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(root.left);</span><br><span class="line">            &#125;</span><br><span class="line">           </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>把前序遍历的代码做两处修改即后序遍历，首先是 </p>
-<ol>
-<li>列表中 <strong>从后往前</strong> 添加 </li>
-<li>子元素 <strong>反序入栈</strong></li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">  </span><br><span class="line">        stack.push(root);</span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">            TreeNode node = stack.pop();</span><br><span class="line">            <span class="comment">// 1: 相当于从后往前逆序添加：    —— —— 根</span></span><br><span class="line">            res.add(<span class="number">0</span>,node.val);  </span><br><span class="line">            <span class="comment">// 2: 先左，出来的时候     ：    —— 右 根</span></span><br><span class="line">            <span class="keyword">if</span>(node.left != <span class="keyword">null</span>)</span><br><span class="line">               stack.push(node.left);</span><br><span class="line">            &#125;  <span class="comment">// 3: 再右，出来           ：左 右 根 ✅</span></span><br><span class="line">            <span class="keyword">if</span>(node.right != <span class="keyword">null</span>)&#123;</span><br><span class="line">              stack.push(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">             </span><br><span class="line">        &#125;     </span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="ckqp7gajo00001r9k0e906c0s" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -651,6 +630,10 @@
       <ul>
         
           <li>
+            <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">缓存的问题</a>
+          </li>
+        
+          <li>
             <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">缓存</a>
           </li>
         
@@ -664,10 +647,6 @@
         
           <li>
             <a href="/2021/07/24/Redis%20%E7%9A%84%20String/">Redis 的 String</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">主从同步与哨兵</a>
           </li>
         
       </ul>
