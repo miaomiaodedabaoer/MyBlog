@@ -64,6 +64,43 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-tes" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/20/tes/" class="article-date">
+  <time datetime="2021-08-20T04:27:51.807Z" itemprop="datePublished">2021-08-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/20/tes/">tes</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>test</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/08/20/tes/" data-id="cksjusbbt0000rj9k7m4rb89u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-缓存的问题" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
@@ -527,73 +564,6 @@
 
 
   
-    <article id="post-Wireshark下HTTPS通信过程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" class="article-date">
-  <time datetime="2021-07-08T14:42:04.540Z" itemprop="datePublished">2021-07-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/">Wireshark下HTTPS通信过程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>按照 《图解HTTP》上的定义， HTTPS 的通信步骤如下，1-4 步</p>
-<p>步骤 1： 客户端通过发送 Client Hello 报文开始 SSL 通信。报文中包 含客户端支持的 SSL 的指定版本、加密组件（Cipher Suite）列表（所 使用的加密算法及密钥长度等）。</p>
-<p>步骤 2： 服务器可进行 SSL 通信时，会以 Server Hello 报文作为应答。和客户端一样，在报文中包含 SSL 版本以及加密组件。服务器的 加密组件内容是从接收到的客户端加密组件内筛选出来的。</p>
-<p>步骤 3： 之后服务器发送 Certificate 报文。报文中包含公开密钥证 书。</p>
-<p>步骤 4： 最后服务器发送 Server Hello Done 报文通知客户端，最初阶段的 SSL 握手协商部分结束。</p>
-<p>步骤 5： SSL 第一次握手结束之后，客户端以 Client Key Exchange 报 文作为回应。报文中包含通信加密中使用的一种被称为 Pre-master secret 的随机密码串。该报文已用步骤 3 中的公开密钥进行加密。</p>
-<p>步骤 6： 接着客户端继续发送 Change Cipher Spec 报文。该报文会提 示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密。</p>
-<p>步骤 7： 客户端发送 Finished 报文。该报文包含连接至今全部报文的 整体校验值。这次握手协商是否能够成功，要以服务器是否能够正确 解密该报文作为判定标准。</p>
-<p>步骤 8： 服务器同样发送 Change Cipher Spec 报文。</p>
-<p>步骤 9： 服务器同样发送 Finished 报文。</p>
-<p>步骤 10： 服务器和客户端的 Finished 报文交换完毕之后，SSL 连接 就算建立完成。当然，通信会受到 SSL 的保护。从此处开始进行应用 层协议的通信，即发送 HTTP 请求。</p>
-<p>步骤 11： 应用层协议通信，即发送 HTTP 响应。</p>
-<p>步骤 12： 最后由客户端断开连接。断开连接时，发送 close_notify 报 文。下图做了一些省略，这步之后再发送 TCP FIN 报文来关闭与 TCP 的通信。</p>
-<p><img src="../images/https.png" alt="https"></p>
-<p>使用 Wireshark 抓包分析, filter 设置为 tls协议，浏览器点击 <a href="https://www.bing.com/" target="_blank" rel="noopener">https://www.bing.com/</a> 后的网络情况，前面一些包的情况如下：</p>
-<p><img src="../images/wireshark.png" alt="wireshark"></p>
-<p>现在把两者匹配一下：</p>
-<p>第一步： client 向 server 发送 Client Hello，查看 667号包内的 TLS协议 相关信息，包含了客户端支持的 SSL 各种相关信息。    <img src="../images/clienthello.png" alt="clienthello"></p>
-<p>然后：server 向 client 发送, 包675, 返回了多了个 握手信息，Server Hello, Certificate, Cerficate Status, Server Key Exchange 和 Server Hello Done, 除了Cerficate Status，对应第2，3，4 步。 </p>
-<p><img src="../images/234.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">发送证书 Certificate 的包： 包含了复杂的证书信息：未展示完全</span><br><span class="line">Handshake Protocol: Certificate</span><br><span class="line">Certificates (3807 bytes)</span><br><span class="line">    Certificate Length: 2274</span><br><span class="line">    Certificate: 308208de308206c6a003020102021333001306f0f7f40a7ccc3369510000001306f0300d… (id-at-commonName&#x3D;graph.microsoft.com,id-at-organizationName&#x3D;Microsoft Corporation,id-at-localityName&#x3D;Redmond,id-at-stateOrProvinceName&#x3D;WA,id-at-count</span><br><span class="line">        &gt;signedCertificate</span><br><span class="line">        algorithmIdentifier (sha384WithRSAEncryption)</span><br><span class="line">            Algorithm Id: 1.2.840.113549.1.1.12 (sha384WithRSAEncryption) </span><br><span class="line">        Padding: 0</span><br><span class="line">        encrypted: 6c207a3574b01c1863c8f9ab262e2af48187801d134026900b41e4264d8b91ed3422ce7e…</span><br><span class="line">    Certificate Length: 1527</span><br><span class="line">    Certificate: 308205f3308204dba00302010202100c6ae97cced599838690a00a9ea53214300d06092a… (id-at-commonName&#x3D;Microsoft Azure TLS Issuing CA 02,id-at-organizationName&#x3D;Microsoft Corporation,id-at-countryName&#x3D;US)</span><br><span class="line">    </span><br><span class="line">*** Certificate Status ***    </span><br><span class="line">Handshake Protocol: Certificate Status</span><br><span class="line">    Handshake Type: Certificate Status (22)</span><br><span class="line">    Length: 1731</span><br><span class="line">    Certificate Status Type: OCSP (1)  &#x2F;&#x2F; 在线证书状态协议 </span><br><span class="line">    OCSP Response Length: 1727</span><br><span class="line">    OCSP Response</span><br><span class="line">        responseStatus: successful (0)</span><br><span class="line">        responseBytes</span><br><span class="line">            ResponseType Id: 1.3.6.1.5.5.7.48.1.1 (id-pkix-ocsp-basic)</span><br><span class="line">            BasicOCSPResponse</span><br><span class="line">                tbsResponseData</span><br><span class="line">                signatureAlgorithm (sha1WithRSAEncryption)</span><br><span class="line">                Padding: 0</span><br><span class="line">                signature: 5dfa777c9706d571dce67ceb7a4eb0c42af602822b7e2ea1d80602afbf6b39fa216e39d7…</span><br><span class="line">                certs: 1 item</span><br><span class="line"></span><br><span class="line">*** Server Key Exchange *** 对于使用DHE&#x2F;ECDHE非对称密钥协商算法的SSL握手，将发送该类型握手</span><br><span class="line">														RSA算法不会进行该握手流程</span><br><span class="line">Handshake Protocol: Server Key Exchange</span><br><span class="line">    Handshake Type: Server Key Exchange (12)</span><br><span class="line">    Length: 296</span><br><span class="line">    EC Diffie-Hellman Server Params</span><br><span class="line">        Curve Type: named_curve (0x03)</span><br><span class="line">        Named Curve: x25519 (0x001d)</span><br><span class="line">        Pubkey Length: 32</span><br><span class="line">        Pubkey: 558e071e8012e5f2f67ed803910d407e1056e780c536670d975fb7e7fdb5621e</span><br><span class="line">        Signature Algorithm: rsa_pkcs1_sha256 (0x0401)  &#x2F;&#x2F; 签名算法</span><br><span class="line">            Signature Hash Algorithm Hash: SHA256 (4)</span><br><span class="line">            Signature Hash Algorithm Signature: RSA (1)</span><br><span class="line">        Signature Length: 256</span><br><span class="line">   签名：Signature:   57276816aecc9f43548e1b0c6b2b1bcb76743c7f28f3ed9548c7fe3130734ad69ac3868b…</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Server Hello Done ***  握手结束</span><br><span class="line">Handshake Protocol: Server Hello Done</span><br><span class="line">    Handshake Type: Server Hello Done (14)</span><br><span class="line">    Length: 0</span><br></pre></td></tr></table></figure>
-
-
-
-<p>接着：client 向 server ， 对应5，6 ，7 步</p>
-<p><img src="../images/678.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">*** Client Key Exchange *** 第一次握手结束后后，回应该报文，包含后面要来加密的随机密码串，</span><br><span class="line">TLSv1.2 Record Layer: Handshake Protocol: Client Key Exchange</span><br><span class="line">    Content Type: Handshake (22)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 37</span><br><span class="line">    Handshake Protocol: Client Key Exchange</span><br><span class="line">        Handshake Type: Client Key Exchange (16)</span><br><span class="line">        Length: 33</span><br><span class="line">        EC Diffie-Hellman Client Params</span><br><span class="line">            Pubkey Length: 32</span><br><span class="line">            Pubkey: d2f7b7a6b289b7a36850de96288a331282c22abb7e99bbd383bc07d1b793a565</span><br><span class="line"></span><br><span class="line">*** Change Cipher Spec ***  提示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密</span><br><span class="line">TLSv1.2 Record Layer: Change Cipher Spec Protocol: Change Cipher Spec</span><br><span class="line">    Content Type: Change Cipher Spec (20)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 1</span><br><span class="line">    Change Cipher Spec Message</span><br><span class="line"></span><br><span class="line">*** Encrypted Handshake Message *** 其实就是 Finish 报文，使用对称秘钥进行加密的第一个报文，用于验证对称密钥的正确性</span><br><span class="line">TLSv1.2 Record Layer: Handshake Protocol: Encrypted Handshake Message</span><br><span class="line">    Content Type: Handshake (22)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 40</span><br><span class="line">    Handshake Protocol: Encrypted Handshake Message</span><br></pre></td></tr></table></figure>
-
-
-
-<p>下来，server 也向 client 发送 Change CipherSpec 和 Finished，也就是 8-9步，服务器和客户端的 Finished 报文交换完毕之后，此处开始进行应用层协议的通信，发送 HTTP 请求，图中所示的 Application Data 包。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" data-id="ckqv2vche00008e9kahwibt10" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -630,6 +600,10 @@
       <ul>
         
           <li>
+            <a href="/2021/08/20/tes/">tes</a>
+          </li>
+        
+          <li>
             <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">缓存的问题</a>
           </li>
         
@@ -643,10 +617,6 @@
         
           <li>
             <a href="/2021/07/28/List%20%E5%92%8C%20Streams/">List 和 Streams</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/24/Redis%20%E7%9A%84%20String/">Redis 的 String</a>
           </li>
         
       </ul>
