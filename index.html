@@ -64,6 +64,164 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Normal Forms 数据库范式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/14/Normal%20Forms%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/" class="article-date">
+  <time datetime="2021-09-14T11:05:33.343Z" itemprop="datePublished">2021-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/09/14/Normal%20Forms%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/">Normal Forms 数据库范式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="完全函数依赖"><a href="#完全函数依赖" class="headerlink" title="完全函数依赖"></a><strong>完全函数依赖</strong></h3><p>假设 X -&gt; Y, 并且 X 的任意一个真子集都推不出来 Y，那么就说 Y 完全依赖于 X。也就是说，要想推出 Y， X 中的属性缺一不可。</p>
+<h3 id="部分函数依赖"><a href="#部分函数依赖" class="headerlink" title="部分函数依赖"></a>部分函数依赖</h3><p>比完全函数依赖稍弱，X 的真子集中存在 X‘ 可以推出 Y。</p>
+<h3 id="传递函数依赖"><a href="#传递函数依赖" class="headerlink" title="传递函数依赖"></a>传递函数依赖</h3><p>X -&gt; Y, Y -&gt; Z, 就说 Z 传递依赖于 X</p>
+<h2 id="1NF"><a href="#1NF" class="headerlink" title="1NF"></a>1NF</h2><p>Membership Table</p>
+<table>
+<thead>
+<tr>
+<th>student</th>
+<th>email</th>
+<th>society</th>
+<th>department</th>
+<th>faculty</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bb16801</td>
+<td>bilbo@…</td>
+<td>Cheese</td>
+<td>modern language</td>
+<td>arts</td>
+</tr>
+<tr>
+<td>bb16801</td>
+<td>bilbo@…</td>
+<td>Hoverboard</td>
+<td>civil engineering</td>
+<td>engineer</td>
+</tr>
+<tr>
+<td>mm16280</td>
+<td>mickey@…</td>
+<td>Hoverboard</td>
+<td>mordern language</td>
+<td>arts</td>
+</tr>
+</tbody></table>
+<p>department 和 faculty 可以直接被 studentId 推出来，这部分就属于部分函数依赖，解决：把部分依赖于主键的非主属性，移动到另一张新表上，和他们部分依赖的主键一起。这样就实现了 1NF -&gt; 2NF 的转变。</p>
+<h2 id="2NF"><a href="#2NF" class="headerlink" title="2NF"></a>2NF</h2><table>
+<thead>
+<tr>
+<th>student</th>
+<th>email</th>
+<th>society</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bb16801</td>
+<td>bilbo@…</td>
+<td>Cheese</td>
+</tr>
+<tr>
+<td>bb16801</td>
+<td>bilbo@…</td>
+<td>Hoverboard</td>
+</tr>
+<tr>
+<td>mm16280</td>
+<td>mickey@…</td>
+<td>Hoverboard</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>student</th>
+<th>department</th>
+<th>faculty</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bb16801</td>
+<td>modern language</td>
+<td>arts</td>
+</tr>
+<tr>
+<td>bb16801</td>
+<td>civil engineering</td>
+<td>engineer</td>
+</tr>
+<tr>
+<td>mm16280</td>
+<td>modern language</td>
+<td>arts</td>
+</tr>
+</tbody></table>
+<p>分析此时的第二张表格，学生可以推出他所属的department，而department 又和 faculty 学部有关系，也就是 student -&gt; department, department -&gt; faculty. 那么 faculty 传递依赖于 student. 为了消除传递函数依赖，我们再把 faculty 分离出去，得到下面的两张表，也就完成了 2NF -&gt; 3 NF 的转变。</p>
+<h2 id="3NF"><a href="#3NF" class="headerlink" title="3NF"></a>3NF</h2><table>
+<thead>
+<tr>
+<th>student</th>
+<th>department</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bb16801</td>
+<td>modern language</td>
+</tr>
+<tr>
+<td>bb16801</td>
+<td>civil engineering</td>
+</tr>
+<tr>
+<td>mm16280</td>
+<td>modern language</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>department</th>
+<th>faculty</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>modern language</td>
+<td>arts</td>
+</tr>
+<tr>
+<td>civil engineering</td>
+<td>engineering</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/09/14/Normal%20Forms%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/" data-id="cktktw9y800006p9k8hu45dvx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-StringBuilder 原理" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/09/14/StringBuilder%20%E5%8E%9F%E7%90%86/" class="article-date">
@@ -110,43 +268,6 @@
     </div>
     <footer class="article-footer">
       <a data-url="http://yoursite.com/2021/09/14/StringBuilder%20%E5%8E%9F%E7%90%86/" data-id="cktju4oex0000x69kahxl5d6e" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-tes" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/08/20/tes/" class="article-date">
-  <time datetime="2021-08-20T04:27:51.807Z" itemprop="datePublished">2021-08-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/20/tes/">tes</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>test</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/20/tes/" data-id="cksjusbbt0000rj9k7m4rb89u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -601,11 +722,11 @@
       <ul>
         
           <li>
-            <a href="/2021/09/14/StringBuilder%20%E5%8E%9F%E7%90%86/">StringBuilder 原理</a>
+            <a href="/2021/09/14/Normal%20Forms%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/">Normal Forms 数据库范式</a>
           </li>
         
           <li>
-            <a href="/2021/08/20/tes/">tes</a>
+            <a href="/2021/09/14/StringBuilder%20%E5%8E%9F%E7%90%86/">StringBuilder 原理</a>
           </li>
         
           <li>
