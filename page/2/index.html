@@ -64,6 +64,68 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Redis AOF 日志 " class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" class="article-date">
+  <time datetime="2021-07-20T14:10:40.922Z" itemprop="datePublished">2021-07-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">Redis AOF 日志 </a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>为了避免宕机后 Redis 数据丢失， redis 使用了 AOF 和 RDB 两种机制。</p>
+<h3 id="AOF-日志-（append-only-file）"><a href="#AOF-日志-（append-only-file）" class="headerlink" title="AOF 日志 （append only file）"></a><strong>AOF 日志 （append only file）</strong></h3><p><strong>写后日志</strong> </p>
+<p>不像其他数据库的写前日志，Redis 是先执行命令，把数据写入 内存，然后才把 <strong>操作命令</strong> 记录日志（以文件的形式）。这样一来可以<strong>避免记录错误日志</strong>，并且操作完成后再记录可以 <strong>避免阻塞线程</strong>。</p>
+<p><strong>风险</strong></p>
+<p>AOF 也存在两个风险。首先，如果刚执行完一个命令，还没有来得及记日志就宕机了，那么这个命令和相应的数据就有 <strong>丢失</strong> 的风险。 </p>
+<p>其次，AOF 可能会给下一个操作带来<strong>阻塞</strong>。这是因为，AOF 日志也是在主线程中执行的，如果在把日志文件写入磁盘时很慢，就会阻塞线程。</p>
+<p>因此，如果我们能够控制一个写命令执行完后 AOF 日志写回磁盘的 <strong>时机</strong>，这两个风险就解除了。</p>
+<h3 id="三种写回策略"><a href="#三种写回策略" class="headerlink" title="三种写回策略"></a><strong>三种写回策略</strong></h3><p><strong>Always 同步写回</strong></p>
+<p>每个写命令执行完，立马同步地将日志写回磁盘；基本可以不丢数据，但是给每次操作带来了额外的负担，会影响主线程性能 </p>
+<p><strong>Everysec 每秒写回</strong></p>
+<p>每个写命令执行完，先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘；避免了同步写会那么大的开销，丢失数据最多丢 1 秒。</p>
+<p> <strong>No 操作系统控制的写回</strong></p>
+<p>写命令执行完后，先把日志写到 AOF 文件的内存缓冲区，由<strong>操作系统决定</strong>何时将缓冲区内容写回磁盘。释放控制权，如果 AOF 没有写回磁盘，宕机后数据丢失可能会很多。</p>
+<p>这三种策略在 <strong>可靠性</strong> 和 <strong>性能</strong> 上依次下降和增加</p>
+<h3 id="AOF-重写"><a href="#AOF-重写" class="headerlink" title="AOF 重写"></a><strong>AOF 重写</strong></h3><p>AOF 是以文件的形式记录接收到的所有 <strong>写命令</strong>。随着接收的写命令越来越多，AOF 文件会越来越大，会带来一些问题：</p>
+<ol>
+<li>文件系统大小限制</li>
+<li>大文件追加记录效率低</li>
+<li>宕机后恢复过程缓慢</li>
+</ol>
+<p>AOF 重写机制就是在重写时，Redis <strong>根据数据库的现状</strong> 创建一个新的 AOF 文件（ 读取数据库中的所有键值对，然后对每一个键值对用一条命令记录它的写入），这样可以实现 <strong>多变一</strong> 的效果。</p>
+<p><strong>重写过程</strong></p>
+<p>和 AOF 日志由主线程写回不同，重写过程是由后台线程 <strong>bgrewriteaof</strong> 来完成的，这也是为了避免阻塞主线程，导致数据库性能下降。</p>
+<p>首先，每次执行重写时，<strong>主线程 fork 出后台的 bgrewriteaof 子进程</strong>。此时，fork 会把主线程的 <strong>内存拷贝</strong> 一份（通过页表）给 bgrewriteaof 子进程，这里面就包含了数据库的最新数据。</p>
+<p>这个过程中，同时存在 <strong>两份日志</strong>：第一处日志就是指 <strong>正在使用的 AOF 日志</strong>，Redis 会把后台线程复制时进来的写操作写到它的缓冲区。这样可以保证在这段时间内的宕机可以正常恢复，</p>
+<p>第二处日志就是新的 <strong>AOF 重写日志</strong>。这些新来的操作也会被写到重写日志的缓冲区。等到拷贝数据的所有操作记录重写完成后，这些最新操作也会写入新的 AOF 文件，这时就可以用新的 AOF 文件替代旧文件了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" data-id="ckrc8x3n900003g9kdt33hdmr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Api styles" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/07/14/Api%20styles/" class="article-date">
@@ -894,60 +956,11 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/05/hello-world/" class="article-date">
-  <time datetime="2020-05-05T02:32:51.309Z" itemprop="datePublished">2020-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/05/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/hello-world/" data-id="ckqnxj92o0002tv9kbesz76ya" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -979,6 +992,10 @@
       <ul>
         
           <li>
+            <a href="/2021/09/16/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a>
+          </li>
+        
+          <li>
             <a href="/2021/09/14/Normal%20Forms%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/">Normal Forms 数据库范式</a>
           </li>
         
@@ -992,10 +1009,6 @@
         
           <li>
             <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">缓存</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/"> Redis 内部的阻塞式操作</a>
           </li>
         
       </ul>
