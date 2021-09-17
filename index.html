@@ -64,6 +64,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-选择类排序算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2021-09-17T12:11:58.962Z" itemprop="datePublished">2021-09-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">选择类排序算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>常用的排序算法可以分为：</p>
+<ol>
+<li><strong>选择类</strong>：简单选择排序，堆排序</li>
+<li><strong>交换类</strong>：快速排序，冒泡排序</li>
+<li><strong>插入类</strong>：简单插入排序，希尔排序</li>
+</ol>
+<h2 id="选择类"><a href="#选择类" class="headerlink" title="选择类"></a>选择类</h2><p>选择类的排序算法，核心就是为每个位置选取一定范围内最小（大）的值，随着各个位置最小值的确定，待选范围也不断缩小，只剩一个元素的时候就不用再比了。简单选择排序代码如下, </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">chooseSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">  	<span class="comment">// 从右往左排</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="comment">// initialize the idx and max number for each search</span></span><br><span class="line">        <span class="keyword">int</span> maxIdx = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> max = Integer.MIN_VALUE;</span><br><span class="line">        <span class="comment">// choose the maximum number between [0 - i]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= i; j++)&#123;  <span class="comment">// 比较</span></span><br><span class="line">            <span class="keyword">if</span>(nums[j] &gt; max)&#123;   </span><br><span class="line">                max = nums[j];</span><br><span class="line">                maxIdx = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        swap(nums, i, maxIdx); <span class="comment">// 交换</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>选择</strong>操作和<strong>交换</strong>操作次数在 0 - n-1 之间，而<strong>比较</strong>操作数随着范围的缩小从 n-1, n-2 一直到 1 等于 n*(n-1)/2, 时间复杂度 O(N^2). </p>
+<p>另一个选择类排序方法为 堆排序，堆是一种完全二叉树，其父节点的值永远大于两个子节点。首先我们需要了解 数组 和 堆的转化形式，如下面代码所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">idx:   <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line">val:  [<span class="number">5</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">3</span>]   -&gt;  left = <span class="number">2</span> * i + <span class="number">1</span>; right = <span class="number">2</span> * i + <span class="number">2</span>; i 为根节点 idx</span><br><span class="line">           <span class="number">5</span></span><br><span class="line">         /   \</span><br><span class="line">        <span class="number">2</span>     <span class="number">1</span></span><br><span class="line">       / \</span><br><span class="line">      <span class="number">6</span>   <span class="number">3</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// 第一步 - 堆化，让所有根节点变为最大, 要从下往上，一轮一轮把大的换上去, 从上往下的话上面大的可能换不到最底下去</span></span><br><span class="line"><span class="comment">// 先选最下面的根节点，由于堆是个满二叉树，可以推出来，根节点的 idx 范围是 0 ～ n/2 - 1;</span></span><br><span class="line"><span class="comment">// 那么就依次对 以值为 1，2，5 的树进行操作。1 节点的左右已经越界所以不用管，接着看 6，2，3 ，由于 6 大于 2和3，那么就把2，6位置交换。然后迭代的 hepify（2），发现左右子树也越界了。然后对 5 进行操作，道理一样，</span></span><br><span class="line">                   <span class="number">5</span>                <span class="number">6</span></span><br><span class="line">                 /   \             / \</span><br><span class="line">                <span class="number">6</span>     <span class="number">1</span>           <span class="number">5</span>   <span class="number">1</span></span><br><span class="line">               / \               / \</span><br><span class="line">              <span class="number">2</span>   <span class="number">3</span>             <span class="number">2</span>   <span class="number">3</span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">// 这样我们就得到了一个最大堆，转化为 数组形式就是 [6,5,1,2,3]</span></span><br><span class="line"> <span class="comment">// 堆排序的核心就是两步,</span></span><br><span class="line"> <span class="comment">// 1. 把最大的值（也就是数组第一个值）和最后的元素交换，也就是从后往前，一个一个把最大的放上去</span></span><br><span class="line"> <span class="comment">// 2.然后对剩余的再进行堆化, 重复上一步</span></span><br><span class="line"> <span class="comment">// 代码如下</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">heapSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = nums.length;</span><br><span class="line">        <span class="comment">// 先建造一个二叉堆</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = n / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">            heapify(nums, n, i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 此时根节点已经最大，不断换到后面</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--)&#123; <span class="comment">// i 表示 堆化的范围，一直在缩小</span></span><br><span class="line">            swap(nums,<span class="number">0</span>, i);</span><br><span class="line">            heapify(nums, i, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">              </span><br><span class="line"><span class="comment">// 把以节点 i 为根节点的树，变成一个最大堆（最小堆），也就是根节点大于（小于）其两个子节点的值</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">heapify</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> n, <span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">      <span class="keyword">int</span> largest = i;    <span class="comment">// 假设 i 就以及是最大的点了</span></span><br><span class="line">      <span class="keyword">int</span> l = <span class="number">2</span> * i + <span class="number">1</span>;  <span class="comment">// 找到左儿子</span></span><br><span class="line">      <span class="keyword">int</span> r = <span class="number">2</span> * i + <span class="number">2</span>;  <span class="comment">// 找到右儿子</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 找出 3 者里面最大的那个点</span></span><br><span class="line">      <span class="keyword">if</span>(l &lt; n &amp;&amp; nums[l] &gt; nums[largest])&#123; largest = l; &#125;</span><br><span class="line">      <span class="keyword">if</span>(r &lt; n &amp;&amp; nums[r] &gt; nums[largest])&#123; largest = r; &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果不是 i 的话，就把 i 换走，并在对换上来的那个点继续进行二叉堆化</span></span><br><span class="line">      <span class="keyword">if</span>(largest != i)&#123;</span><br><span class="line">          swap(nums, largest, i);</span><br><span class="line">          heapify(nums, n, largest);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上面建好的堆为例子, n = 5</span></span><br><span class="line"><span class="comment">/* I:  i = 4, swap(0,4), 堆化列表前四个： </span></span><br><span class="line"><span class="comment">          [3,5,1,2,6], heapify(nums, 4, 0) [3,5,1,2,6]</span></span><br><span class="line"><span class="comment">               3           5</span></span><br><span class="line"><span class="comment">              / \         / \</span></span><br><span class="line"><span class="comment">             5   1       3   1   -&gt;  [5,3,1,2,6]</span></span><br><span class="line"><span class="comment">            /           /</span></span><br><span class="line"><span class="comment">           2           2</span></span><br><span class="line"><span class="comment">           </span></span><br><span class="line"><span class="comment"> II: i = 3, swap(0,3), -&gt; [2,3,1,5,6]   heapify(nums, 3, 0) </span></span><br><span class="line"><span class="comment">         2                3</span></span><br><span class="line"><span class="comment"> 		    / \     -&gt;      /   \    -&gt;  [3,1,2,5,6]</span></span><br><span class="line"><span class="comment">       3   1           2     1</span></span><br><span class="line"><span class="comment">       </span></span><br><span class="line"><span class="comment">III: i = 2, swap(0,2), -&gt; [2,1,3,5,6]   heapify(nums, 2, 0) </span></span><br><span class="line"><span class="comment">         2                2</span></span><br><span class="line"><span class="comment"> 		    /       -&gt;      /      -&gt;  [2,1,3,5,6]</span></span><br><span class="line"><span class="comment">       1               1             </span></span><br><span class="line"><span class="comment">IV: i = 1, swap(0,1), -&gt; [1,2,3,5,6]   heapify(nums, 1, 0) (里面什么也不用做了)</span></span><br><span class="line"><span class="comment">       </span></span><br><span class="line"><span class="comment">  *</span></span><br></pre></td></tr></table></figure>
+
+<p>复杂度分析：O(n log n)</p>
+<p>具体推算可以查看这篇文章 <a href="https://www.happycoders.eu/algorithms/heapsort/#Total_Time_Complexity_of_Heapsort" target="_blank" rel="noopener">https://www.happycoders.eu/algorithms/heapsort/#Total_Time_Complexity_of_Heapsort</a></p>
+<p>堆排序的优点是时间稳定，最好最坏都是 <em>O(n log n)</em>，并且当我们需要找到前K大（小）的数时，会比较有用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" data-id="cktogdxgs0000p29k931fhqwu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-mysql索引" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/09/16/mysql%E7%B4%A2%E5%BC%95/" class="article-date">
@@ -620,54 +672,6 @@
 
 
   
-    <article id="post-RDB 内存快照" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" class="article-date">
-  <time datetime="2021-07-22T13:39:47.273Z" itemprop="datePublished">2021-07-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。</p>
-<p>而 redis 的另一种恢复机制 <strong>内存快照</strong>，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 <strong>快速恢复</strong>；</p>
-<p>但是这张快照的拍摄要注意：</p>
-<p><strong>拍多少</strong></p>
-<p>提供所有数据的可靠性保证，reids 执行的是<strong>全量快照</strong>，redis 提供两个命令来生成 （阻塞主线程与否）</p>
-<p>​    save： 主线程中执行，阻塞</p>
-<p>​    <strong><u>bgsave</u></strong>：创建子线程，专门用于写入 RDB 文件，默认配置，非阻塞</p>
-<p><strong>人动怎么办</strong></p>
-<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong>（主线程在有写操作时，才会把这个新写或修改后的数据 写入到一个新的物理地址中，并修改自己的页表映射） 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
-<p><strong>拍摄频率</strong></p>
-<p>与 AOF 类似，拍的越频繁，宕机时丢失数据内容越少，但是也越影响性能，因为 fork 子线程时会阻塞主线程，并且也会给磁盘带来压力。那么我们在第一次拍摄全景之后，每次拍摄只拍摄动的东西（也就是被修改的数据）不就好了，为了记住那些数据做了修改，我们可以用 AOF 日志进行记录（Redis 4.0 提出，混合策略）</p>
-<p>AOF 和 RDB 的选择取决于 <strong>丢失容忍度</strong> 和 <strong>性能</strong> 两方面的考虑。如果数据不能丢失，可以结合内存快照和 AOF; 如果允许分钟级别的数据丢失，可以只使用 RDB; 如果只用 AOF，优先使用 everysec 的配置选项，因为它在可靠性和性能之间取了一个 平衡。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" data-id="ckrf0kgpm0000nv9k1dujdlms" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -704,6 +708,10 @@
       <ul>
         
           <li>
+            <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">选择类排序算法</a>
+          </li>
+        
+          <li>
             <a href="/2021/09/16/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a>
           </li>
         
@@ -717,10 +725,6 @@
         
           <li>
             <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">缓存的问题</a>
-          </li>
-        
-          <li>
-            <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">缓存</a>
           </li>
         
       </ul>
