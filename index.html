@@ -64,6 +64,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-交换类排序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/" class="article-date">
+  <time datetime="2021-09-18T12:19:48.393Z" itemprop="datePublished">2021-09-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/">交换类排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这种类型主要靠元素之间的交换来完成排序，常见的交换类排序主要是冒泡排序，和快速排序。</p>
+<p>冒泡排序：一次次的遍历带排序的范围，比较两个元素，按照顺序交换他们的位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 随着 i 的增加，比较的范围越来越小，从 0</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; nums.length - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[j] &gt; nums[j + <span class="number">1</span>])&#123;</span><br><span class="line">                swap(nums, j, j + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 加入在一轮遍历后，发现没有需要改变顺序的相邻元素，也就是说排好序了已经，上面的算法还会继续比较下去。为了避免时间浪费，可以把是否调换顺序用一个变量记录，如果值为0，就说明已经排好了</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bubbleSort2</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> change;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            change = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; nums.length - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[j] &gt; nums[j + <span class="number">1</span>])&#123;</span><br><span class="line">                    change = <span class="keyword">true</span>;</span><br><span class="line">                    swap(nums, j, j + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (change == <span class="keyword">true</span>)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>冒泡排序最好情况下也就是已经排好序时的时间复杂度为 O(N), 最坏情况发生在数组反向排序时，此时时间复杂度为O(N^2), 由于不占用额外空间，其空间复杂度为 O(1)。</p>
+<p>冒泡排序作为排序中的启蒙算法比较简单，但是由于它 ？？？？</p>
+<p>快排采取了 <strong>分治</strong> 的思想，每次选择一个元素作为枢轴 pivot，使其左边的值都小于 pivot，右边的值都大于 pivot，使用递归的方法对这两部分继续进行排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 只处理左边小于右边的情况</span></span><br><span class="line">    <span class="keyword">if</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">int</span> partition = partition(nums, left, right); </span><br><span class="line">        quickSort(nums, left, partition - <span class="number">1</span>);  </span><br><span class="line">        quickSort(nums, partition + <span class="number">1</span>, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选定 pivot 并排序，返回一个 idx，idx 右边都大于 nums[idx]，左边都小于</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 首节点设置为 pivot</span></span><br><span class="line">    <span class="keyword">int</span> pivot = nums[left];</span><br><span class="line">    <span class="keyword">int</span> i = left;</span><br><span class="line">    <span class="keyword">int</span> j = right;</span><br><span class="line">    <span class="comment">// 其实就是双指针</span></span><br><span class="line">    <span class="keyword">while</span>(i != j)&#123;</span><br><span class="line">        <span class="comment">// 先 从右往左找一个 小于 pivot 的</span></span><br><span class="line">        <span class="keyword">while</span>(i &lt; j &amp;&amp; nums[j] &gt;= pivot)&#123;</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">       <span class="comment">// 从左往右找一个大于 pivot 的</span></span><br><span class="line">        <span class="keyword">while</span>(i &lt; j &amp;&amp; nums[i] &lt;= pivot)&#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// swap</span></span><br><span class="line">        <span class="keyword">if</span>(i &lt; j)&#123;</span><br><span class="line">            swap(nums, i, j);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 最终停下的 和 nums[left] swap</span></span><br><span class="line">    swap(nums, i, left);</span><br><span class="line">    <span class="keyword">return</span> i; <span class="comment">// new pivot</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  6 1 2 7 3 9 -&gt;  6 1 2 3 7 9  -&gt; 6 1 2 3 7 9</span></span><br><span class="line"><span class="comment">        i j             i j            j i  此时 j 遇到了 i，跳出循环,</span></span><br><span class="line"><span class="comment">  然后 swap(i, left), 得到 3 2 1 6 7 9， 可以发现 i 两边已经排好</span></span><br><span class="line"><span class="comment">                                i</span></span><br><span class="line"><span class="comment">  然后递归 quick(nums, 0, 2), 排 3 2 1  -&gt;   3  2 1                    -&gt; 3 2  1</span></span><br><span class="line"><span class="comment">                               i   j       i    j , j dont need move        i j  i 一路跑过来遇到 j，跳出循环，调换 3 和 1， 得到 1 2 3 ; </span></span><br><span class="line"><span class="comment">                                        i</span></span><br><span class="line"><span class="comment">递归 quick(nums, 0, 1); 以上简要介绍了快排的过程，省去了之中产生的递归。                                        </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">值得注意的一点是，经常会看到 要 j 先走，然后 i 再走，经过一番推理，可能的一个原因是</span></span><br><span class="line"><span class="comment">如果 序列已经有序，比如 1 2 3 4, 如果让 i 先走，找一个大于 pivot 1的，那么它会一路走到 j 那里去</span></span><br><span class="line"><span class="comment">                    i     j</span></span><br><span class="line"><span class="comment">最终导致 1 和 4 互换位置，打乱顺序。               </span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>快排的最优，平均，最坏时间复杂度为 O(nlog2n)，O(nlog2n)， O(n^2)，空间复杂度为 O （1）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/" data-id="cktpujk560000e79k6uoxfj2j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-选择类排序算法" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="article-date">
@@ -618,60 +664,6 @@
 
 
   
-    <article id="post-主从同步与哨兵" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/" class="article-date">
-  <time datetime="2021-07-23T14:59:38.755Z" itemprop="datePublished">2021-07-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">主从同步与哨兵</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>为了保证高可靠，redis 增加了一些从库与主库配合使用，确保在主库宕机时不过大影响服务。主从库之间采用的是读写分离的方式。主库、从库都可以接收 <strong>读操作</strong>; 而 <strong>写操作</strong> 要先到主库执行，然后主库将写操作同步给从库，从而确保主从库数据的一致性，如果都能写容易乱套，加锁的话会带来很大开销。</p>
-<h2 id="主从同步"><a href="#主从同步" class="headerlink" title="主从同步"></a><strong>主从同步</strong></h2><p>首先，建立连接，从库向发送主库 <strong>psync</strong> 命令，参数包含 <strong>runID</strong>（主库id，不知道就是 ？） 和复制进度 <strong>offset</strong>（第一次为 -1，断连恢复时设置为其他值） ；主库收到后 回复 <strong>FULLRESYNC</strong>，全量复制命令，带上主库 runID 和 主库目前复制进度。</p>
-<p>然后，主库执行 <strong>bgsave</strong> 命令，生成并发送 <strong>RDB</strong> 文件给从库（这个过程中主库仍接受 写操作，把这些操作记录到 <strong>replication</strong> <strong>buffer</strong> 里面）。从库收到 RDB 文件后，<strong>先清空其数据库</strong>，再加载 RDB，从而和主库保持一致。</p>
-<p>最后，主库把 replication buffer 的内容发给从库，从库再执行这些操作。</p>
-<p>在一次全量复制中，主库需要生成 RDB 文件（fork 子进程会阻塞主线程），传输 RDB（占用带宽），为了减轻主库的压力，可以采取 <strong>主从级联模式</strong> 主-从-从 的模式，选出一个从库作为小领导，把其他一些从库和小领导建立主从关系，这些从库在进行同步时直接和小领导联系，不去打扰主库。</p>
-<p>主从库完成了全量复制，它们之间就会一直维护一个网络连接，主库会通过这个连接将后续收到的命令操作再同步给从库，这个过程也称为<strong>基于长连接的命令传播</strong>，可以避免频繁建立连接的开销。</p>
-<h2 id="断连后的恢复"><a href="#断连后的恢复" class="headerlink" title="断连后的恢复"></a><strong>断连后的恢复</strong></h2><p>Redis 2.8 开始，网络断了之后，主从库会采用<strong>增量复制</strong>的方式继续同步。</p>
-<p>主库会把断连期间收到的<strong>写操作命令</strong>，<strong>写入 replication buffer</strong>，同时也写入 <strong>repl_backlog_buffer</strong> 这个缓冲区。repl_backlog_buffer 是一个<strong>环形缓冲区</strong>，<strong>主库会记录自己写到的位置，从库则会记录自己读到的位置</strong>。主从库对应的参数分别是 master_repl_offset, slave_repl_offset。连接恢复后，从库就会把其 offeset 发送到主库，主库与自己的offset 判断后就会把断连期间的操作传给从库。</p>
-<p>real_backlog_buffer 是一个环形内存区域，如果断连期间写操作过多，就可能导致从库还没有读取到的数据被覆盖，因此我们需要综合考虑<strong>主库命令写入速率</strong>和<strong>命令大小</strong>，以及 <strong>网络传输速率</strong> 来调整该参数的大小。</p>
-<h2 id="哨兵"><a href="#哨兵" class="headerlink" title="哨兵"></a>哨兵</h2><p>为了保证主从库的可用性（处理主库挂了），redis 引入了哨兵的机制，哨兵也是 redis 的实例，只不过不接受数据读写请求，而致力于 <strong>监控</strong>，<strong>选主</strong>，<strong>通知</strong></p>
-<p><strong>监控</strong></p>
-<p>哨兵会周期性给主从库发送 PING 命令，来监控是否库是否正常，如果响应超时，谨慎起见（网络拥堵，主库压力大等其他原因导致超时），哨兵会把该库先标记为 “<strong>主观下线</strong>”，然后询问其他哨兵（哨兵一般为一个集群），只有认为该库下线的哨兵数量多于一个阈值时（N/2 + 1， N 为哨兵总数），才会把该库标记为“<strong>客观下线</strong>”</p>
-<p><strong>选主</strong></p>
-<p>判断主库下线后，开启选主阶段。</p>
-<p>首先，选出仍然在线的从库，并检测它之前的网络状态（与主库断连的次数）得到第一次筛选结果</p>
-<p>然后，选择 <strong>优先级</strong>（可以手动设置，如内存大小） 最高的作为主库，如果选出多个，再根据 <strong>复制进度</strong>（选与主库接近的），如果再有一样的，就选 ID 号小的。</p>
-<p><strong>通知</strong></p>
-<p>哨兵通知其他 <strong>从库 *<em>和 *</em>客户端</strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/" data-id="ckrgim8tp00002e9k9z4vg38p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -708,6 +700,10 @@
       <ul>
         
           <li>
+            <a href="/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/">交换类排序</a>
+          </li>
+        
+          <li>
             <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">选择类排序算法</a>
           </li>
         
@@ -721,10 +717,6 @@
         
           <li>
             <a href="/2021/09/14/StringBuilder%20%E5%8E%9F%E7%90%86/">StringBuilder 原理</a>
-          </li>
-        
-          <li>
-            <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">缓存的问题</a>
           </li>
         
       </ul>
