@@ -1,741 +1,635 @@
+
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-
-  
-  <title>Mmddb</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Mmddb">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="Mmddb">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="Zhang Penghe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
+<html lang="en">
+    <head>
+        <title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="manifest" href="/site.webmanifest">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+        
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Mmddb</a>
+            </div>
+        </div>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Mmddb</a>
-      </h1>
-      
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
 </header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post- Redis 内部的阻塞式操作" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/" class="article-date">
-  <time datetime="2021-07-30T00:49:28.464Z" itemprop="datePublished">2021-07-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/"> Redis 内部的阻塞式操作</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Redis 变慢的原因主要有 5 大方面：</p>
-<h3 id="复杂度高的-CRUD-操作-（客户端交互）"><a href="#复杂度高的-CRUD-操作-（客户端交互）" class="headerlink" title="复杂度高的 CRUD 操作 （客户端交互）"></a><strong>复杂度高的 CRUD 操作</strong> （客户端交互）</h3><p>复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括<strong>全量查询</strong>，<strong>聚合统计</strong>操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会<strong>阻塞当前释放内存的应用程序</strong>，如果一下子释放大量内存，也就是 <strong>Big key 删除</strong>，redis 的主线程会被阻塞；同时，由于涉及大量的删除，*<em>清空数据库 *</em>（flushdb 和 flushall）也是一个阻塞点。</p>
-<h3 id="AOF-日志同步写，-RDB-文件加载（磁盘交互）"><a href="#AOF-日志同步写，-RDB-文件加载（磁盘交互）" class="headerlink" title="AOF 日志同步写， RDB 文件加载（磁盘交互）"></a><strong>AOF 日志同步写， RDB 文件加载</strong>（磁盘交互）</h3><p>redis 在 <strong>AOF 日志同步写</strong> 时，如果一个时间点内有大量的操作需要落盘，也会阻塞主线程；在从库收到主库发来的 RDB 文件时，如果文件太大，加载过程缓慢，就会阻塞从库。</p>
-<p>为了减小主线程阻塞对于 redis 的影响，我们可以把一些<strong>非关键路径操作</strong> ，也就是客户端不用等着 Redis 返回数据结果的操作，使用后台线程进行操作，释放主线程压力。这些操作包括数据的删除，清空数据库，记录 AOF 文件。</p>
-<p>主线程通过一个链表形式的<strong>任务队列</strong>和子线程进行交互。当收到键值对删除和清空数据库<br>的操作时，主线程会把这个操作封装成起来放入到任务队列中，然后给客户端返回一个完成信息，表明删除已经完成。But，直到后台子线程从任务队列中读取任务后，才开始实际删除键值对，并释放相应的内存空间。这种异步删除也称为<strong>惰性删除 (lazy free)</strong>。</p>
-<p> tips： 删除大量键值对，使用 UNLINK；清空数据库在命令后加 ASYNC；集合全量查询和聚合操作，使用 SCAN 命令，分批读取数据，再在客户端进行聚合计算; 从库加载 RDB 文件，把主库的数据量大小控制在 2~4GB 左右，以保证 RDB 文件能以 较快的速度加载。</p>
+        <div class="al_sidebar">
 
-      
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Mmddb</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>Zhang Penghe</h4>
+                <img class="al_sidebar_avatar" src="https://github.com/mmddb">
+                <p></p>
+            </div>
+
+            
+                <div class="al_sidebar_contact_info">
+                    <h4>GET IN TOUCH</h4>
+                    <p>一个迷茫的沙沙</p>
+
+                    <div class="dis_flex al_sidebar_social_widget">
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+                            <div class="al_social_icon_cnt" data_link="https://www.github.com/mmddb">
+                                <svg class="al_social_icon" id="github">
+                                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#icon_github"></use>
+                                </svg>
+                            </div>
+                        
+
+                        
+                        
+                    </div>
+                </div>
+            
+        </div>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/" data-id="ckrpnolu90000ek9kcfy1ge9a" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
+</div>
 
-
-  
-    <article id="post-List 和 Streams" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/28/List%20%E5%92%8C%20Streams/" class="article-date">
-  <time datetime="2021-07-28T10:04:45.175Z" itemprop="datePublished">2021-07-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/28/List%20%E5%92%8C%20Streams/">List 和 Streams</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h1><p>消息队列是很多分布式系统中必备的组件，需要支持 <strong>快速读写</strong> 的要求，redis 本身支持数据的告诉访问，在解决消息队列几个问题的前提下（洗有序，重复消费，可靠性），redis 可以使用 <strong>List</strong> 数据结构，活着 5.0 后新增的 <strong>streams</strong> 结构作为一个解决方案。</p>
-<h2 id="List"><a href="#List" class="headerlink" title="List"></a><strong>List</strong></h2><p><strong>消息有序</strong>：List 本身就是先进先出的结构，直接满足了有序的要求，生产者可以用 LPUSH 把消息写入 List，消费者在用 LPOP 命令读取消息，在读取的过程中，为了避免在消息队列没有内容时轮询队列消耗性能，可以采用 <strong>BRPOP</strong>，阻塞式读取（读不到数据就阻塞，直到有新的数据写入，再开始读取新的）。</p>
-<p><strong>重复消费</strong>：为了避免重复消费同一条消息，消息最好能有一个全局唯一的 ID，消费者在消费的时候可以进行对比。但是 List 本身不会干这个活，需要<strong>生产者自行生成</strong>一个。</p>
-<p><strong>消息可靠性</strong>：可靠性就是说消费者在拿到一条消息后，还没来得及处理就发生了宕机，当他恢复的时候，消息队列里也没这条消息了，也没办法再读。应对这种问题，消息队列留一手就行了，用另一个队列来存储消费者拿走的消息，这样如果哪个傻傻消费者再来要，还有的给。</p>
-<p>从上面看，list 有做消息队列的潜力，不过，在List 没有办法支持 <strong>消费者组</strong> 来进行消费，这就可能导致消息积压的问题。</p>
-<h2 id="Streams"><a href="#Streams" class="headerlink" title="Streams"></a>Streams</h2><p>Streams 是 Redis 专门为消息队列设计的数据类型，它提供了丰富的消息队列操作命令。</p>
-<p><strong>XADD</strong>：插入消息，可以 <strong>自动生成全局唯一 ID</strong>（当前毫秒值 + 毫秒内的消息序号）；同样支持设定时间的 <strong>BLOCK</strong> <strong>读取</strong></p>
-<p><strong>XREAD</strong>：读取消息，支持按 ID 读取；</p>
-<p><strong>XREADGROUP</strong>：按组读，如果其中一个消费者读取了，其他消费者就读不出来了；</p>
-<p><strong>XPENDING</strong>：Streams 会使用内部队列 PENDING List 保存被已被消费者读取，但是尚未确认的消息，该命令可以读取这些消息。</p>
-<p><strong>XACK</strong>：相应的，消费者通过 XACK 命令通知 Streams 消息已经处理完成。</p>
-
-      
+    <div class="al_index_background dis_flex_center al_full_cover">
+        <div class="al_pos_ab al_letter al_index_background_letter">
+            W
+        </div>
+        <h2 class="al_index_background_bio">
+            We don’t really know anything, do we?
+        </h2>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/28/List%20%E5%92%8C%20Streams/" data-id="ckrncriqq0000fn9k4x3qagsm" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
+    <div class="al_index_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow">
+            <div class="al_section_container dis_flex_jcenter">
+                <div class="section_header">
+                    LATEST PAGES
+                </div>
+            </div>
 
-  
-    <article id="post-Redis 的 String" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/24/Redis%20%E7%9A%84%20String/" class="article-date">
-  <time datetime="2021-07-24T14:10:29.475Z" itemprop="datePublished">2021-07-24</time>
-</a>
+            <ul class="al_post_list">
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                缓
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">
+                                    缓存
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-08-08 21:53:16
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        2 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                redis 自带数据淘汰策略和高速读写的功能，可以被用于实现缓存。redis 不同于操作系统的 LLC 和 page cache，应用想使用的话需要在程序中加入缓存读写代码，这种缓存类型也被称为 旁路缓存。
+
+redis 缓存可以被分为两种，只读缓存 和 读写缓存。
+
+只读缓存可以只负责读取数据，所有的数据写请求会直接发往后端的数据库。对于删改操作，应用需要先删除 redis 已有的数据，下次再读这些数据时，会发生缓存缺失，此时应用把这些数据再从数据库存储到 redis 中。只读缓存的好处是所有数据都在数据库中，不会有丢失的风险。
+
+对于读写缓存，读写删改都在缓存中完成，这样虽然更快，但是数据
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/08/08/缓存/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                 
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/">
+                                     Redis 内部的阻塞式操作
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-30 08:49:28
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        1 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                Redis 变慢的原因主要有 5 大方面：
+
+复杂度高的 CRUD 操作 （客户端交互）
+复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括全量查询，聚合统计操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会阻塞当前释放内存的应用程序，如果一下子释放大量内存，也就是 Big key 删除，redis 的主线程会被阻塞；同时，由于涉及大量的删除，*清空数据库 *（flushdb 和 flushall）也是一个阻塞点。
+
+AOF 日志同步写， RDB 文件加载（磁盘交互）
+redis 在 AOF 日志同步写 时，如果一个时间
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/30/ Redis 内部的阻塞式操作/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                L
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/28/List%20%E5%92%8C%20Streams/">
+                                    List 和 Streams
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-28 18:04:45
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        2 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                消息队列
+消息队列是很多分布式系统中必备的组件，需要支持 快速读写 的要求，redis 本身支持数据的告诉访问，在解决消息队列几个问题的前提下（洗有序，重复消费，可靠性），redis 可以使用 List 数据结构，活着 5.0 后新增的 streams 结构作为一个解决方案。
+
+List
+消息有序：List 本身就是先进先出的结构，直接满足了有序的要求，生产者可以用 LPUSH 把消息写入 List，消费者在用 LPOP 命令读取消息，在读取的过程中，为了避免在消息队列没有内容时轮询队列消耗性能，可以采用 BRPOP，阻塞式读取（读不到数据就阻塞，直到有新的数据写入，再开始读取新的）。
+
+重复
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/28/List 和 Streams/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                R
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/24/Redis%20%E7%9A%84%20String/">
+                                    Redis 的 String
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-24 22:10:29
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                保存整数
+当保存 64 位有符号整数 时，String 类型会把它保存为一个 8 字节的 Long 类型整数，这种方式成为 int 编码方式；
+
+包含字符
+当保存的数据中 包含字符 时，String 类型使用 SDS （Simple dynamic string）简单动态结构体保存。
+
+一个 SDS 由三部分组成，buf 保存实际数据（末尾加 ‘\0’, 和 C 一样 ）， len （4B）表示 buf 已用长度， alloc（4B）表示 buf 的实际分配长度。
+
+除了 SDS 的开销，redis 需要用一个 RedisObject 来记录 SDS 的 元数据（最后一次访问时间，被引用次数等
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/24/Redis 的 String/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                主
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">
+                                    主从同步与哨兵
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-23 22:59:38
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                为了保证高可靠，redis 增加了一些从库与主库配合使用，确保在主库宕机时不过大影响服务。主从库之间采用的是读写分离的方式。主库、从库都可以接收 读操作; 而 写操作 要先到主库执行，然后主库将写操作同步给从库，从而确保主从库数据的一致性，如果都能写容易乱套，加锁的话会带来很大开销。
+
+主从同步
+首先，建立连接，从库向发送主库 psync 命令，参数包含 runID（主库id，不知道就是 ？） 和复制进度 offset（第一次为 -1，断连恢复时设置为其他值） ；主库收到后 回复 FULLRESYNC，全量复制命令，带上主库 runID 和 主库目前复制进度。
+
+然后，主库执行 bgsave 
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/23/主从同步与哨兵/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                R
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">
+                                    RDB 内存快照
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-22 21:39:47
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        2 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。
+
+而 redis 的另一种恢复机制 内存快照，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 快速恢复；
+
+但是这张快照的拍摄要注意：
+
+拍多少
+
+提供所有数据的可靠性保证，reids 执行的是全量快照，redis 提供两个命令来生成 （阻塞主线程与否）
+
+​ save： 主线
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/22/RDB 内存快照/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                R
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">
+                                    Redis AOF 日志 
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-20 22:10:40
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                为了避免宕机后 Redis 数据丢失， redis 使用了 AOF 和 RDB 两种机制。
+
+AOF 日志 （append only file）
+写后日志 
+
+不像其他数据库的写前日志，Redis 是先执行命令，把数据写入 内存，然后才把 操作命令 记录日志（以文件的形式）。这样一来可以避免记录错误日志，并且操作完成后再记录可以 避免阻塞线程。
+
+风险
+
+AOF 也存在两个风险。首先，如果刚执行完一个命令，还没有来得及记日志就宕机了，那么这个命令和相应的数据就有 丢失 的风险。 
+
+其次，AOF 可能会给下一个操作带来阻塞。这是因为，AOF 日志也是在主线程中执行的，如果在把日志文件写入磁盘时
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/20/Redis AOF 日志 /">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                A
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/14/Api%20styles/">
+                                    Api styles
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-14 20:28:56
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        1 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                API 规定了网络主体中通信的一些规则，不同的 API 风格适用于不同的业务和情景，今天在搜索论文相关东西时候，看到了主要的 5 种 API 风格
+
+ 1. Tunnel Style: 
     
-  </div>
-  <div class="article-inner">
+    这种风格的 API 是一些 fuction 的集合，这些方法可以被远程调用；比较出名的就是 gRPC。
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/24/Redis%20%E7%9A%84%20String/">Redis 的 String</a>
-    </h1>
-  
-
-      </header>
+ 2. Resource Style
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="保存整数"><a href="#保存整数" class="headerlink" title="保存整数"></a>保存整数</h2><p>当保存  <strong>64 位有符号整数</strong> 时，String 类型会把它保存为一个 8 字节的 Long 类型整数，这种方式成为 int 编码方式；</p>
-<h2 id="包含字符"><a href="#包含字符" class="headerlink" title="包含字符"></a>包含字符</h2><p>当保存的数据中 <strong>包含字符</strong> 时，String 类型使用 SDS （Simple dynamic string）简单动态结构体保存。</p>
-<p>一个 SDS 由三部分组成，<strong>buf</strong> 保存实际数据（末尾加 ‘\0’, 和 C 一样 ）， <strong>len</strong> （4B）表示 buf 已用长度， <strong>alloc</strong>（4B）表示 buf 的实际分配长度。</p>
-<p>除了 SDS 的开销，redis 需要用一个 <strong>RedisObject</strong> 来记录 SDS 的 <strong>元数据</strong>（最后一次访问时间，被引用次数等）； RedisObject 包含了 <strong>8B</strong> 的元数据和 一个 <strong>8B</strong> 的 <strong>指针</strong> 指向数据的实际位置。如果保存的是 Long 类型整数的话，为了提高效率，redisObject 的指针直接赋值为 <strong>整数数据</strong>。</p>
-<p>Redis 使用一个全局哈希表保存所有键值对，哈希表的每一项是一个 <strong>dictEntry</strong> 结构体，用来指向一个键值对。dictEntry 中有三个 8B 的指针，分别指向 Key， value 和下一个 dictEntry。But，redis 使用的 内存分配库 jemalloc 在分配内存时，假设申请 N 个字节，实际会分配一个比 N 大的且为 2 的幂次方的空间，<strong>这样可以减少分配次数</strong>。</p>
-<p>以上基本就是 redis 中 string 的存储方式，现在假设我们要存储一个键值对，key = 12345678, value = 123123; 如果以字符串方式存储，因为 key 和value 可以作为 Long 类型存储，那共需要两个 16B 的 redisObject 和一个 32B 的 dictEntry，共 64B，而我们实际存储的数据只是两个 8B 的 long类型整数，有 75% 的空间都存储一些乱七八糟的数据，效率比较底下。</p>
-<h2 id="压缩列表-ziplist"><a href="#压缩列表-ziplist" class="headerlink" title="压缩列表 ziplist"></a>压缩列表 ziplist</h2><p>压缩列表是 redis 底层的一种数据结构，比较节省内存。ziplist 的表头有三个字段 ，表尾有一个字段，中间存储的是一个一个的 <strong>entry</strong></p>
-<p><strong>zlbytes</strong> ： 表示列表长度； <strong>zltail</strong> 表示 <strong>表尾偏移量</strong>； <strong>zllen</strong> 表示列表中 entry 个数。表尾还有一个 <strong>zlend</strong> 字段表示列表结束。</p>
-<p>entry 的内存结构分为 4 部分，</p>
-<p><strong>prev_len</strong>：上一个 entry 长度，取值 <strong>1B</strong> （上一个小于 254 字节）或 *<em>5B *</em>（大于254）；</p>
-<p><strong>len</strong>： 自身长度， <strong>4B</strong>； </p>
-<p><strong>encoding</strong>： 表示编码方式 <strong>1B</strong></p>
-<p><strong>content</strong>： 保存实际数据。</p>
-<p>这样一来，如果存储一个 long 类型 value，只需要 1+4+1+8 = 14B，实际分配 16B （jemalloc）。</p>
-<p>还是回到刚刚例子，key = 12345678, value = 123123; 假设我们用压缩列表的一个 entry 花费 16B 存储了这个 value，但是我们怎么根据 key 找到它呢。其实就是说怎么 <strong>用集合类型保存键值对</strong>。</p>
-<p>只用把 key 拆分为两部分，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hest key field value —&gt;创建</span><br><span class="line">hset 12345 678 123123</span><br></pre></td></tr></table></figure>
+    API 是资源的集合，可以和消费者进行特定种类的交互；提供者对外界暴露一些资源，最常见的 就是 OpenAPI （将服务封装成一些列 API 开放出去供人调用） 
+    
+    
+ 3. Hypermedia 
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/14/Api styles/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                W
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/">
+                                    Wireshark下HTTPS通信过程
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-08 22:42:04
+                                </div>
 
-<p>这也就是 <strong>Hash</strong> 类型的 <strong>二级编码</strong> 方法。就是把一个单值的数据拆分成两部分，前一部分作为 <strong>Hash 集合的 key</strong>，后一部分作为 <strong>Hash 集合的 field</strong>, value 就是 value。</p>
-<p>而 Redis <strong>Hash 类型有两种底层实现结构</strong>，分别是压缩列表（节省空间）和哈希表。Hash 类型设置了用 ziplist 保存数据时的两个阈值，超过任意一个阈值，Hash 类型就会用哈希表来保存数据。</p>
-<p><strong>hash-max-ziplist-entries</strong>: 压缩列表保存时哈希集合中的 <strong>最大元素个数</strong>。 </p>
-<p><strong>hash-max-ziplist-value</strong>: 压缩列表保存时哈希集合中 <strong>单个元素的最大长度。</strong></p>
-<p>这两个参数需要注意，因为如果转为哈希表，Hash 类型就会一直用哈希表进行保存，而不会再转回压缩列表了。</p>
+                                
+                                    <div class="al_index_post_read_time">
+                                        5 Min Read
+                                    </div>
+                                
 
-      
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                按照 《图解HTTP》上的定义， HTTPS 的通信步骤如下，1-4 步
+
+步骤 1： 客户端通过发送 Client Hello 报文开始 SSL 通信。报文中包 含客户端支持的 SSL 的指定版本、加密组件（Cipher Suite）列表（所 使用的加密算法及密钥长度等）。
+
+步骤 2： 服务器可进行 SSL 通信时，会以 Server Hello 报文作为应答。和客户端一样，在报文中包含 SSL 版本以及加密组件。服务器的 加密组件内容是从接收到的客户端加密组件内筛选出来的。
+
+步骤 3： 之后服务器发送 Certificate 报文。报文中包含公开密钥证 书。
+
+步骤 4： 最后服务器发
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/08/Wireshark下HTTPS通信过程/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                迭
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">
+                                    迭代遍历二叉树
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-04 20:17:59
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                二叉树的遍历从深度遍历来看，分为前序遍历，中序遍历和后序遍历，其中的前中后指 根节点 在遍历时的相对位置，前序就是指 根 - 左 - 右，中序指 左 - 根 - 右；
+
+使用递归遍历二叉树十分简单, 中序遍历代码如下，前序和后序只需改变最后三行代码顺序即可。
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+
+class Solution {
+  	List list = new ArrayList<>();
+    private void inorderTree(TreeNode root) {
+        if (root == null) {
+         
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/04/迭代遍历二叉树/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+            </ul>
+
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
+                    
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
+                        </svg>
+                        <span>Newer Posts</span>
+                    
+                </a>
+                <a class="al_post_nav_item dis_flex_acenter" href="/page/3/">
+                    
+                        <span>Older Posts</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
+                    
+                </a>
+            </nav>
+        </div>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/24/Redis%20%E7%9A%84%20String/" data-id="ckrhw5wva0000r59k77nybjro" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-主从同步与哨兵" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/" class="article-date">
-  <time datetime="2021-07-23T14:59:38.755Z" itemprop="datePublished">2021-07-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">主从同步与哨兵</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>为了保证高可靠，redis 增加了一些从库与主库配合使用，确保在主库宕机时不过大影响服务。主从库之间采用的是读写分离的方式。主库、从库都可以接收 <strong>读操作</strong>; 而 <strong>写操作</strong> 要先到主库执行，然后主库将写操作同步给从库，从而确保主从库数据的一致性，如果都能写容易乱套，加锁的话会带来很大开销。</p>
-<h2 id="主从同步"><a href="#主从同步" class="headerlink" title="主从同步"></a><strong>主从同步</strong></h2><p>首先，建立连接，从库向发送主库 <strong>psync</strong> 命令，参数包含 <strong>runID</strong>（主库id，不知道就是 ？） 和复制进度 <strong>offset</strong>（第一次为 -1，断连恢复时设置为其他值） ；主库收到后 回复 <strong>FULLRESYNC</strong>，全量复制命令，带上主库 runID 和 主库目前复制进度。</p>
-<p>然后，主库执行 <strong>bgsave</strong> 命令，生成并发送 <strong>RDB</strong> 文件给从库（这个过程中主库仍接受 写操作，把这些操作记录到 <strong>replication</strong> <strong>buffer</strong> 里面）。从库收到 RDB 文件后，<strong>先清空其数据库</strong>，再加载 RDB，从而和主库保持一致。</p>
-<p>最后，主库把 replication buffer 的内容发给从库，从库再执行这些操作。</p>
-<p>在一次全量复制中，主库需要生成 RDB 文件（fork 子进程会阻塞主线程），传输 RDB（占用带宽），为了减轻主库的压力，可以采取 <strong>主从级联模式</strong> 主-从-从 的模式，选出一个从库作为小领导，把其他一些从库和小领导建立主从关系，这些从库在进行同步时直接和小领导联系，不去打扰主库。</p>
-<p>主从库完成了全量复制，它们之间就会一直维护一个网络连接，主库会通过这个连接将后续收到的命令操作再同步给从库，这个过程也称为<strong>基于长连接的命令传播</strong>，可以避免频繁建立连接的开销。</p>
-<h2 id="断连后的恢复"><a href="#断连后的恢复" class="headerlink" title="断连后的恢复"></a><strong>断连后的恢复</strong></h2><p>Redis 2.8 开始，网络断了之后，主从库会采用<strong>增量复制</strong>的方式继续同步。</p>
-<p>主库会把断连期间收到的<strong>写操作命令</strong>，<strong>写入 replication buffer</strong>，同时也写入 <strong>repl_backlog_buffer</strong> 这个缓冲区。repl_backlog_buffer 是一个<strong>环形缓冲区</strong>，<strong>主库会记录自己写到的位置，从库则会记录自己读到的位置</strong>。主从库对应的参数分别是 master_repl_offset, slave_repl_offset。连接恢复后，从库就会把其 offeset 发送到主库，主库与自己的offset 判断后就会把断连期间的操作传给从库。</p>
-<p>real_backlog_buffer 是一个环形内存区域，如果断连期间写操作过多，就可能导致从库还没有读取到的数据被覆盖，因此我们需要综合考虑<strong>主库命令写入速率</strong>和<strong>命令大小</strong>，以及 <strong>网络传输速率</strong> 来调整该参数的大小。</p>
-<h2 id="哨兵"><a href="#哨兵" class="headerlink" title="哨兵"></a>哨兵</h2><p>为了保证主从库的可用性（处理主库挂了），redis 引入了哨兵的机制，哨兵也是 redis 的实例，只不过不接受数据读写请求，而致力于 <strong>监控</strong>，<strong>选主</strong>，<strong>通知</strong></p>
-<p><strong>监控</strong></p>
-<p>哨兵会周期性给主从库发送 PING 命令，来监控是否库是否正常，如果响应超时，谨慎起见（网络拥堵，主库压力大等其他原因导致超时），哨兵会把该库先标记为 “<strong>主观下线</strong>”，然后询问其他哨兵（哨兵一般为一个集群），只有认为该库下线的哨兵数量多于一个阈值时（N/2 + 1， N 为哨兵总数），才会把该库标记为“<strong>客观下线</strong>”</p>
-<p><strong>选主</strong></p>
-<p>判断主库下线后，开启选主阶段。</p>
-<p>首先，选出仍然在线的从库，并检测它之前的网络状态（与主库断连的次数）得到第一次筛选结果</p>
-<p>然后，选择 <strong>优先级</strong>（可以手动设置，如内存大小） 最高的作为主库，如果选出多个，再根据 <strong>复制进度</strong>（选与主库接近的），如果再有一样的，就选 ID 号小的。</p>
-<p><strong>通知</strong></p>
-<p>哨兵通知其他 <strong>从库 *<em>和 *</em>客户端</strong></p>
-
-      
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        Zhang Penghe
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/" data-id="ckrgim8tp00002e9k9z4vg38p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-RDB 内存快照" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" class="article-date">
-  <time datetime="2021-07-22T13:39:47.273Z" itemprop="datePublished">2021-07-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">RDB 内存快照</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。</p>
-<p>而 redis 的另一种恢复机制 <strong>内存快照</strong>，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 <strong>快速恢复</strong>；</p>
-<p>但是这张快照的拍摄要注意：</p>
-<p><strong>拍多少</strong></p>
-<p>提供所有数据的可靠性保证，reids 执行的是<strong>全量快照</strong>，redis 提供两个命令来生成 （阻塞主线程与否）</p>
-<p>​    save： 主线程中执行，阻塞</p>
-<p>​    <strong><u>bgsave</u></strong>：创建子线程，专门用于写入 RDB 文件，默认配置，非阻塞</p>
-<p><strong>人动怎么办</strong></p>
-<p>制作快照过程中，主线程仍然可以处理写操作，redis 借助操作系统提供的 <strong><u>写时复制</u></strong>（主线程在有写操作时，才会把这个新写或修改后的数据 写入到一个新的物理地址中，并修改自己的页表映射） 技术生成该数据的副本。然后，<strong>bgsave</strong> 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
-<p><strong>拍摄频率</strong></p>
-<p>与 AOF 类似，拍的越频繁，宕机时丢失数据内容越少，但是也越影响性能，因为 fork 子线程时会阻塞主线程，并且也会给磁盘带来压力。那么我们在第一次拍摄全景之后，每次拍摄只拍摄动的东西（也就是被修改的数据）不就好了，为了记住那些数据做了修改，我们可以用 AOF 日志进行记录（Redis 4.0 提出，混合策略）</p>
-<p>AOF 和 RDB 的选择取决于 <strong>丢失容忍度</strong> 和 <strong>性能</strong> 两方面的考虑。如果数据不能丢失，可以结合内存快照和 AOF; 如果允许分钟级别的数据丢失，可以只使用 RDB; 如果只用 AOF，优先使用 everysec 的配置选项，因为它在可靠性和性能之间取了一个 平衡。</p>
-
-      
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a href="https://github.com/iGuan7u/Acetolog" target="_blank" rel="noopener">AcetoLog</a>
+         · Power By 
+        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/" data-id="ckrf0kgpm0000nv9k1dujdlms" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-Redis AOF 日志 " class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" class="article-date">
-  <time datetime="2021-07-20T14:10:40.922Z" itemprop="datePublished">2021-07-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">Redis AOF 日志 </a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>为了避免宕机后 Redis 数据丢失， redis 使用了 AOF 和 RDB 两种机制。</p>
-<h3 id="AOF-日志-（append-only-file）"><a href="#AOF-日志-（append-only-file）" class="headerlink" title="AOF 日志 （append only file）"></a><strong>AOF 日志 （append only file）</strong></h3><p><strong>写后日志</strong> </p>
-<p>不像其他数据库的写前日志，Redis 是先执行命令，把数据写入 内存，然后才把 <strong>操作命令</strong> 记录日志（以文件的形式）。这样一来可以<strong>避免记录错误日志</strong>，并且操作完成后再记录可以 <strong>避免阻塞线程</strong>。</p>
-<p><strong>风险</strong></p>
-<p>AOF 也存在两个风险。首先，如果刚执行完一个命令，还没有来得及记日志就宕机了，那么这个命令和相应的数据就有 <strong>丢失</strong> 的风险。 </p>
-<p>其次，AOF 可能会给下一个操作带来<strong>阻塞</strong>。这是因为，AOF 日志也是在主线程中执行的，如果在把日志文件写入磁盘时很慢，就会阻塞线程。</p>
-<p>因此，如果我们能够控制一个写命令执行完后 AOF 日志写回磁盘的 <strong>时机</strong>，这两个风险就解除了。</p>
-<h3 id="三种写回策略"><a href="#三种写回策略" class="headerlink" title="三种写回策略"></a><strong>三种写回策略</strong></h3><p><strong>Always 同步写回</strong></p>
-<p>每个写命令执行完，立马同步地将日志写回磁盘；基本可以不丢数据，但是给每次操作带来了额外的负担，会影响主线程性能 </p>
-<p><strong>Everysec 每秒写回</strong></p>
-<p>每个写命令执行完，先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘；避免了同步写会那么大的开销，丢失数据最多丢 1 秒。</p>
-<p> <strong>No 操作系统控制的写回</strong></p>
-<p>写命令执行完后，先把日志写到 AOF 文件的内存缓冲区，由<strong>操作系统决定</strong>何时将缓冲区内容写回磁盘。释放控制权，如果 AOF 没有写回磁盘，宕机后数据丢失可能会很多。</p>
-<p>这三种策略在 <strong>可靠性</strong> 和 <strong>性能</strong> 上依次下降和增加</p>
-<h3 id="AOF-重写"><a href="#AOF-重写" class="headerlink" title="AOF 重写"></a><strong>AOF 重写</strong></h3><p>AOF 是以文件的形式记录接收到的所有 <strong>写命令</strong>。随着接收的写命令越来越多，AOF 文件会越来越大，会带来一些问题：</p>
-<ol>
-<li>文件系统大小限制</li>
-<li>大文件追加记录效率低</li>
-<li>宕机后恢复过程缓慢</li>
-</ol>
-<p>AOF 重写机制就是在重写时，Redis <strong>根据数据库的现状</strong> 创建一个新的 AOF 文件（ 读取数据库中的所有键值对，然后对每一个键值对用一条命令记录它的写入），这样可以实现 <strong>多变一</strong> 的效果。</p>
-<p><strong>重写过程</strong></p>
-<p>和 AOF 日志由主线程写回不同，重写过程是由后台线程 <strong>bgrewriteaof</strong> 来完成的，这也是为了避免阻塞主线程，导致数据库性能下降。</p>
-<p>首先，每次执行重写时，<strong>主线程 fork 出后台的 bgrewriteaof 子进程</strong>。此时，fork 会把主线程的 <strong>内存拷贝</strong> 一份（通过页表）给 bgrewriteaof 子进程，这里面就包含了数据库的最新数据。</p>
-<p>这个过程中，同时存在 <strong>两份日志</strong>：第一处日志就是指 <strong>正在使用的 AOF 日志</strong>，Redis 会把后台线程复制时进来的写操作写到它的缓冲区。这样可以保证在这段时间内的宕机可以正常恢复，</p>
-<p>第二处日志就是新的 <strong>AOF 重写日志</strong>。这些新来的操作也会被写到重写日志的缓冲区。等到拷贝数据的所有操作记录重写完成后，这些最新操作也会写入新的 AOF 文件，这时就可以用新的 AOF 文件替代旧文件了。</p>
-
-      
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/" data-id="ckrc8x3n900003g9kdt33hdmr" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
+</div>
 
-
-  
-    <article id="post-Api styles" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/14/Api%20styles/" class="article-date">
-  <time datetime="2021-07-14T12:28:56.961Z" itemprop="datePublished">2021-07-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/14/Api%20styles/">Api styles</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>API 规定了网络主体中通信的一些规则，不同的 API 风格适用于不同的业务和情景，今天在搜索论文相关东西时候，看到了主要的 5 种 API 风格</p>
-<ol>
-<li><p>Tunnel Style:  </p>
-<p>这种风格的 API 是一些 fuction 的集合，这些方法可以被远程调用；比较出名的就是 gRPC。</p>
-</li>
-<li><p>Resource Style</p>
-<p>API 是资源的集合，可以和消费者进行特定种类的交互；提供者对外界暴露一些资源，最常见的 就是 OpenAPI （将服务封装成一些列 API 开放出去供人调用） </p>
-</li>
-<li><p>Hypermedia Style:</p>
-<p>和上面类似，这类 API 是一些 相互关联的资源的集合，就像 Web 上的资源一样；基于资源，基于link，我们请求这些资源，并不是一个独立的调用，得到的资源又包含别的资源的路径，这样就可以组成一个工作流。</p>
-</li>
-<li><p>Query Style</p>
-<p>这类 API 公开了一个结构化数据模型，通过通用查询语言进行查询和更新。如 facebook 的 graphQL, 与消费者的通信大多是对数据库的查询更新，如 CRUD users, posts, likes ,mentions, query 风格的API 可以有效的请求这些数据。</p>
-</li>
-<li><p>Event-based Style</p>
-<p> API 是一些事件的集合，这些事件由提供者发布并且可以被消费者订阅。它逆转了。大部分使用 pub/sub模型，API 的使用者会监听事件，收到他们所订阅的特定事件的通知，提供者只需要将事件发布到特定地方，无需关注消费主体。</p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/14/Api%20styles/" data-id="ckr3kjn8v00001atlait1e9cq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Wireshark下HTTPS通信过程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" class="article-date">
-  <time datetime="2021-07-08T14:42:04.540Z" itemprop="datePublished">2021-07-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/">Wireshark下HTTPS通信过程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>按照 《图解HTTP》上的定义， HTTPS 的通信步骤如下，1-4 步</p>
-<p>步骤 1： 客户端通过发送 Client Hello 报文开始 SSL 通信。报文中包 含客户端支持的 SSL 的指定版本、加密组件（Cipher Suite）列表（所 使用的加密算法及密钥长度等）。</p>
-<p>步骤 2： 服务器可进行 SSL 通信时，会以 Server Hello 报文作为应答。和客户端一样，在报文中包含 SSL 版本以及加密组件。服务器的 加密组件内容是从接收到的客户端加密组件内筛选出来的。</p>
-<p>步骤 3： 之后服务器发送 Certificate 报文。报文中包含公开密钥证 书。</p>
-<p>步骤 4： 最后服务器发送 Server Hello Done 报文通知客户端，最初阶段的 SSL 握手协商部分结束。</p>
-<p>步骤 5： SSL 第一次握手结束之后，客户端以 Client Key Exchange 报 文作为回应。报文中包含通信加密中使用的一种被称为 Pre-master secret 的随机密码串。该报文已用步骤 3 中的公开密钥进行加密。</p>
-<p>步骤 6： 接着客户端继续发送 Change Cipher Spec 报文。该报文会提 示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密。</p>
-<p>步骤 7： 客户端发送 Finished 报文。该报文包含连接至今全部报文的 整体校验值。这次握手协商是否能够成功，要以服务器是否能够正确 解密该报文作为判定标准。</p>
-<p>步骤 8： 服务器同样发送 Change Cipher Spec 报文。</p>
-<p>步骤 9： 服务器同样发送 Finished 报文。</p>
-<p>步骤 10： 服务器和客户端的 Finished 报文交换完毕之后，SSL 连接 就算建立完成。当然，通信会受到 SSL 的保护。从此处开始进行应用 层协议的通信，即发送 HTTP 请求。</p>
-<p>步骤 11： 应用层协议通信，即发送 HTTP 响应。</p>
-<p>步骤 12： 最后由客户端断开连接。断开连接时，发送 close_notify 报 文。下图做了一些省略，这步之后再发送 TCP FIN 报文来关闭与 TCP 的通信。</p>
-<p><img src="../images/https.png" alt="https"></p>
-<p>使用 Wireshark 抓包分析, filter 设置为 tls协议，浏览器点击 <a href="https://www.bing.com/" target="_blank" rel="noopener">https://www.bing.com/</a> 后的网络情况，前面一些包的情况如下：</p>
-<p><img src="../images/wireshark.png" alt="wireshark"></p>
-<p>现在把两者匹配一下：</p>
-<p>第一步： client 向 server 发送 Client Hello，查看 667号包内的 TLS协议 相关信息，包含了客户端支持的 SSL 各种相关信息。    <img src="../images/clienthello.png" alt="clienthello"></p>
-<p>然后：server 向 client 发送, 包675, 返回了多了个 握手信息，Server Hello, Certificate, Cerficate Status, Server Key Exchange 和 Server Hello Done, 除了Cerficate Status，对应第2，3，4 步。 </p>
-<p><img src="../images/234.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">发送证书 Certificate 的包： 包含了复杂的证书信息：未展示完全</span><br><span class="line">Handshake Protocol: Certificate</span><br><span class="line">Certificates (3807 bytes)</span><br><span class="line">    Certificate Length: 2274</span><br><span class="line">    Certificate: 308208de308206c6a003020102021333001306f0f7f40a7ccc3369510000001306f0300d… (id-at-commonName&#x3D;graph.microsoft.com,id-at-organizationName&#x3D;Microsoft Corporation,id-at-localityName&#x3D;Redmond,id-at-stateOrProvinceName&#x3D;WA,id-at-count</span><br><span class="line">        &gt;signedCertificate</span><br><span class="line">        algorithmIdentifier (sha384WithRSAEncryption)</span><br><span class="line">            Algorithm Id: 1.2.840.113549.1.1.12 (sha384WithRSAEncryption) </span><br><span class="line">        Padding: 0</span><br><span class="line">        encrypted: 6c207a3574b01c1863c8f9ab262e2af48187801d134026900b41e4264d8b91ed3422ce7e…</span><br><span class="line">    Certificate Length: 1527</span><br><span class="line">    Certificate: 308205f3308204dba00302010202100c6ae97cced599838690a00a9ea53214300d06092a… (id-at-commonName&#x3D;Microsoft Azure TLS Issuing CA 02,id-at-organizationName&#x3D;Microsoft Corporation,id-at-countryName&#x3D;US)</span><br><span class="line">    </span><br><span class="line">*** Certificate Status ***    </span><br><span class="line">Handshake Protocol: Certificate Status</span><br><span class="line">    Handshake Type: Certificate Status (22)</span><br><span class="line">    Length: 1731</span><br><span class="line">    Certificate Status Type: OCSP (1)  &#x2F;&#x2F; 在线证书状态协议 </span><br><span class="line">    OCSP Response Length: 1727</span><br><span class="line">    OCSP Response</span><br><span class="line">        responseStatus: successful (0)</span><br><span class="line">        responseBytes</span><br><span class="line">            ResponseType Id: 1.3.6.1.5.5.7.48.1.1 (id-pkix-ocsp-basic)</span><br><span class="line">            BasicOCSPResponse</span><br><span class="line">                tbsResponseData</span><br><span class="line">                signatureAlgorithm (sha1WithRSAEncryption)</span><br><span class="line">                Padding: 0</span><br><span class="line">                signature: 5dfa777c9706d571dce67ceb7a4eb0c42af602822b7e2ea1d80602afbf6b39fa216e39d7…</span><br><span class="line">                certs: 1 item</span><br><span class="line"></span><br><span class="line">*** Server Key Exchange *** 对于使用DHE&#x2F;ECDHE非对称密钥协商算法的SSL握手，将发送该类型握手</span><br><span class="line">														RSA算法不会进行该握手流程</span><br><span class="line">Handshake Protocol: Server Key Exchange</span><br><span class="line">    Handshake Type: Server Key Exchange (12)</span><br><span class="line">    Length: 296</span><br><span class="line">    EC Diffie-Hellman Server Params</span><br><span class="line">        Curve Type: named_curve (0x03)</span><br><span class="line">        Named Curve: x25519 (0x001d)</span><br><span class="line">        Pubkey Length: 32</span><br><span class="line">        Pubkey: 558e071e8012e5f2f67ed803910d407e1056e780c536670d975fb7e7fdb5621e</span><br><span class="line">        Signature Algorithm: rsa_pkcs1_sha256 (0x0401)  &#x2F;&#x2F; 签名算法</span><br><span class="line">            Signature Hash Algorithm Hash: SHA256 (4)</span><br><span class="line">            Signature Hash Algorithm Signature: RSA (1)</span><br><span class="line">        Signature Length: 256</span><br><span class="line">   签名：Signature:   57276816aecc9f43548e1b0c6b2b1bcb76743c7f28f3ed9548c7fe3130734ad69ac3868b…</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Server Hello Done ***  握手结束</span><br><span class="line">Handshake Protocol: Server Hello Done</span><br><span class="line">    Handshake Type: Server Hello Done (14)</span><br><span class="line">    Length: 0</span><br></pre></td></tr></table></figure>
-
-
-
-<p>接着：client 向 server ， 对应5，6 ，7 步</p>
-<p><img src="../images/678.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">*** Client Key Exchange *** 第一次握手结束后后，回应该报文，包含后面要来加密的随机密码串，</span><br><span class="line">TLSv1.2 Record Layer: Handshake Protocol: Client Key Exchange</span><br><span class="line">    Content Type: Handshake (22)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 37</span><br><span class="line">    Handshake Protocol: Client Key Exchange</span><br><span class="line">        Handshake Type: Client Key Exchange (16)</span><br><span class="line">        Length: 33</span><br><span class="line">        EC Diffie-Hellman Client Params</span><br><span class="line">            Pubkey Length: 32</span><br><span class="line">            Pubkey: d2f7b7a6b289b7a36850de96288a331282c22abb7e99bbd383bc07d1b793a565</span><br><span class="line"></span><br><span class="line">*** Change Cipher Spec ***  提示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密</span><br><span class="line">TLSv1.2 Record Layer: Change Cipher Spec Protocol: Change Cipher Spec</span><br><span class="line">    Content Type: Change Cipher Spec (20)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 1</span><br><span class="line">    Change Cipher Spec Message</span><br><span class="line"></span><br><span class="line">*** Encrypted Handshake Message *** 其实就是 Finish 报文，使用对称秘钥进行加密的第一个报文，用于验证对称密钥的正确性</span><br><span class="line">TLSv1.2 Record Layer: Handshake Protocol: Encrypted Handshake Message</span><br><span class="line">    Content Type: Handshake (22)</span><br><span class="line">    Version: TLS 1.2 (0x0303)</span><br><span class="line">    Length: 40</span><br><span class="line">    Handshake Protocol: Encrypted Handshake Message</span><br></pre></td></tr></table></figure>
-
-
-
-<p>下来，server 也向 client 发送 Change CipherSpec 和 Finished，也就是 8-9步，服务器和客户端的 Finished 报文交换完毕之后，此处开始进行应用层协议的通信，发送 HTTP 请求，图中所示的 Application Data 包。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/08/Wireshark%E4%B8%8BHTTPS%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B/" data-id="ckqv2vche00008e9kahwibt10" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-迭代遍历二叉树" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-date">
-  <time datetime="2021-07-04T12:17:59.072Z" itemprop="datePublished">2021-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">迭代遍历二叉树</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>二叉树的遍历从深度遍历来看，分为前序遍历，中序遍历和后序遍历，其中的前中后指 <strong>根节点</strong> 在遍历时的相对位置，前序就是指 <strong>根 - 左 - 右</strong>，中序指 <strong>左 - 根 - 右</strong>；</p>
-<p>使用递归遍历二叉树十分简单, 中序遍历代码如下，前序和后序只需改变最后三行代码顺序即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  	List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">inorderTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        inorderTree(root.left);</span><br><span class="line">        list.add(root.val);</span><br><span class="line">        inorderTree(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>使用迭代遍历的话，首先想到借助 <strong>栈</strong> 模拟递归，其次在纸上设计一下节点应该怎么 <strong>入栈</strong>，<strong>取值</strong>，<strong>出栈</strong>， 即可；</p>
-<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>以中序遍历为例子，<strong>左 - 根 - 右</strong> 的方式下:</p>
-<ol>
-<li><p>把所有 <strong>左节点</strong> 全部 <strong>入栈</strong>，直到没有 右边的非NULL节点</p>
-</li>
-<li><p>取出最顶端节点（该节点就是树形图中最左下的元素，也就是应该第一个取到值的），加入列表</p>
-</li>
-<li><p>此时 <strong>左 - 根 - 右</strong> 中的 <strong>左，根</strong> 节点已经遍历完成，<strong>对右节点重复上两步</strong>操作即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">inorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">    List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">    Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    TreeNode curNode = root;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(!stack.isEmpty() || root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 1⃣️ travel(root.left);</span></span><br><span class="line">        <span class="keyword">while</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        stack.push(root);</span><br><span class="line">        root = root.left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 2⃣️ res.add(val);</span></span><br><span class="line">        root = stack.pop();</span><br><span class="line">        res.add(root.val);</span><br><span class="line">        <span class="comment">// 3⃣️ travel(root.right)</span></span><br><span class="line">        root = root.right;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>仔细看来，中序遍历的迭代遍历代码和递归有神似之处，划分为3块。</p>
-<h2 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h2><p>前序遍历的顺序为 <strong>根 - 左- 右</strong>，迭代遍历可以分为三步</p>
-<ol>
-<li><p><strong>取出栈顶</strong>元素（视为根元素），进行记录</p>
-</li>
-<li><p>把不是 NULL 的 <strong>子元素入栈</strong>，但是 <strong>右先左后</strong> （这样出栈时才是 根 - 左 - 右）</p>
-</li>
-<li><p><strong>重复</strong>上两步，<strong>直到栈空</strong></p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">        stack.push(root);</span><br><span class="line">        <span class="comment">// !! 注意无需 root ！= null</span></span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">            <span class="comment">// 1: 取出栈顶元素并记录：  根 —— ——</span></span><br><span class="line">            root = stack.pop();</span><br><span class="line">            res.add(root.val);</span><br><span class="line">            <span class="comment">// 2: push 子元素         根 左 —— </span></span><br><span class="line">            <span class="keyword">if</span>(root.right != <span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(root.right);</span><br><span class="line">            &#125; <span class="comment">//                     根 左 右</span></span><br><span class="line">            <span class="keyword">if</span>(root.left != <span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(root.left);</span><br><span class="line">            &#125;</span><br><span class="line">           </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>把前序遍历的代码做两处修改即后序遍历，首先是 </p>
-<ol>
-<li>列表中 <strong>从后往前</strong> 添加 </li>
-<li>子元素 <strong>反序入栈</strong></li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">  </span><br><span class="line">        stack.push(root);</span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">            TreeNode node = stack.pop();</span><br><span class="line">            <span class="comment">// 1: 相当于从后往前逆序添加：    —— —— 根</span></span><br><span class="line">            res.add(<span class="number">0</span>,node.val);  </span><br><span class="line">            <span class="comment">// 2: 先左，出来的时候     ：    —— 右 根</span></span><br><span class="line">            <span class="keyword">if</span>(node.left != <span class="keyword">null</span>)</span><br><span class="line">               stack.push(node.left);</span><br><span class="line">            &#125;  <span class="comment">// 3: 再右，出来           ：左 右 根 ✅</span></span><br><span class="line">            <span class="keyword">if</span>(node.right != <span class="keyword">null</span>)&#123;</span><br><span class="line">              stack.push(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">             </span><br><span class="line">        &#125;     </span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="ckqp7gajo00001r9k0e906c0s" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Https" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/03/Https/" class="article-date">
-  <time datetime="2021-07-03T14:30:17.868Z" itemprop="datePublished">2021-07-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/03/Https/">Https</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="HTTP-的问题"><a href="#HTTP-的问题" class="headerlink" title="HTTP 的问题"></a>HTTP 的问题</h1><p>从 HTTP 协议本身来看，其存在几大问题：</p>
-<h3 id="可能被窃听"><a href="#可能被窃听" class="headerlink" title="可能被窃听"></a>可能被窃听</h3><p>HTTP 本身不具备加密的功能，在互联网的线路上传输时，可能会被人收集，这样就会看到通信内容。</p>
-<p>解决： 对信道加密（结合 SSL 和 TLS）； 对内容加密</p>
-<h3 id="内容可能被篡改"><a href="#内容可能被篡改" class="headerlink" title="内容可能被篡改"></a>内容可能被篡改</h3><p>HTTP 请求或响应在传输途中，可能遭到攻击者拦截并篡改，这种方式称为中间人攻击（Man-In-Middle attack). </p>
-<h3 id="不验证身份"><a href="#不验证身份" class="headerlink" title="不验证身份"></a>不验证身份</h3><p>只要知道 IP 和端口，任何人都可以发起请求，服务器也会响应。解决：使用 SSL ，查看证书 CA， 证书由第三方颁发，客户端通信前先确认证书。</p>
-<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><p>https 的出现正是解决了这些问题，https 并不是一种新的协议，只是 HTTP 通信接口部分用 <strong>SSL</strong>（Secure Socket Layer）和 <strong>TLS</strong><br>( Transport Layer Security)，其和 http 的区别简单来说就是：</p>
-<p><strong>HTTP + 加密 + 完整性保护 + 身份认证 = HTTPS</strong></p>
-<h3 id="SSL-的加密"><a href="#SSL-的加密" class="headerlink" title="SSL 的加密"></a>SSL 的加密</h3><p>SSL 的加密结合了 <strong>共享密钥</strong> 和 <strong>公开密钥</strong>。公开密钥更安全，但是通信效率比较低；因此 SSL 先使用 公开密钥加密方式来传输在后面的共享密钥加密使用的密钥，确保交换的密钥安全后，使用共享密钥加密方式进行通信。</p>
-<p>但是，在第一次通信时，客户端无法证明公开密钥本身的真实性；为解决这种问题，服务器可以向数字证书认证机构申请一个数字签名，在通信时一并发给客户端，客户端拿着签名去验证即可。</p>
-<h1 id="HTTPS-缺点"><a href="#HTTPS-缺点" class="headerlink" title="HTTPS 缺点"></a>HTTPS 缺点</h1><ol>
-<li><p>耗费资源</p>
-<p>与纯文本通信相比，加密通信会消耗服务器更多的资源</p>
-</li>
-<li><p>速度慢</p>
-<p>多了 SSL 通信部分，还有加密解密部分，整体速度比HTTP慢 2 到 100倍</p>
-</li>
-<li><p>证书贵</p>
-<p>要进行 HTTPS 通信，证书是必不可少的。而使用的证书必须向认 证机构（CA）购买。因此一些个人网站，可能无法负担这一开销</p>
-</li>
-</ol>
-<h1 id="各种加密方式"><a href="#各种加密方式" class="headerlink" title="各种加密方式"></a>各种加密方式</h1><h4 id="共享密钥加密"><a href="#共享密钥加密" class="headerlink" title="共享密钥加密"></a>共享密钥加密</h4><p>接收方和发送方使用同一把密钥进行解密和加密工作，发送方要把密钥发给接收方，在这个过程中 密钥 可能会泄漏，但是这种方式 加密，解密速度快</p>
-<h4 id="公开密钥加密"><a href="#公开密钥加密" class="headerlink" title="公开密钥加密"></a>公开密钥加密</h4><p>接收方生成，公钥和私钥，公钥发给发送方，发送方使用 <strong>公钥</strong> 进行 <strong>加密</strong>，再把密文发送给接收方，接收方使用 <strong>私钥</strong> 进行 <strong>解密</strong>。</p>
-<p>保证了 密钥 传递的安全，但是解密加密较慢，并且 公开密钥 在传递过程中可能被中间人截取，给发送方发一个错误的，中间人使用正确的公钥 加密 错误的信息给接收方，发送方，接收方并不知情（中间人攻击）</p>
-<h4 id="混合密钥加密"><a href="#混合密钥加密" class="headerlink" title="混合密钥加密"></a>混合密钥加密</h4><p>使用公开密钥的方式 传递 共享密钥，确保 共享密钥 传输正确，之后用共享密钥来通信。</p>
-<h4 id="消息认证码"><a href="#消息认证码" class="headerlink" title="消息认证码"></a>消息认证码</h4><p>防止密文被篡改，使用一个共享密钥对信息进行计算，得到（类似哈希值） MAC（message authentication code) 连同这个码发给接收方，接收方根据同样的密钥进行解密</p>
-<p>但是，由于两方都可以自己生成 MAC，这个信息是自己伪造的还是真正发过来的没办法识别，</p>
-<h4 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h4><p>数字签名可以解决该事后否认的问题：发送者在发送时给消息加上数字签名，数字签名的生成使用公开密钥加密，发送者通过私钥生成，接收者使用公钥对签名进行解密，这样就可以确认消息的发送者。</p>
-<p>但是无法保证公开密钥确实来自发送者，有可能被中间人替换</p>
-<h4 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h4><p>认证中心通过自己的私钥，对发送者的资料（发送者的公钥已经个人信息）生成数字签名，加上资料放到数字证书里，发给发送者，发送者再发给接收者，接收者通过认证中心的公钥对证书内对签名进行认证，来确认确实来自发送者。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/03/Https/" data-id="ckqnxj92n0001tv9k8txfdz4v" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/10/05/DAG%20%E6%A3%80%E6%B5%8B/">DAG 检测</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/30/HSBC%20job%20simulation%20test/">HSBC job simulation test</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/25/DISTINCT%20&%20GROUP%20BY/">DISTINCT &amp; GROUP BY</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/">交换类排序</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">选择类排序算法</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2021 Zhang Penghe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+    </body>
 </html>
+        

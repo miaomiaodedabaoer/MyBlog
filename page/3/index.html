@@ -1,786 +1,505 @@
+
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-
-  
-  <title>Mmddb</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Mmddb">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
-<meta property="og:site_name" content="Mmddb">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="Zhang Penghe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Mmddb" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
+<html lang="en">
+    <head>
+        <title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="manifest" href="/site.webmanifest">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+        
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Mmddb</a>
+            </div>
+        </div>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Mmddb</a>
-      </h1>
-      
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
 </header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-JWT" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/07/01/JWT/" class="article-date">
-  <time datetime="2021-07-01T11:52:23.825Z" itemprop="datePublished">2021-07-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/01/JWT/">JWT</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>JSON Web Token （JWT）是一个 开放的 <strong>标准</strong>，以紧凑且 self-contained 的方式，使用 JSON 对象在 parties 间安全的传输信息。这些信息是可以被验证且信任的，JWT 可以使用一个 secret （借助HMAC算法）或者一个 public/private 钥匙 （借助 RSA 或者 ECDSA）</p>
-<p>JWT 主要用于 签名 token，签名 token 可以供他人验证其中包含的信息（claims）的完整性</p>
-<h1 id="什么时候用"><a href="#什么时候用" class="headerlink" title="什么时候用"></a>什么时候用</h1><h4 id="1-用户授权"><a href="#1-用户授权" class="headerlink" title="1. 用户授权"></a>1. 用户授权</h4><p>因为 HTTP 是开放的，且无状态，server 不知道用户的身份，就要做访问权限的控制，认证用户后，才允许调用 API。具体是，用户第一次登陆时，返回一个 JWT，里面包含用户的一些信息，用户之后的所有请求都带着 JWT，验证后允许其访问一些路径，服务，资源。使用 Token 的好处是不用每次都发送 账号密码，减小风险。</p>
-<p>由于 JWT 自身较小的<strong>开销？</strong>和 <strong>轻松跨域</strong>，Single Sing On 广泛应用了 JWT。</p>
-<h4 id="2-信息交换"><a href="#2-信息交换" class="headerlink" title="2. 信息交换"></a>2. 信息交换</h4><p>由于 JWT 可以被签名，使用 public key/ private key可以确定发送人的身份；并且，使用 JWT 内容中的 header 和 payload, 可以轻松的验证内容是否被篡改。</p>
-<h1 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h1><p>两种表现形式 JSON 和 压缩后的，都由三部分组成，</p>
-<p>三部分： 名字都是 3个 character (宣传为了紧凑)</p>
-<ul>
-<li><p>Header, （ token 的类型，签名算法）</p>
-<p><code>{  &quot;alg&quot;: &quot;HS256&quot;,  &quot;typ&quot;: &quot;JWT&quot; }</code>  </p>
-</li>
-<li><p>Payload （携带的有用的一些信息 claims，3类,</p>
-<ol>
-<li><p>Registered claims: 推荐的，预定义的属性，包括 <strong>iss</strong> (issuer),  (expiration time), <strong>sub</strong> (subject), <strong>aud</strong> (audience)</p>
-</li>
-<li><p>Public claims: 由使用 JWT 的人随意使用，尽量与标准中定义的不冲突</p>
-</li>
-<li><p>Private claims: 客制化定义，分享信息的人定义，更加私人化</p>
-<p>由于这些信息都是可读的，不建议在里面放一些 机密信息，除非他们是加密的，</p>
-<p><code>{  &quot;sub&quot;: &quot;1234567890&quot;,  &quot;name&quot;: &quot;John Doe&quot;,  &quot;admin&quot;: true }</code></p>
-</li>
-</ol>
-</li>
-<li><p>Signature （ 由以上两部分，以及你的 secret，使用 header中声明的算法，进行签名）</p>
-<p><code>HMACSHA256(base64UrlEncode(header) + &quot;.&quot; +  base64UrlEncode(payload),  secret)</code></p>
-</li>
-</ul>
-<p>把 header 和 payload 分别用 Base64url 编码，再加上 signature，三部分以点分隔就形成了压缩后的结构：<code>xxxxx.yyyyy.zzzzz</code> 。</p>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>无状态的验证机制，server 并不存储 JWT，当用户成功登陆时，返回一个 JWT，用户之后的请求都带上，使用 Bearer schema 放到 Authorization header 中，这样 CORS （Cross-Origin Resource Sharing）跨域问题就得到了解决。</p>
-<p>「 JWT 数据可以放到 HTTP 请求头部发送，不存在跨域问题。而原生 session 基于 cookie 发送，存在跨域问题」</p>
-<h1 id="为啥-JWT-呢"><a href="#为啥-JWT-呢" class="headerlink" title="为啥 JWT 呢"></a>为啥 JWT 呢</h1><p>官网上与 <strong>Simple Web Tokens (SWT)</strong> ，<strong>Security Assertion Markup Language Tokens (SAML)</strong> 做了比较。</p>
-<p>物理属性方面，对比与 SAML，JSON没有 XML 冗长，并且使用 JSON 编码起来体积更小，利于在http中传输</p>
-<p>安全性方面，对比 SWT，SWT 只能使用 HMAC 算法进行对称加密，JWT 和 SMAL 可以用 公钥/私钥进行签名，SMAL在这方面又比较困难。</p>
-<h1 id="与-Session的比较"><a href="#与-Session的比较" class="headerlink" title="与 Session的比较"></a>与 Session的比较</h1><p>主要区别就是存储的位置， session 保存在服务端，jwt 在客户端</p>
-<ol>
-<li><p>安全性</p>
-<p>jwt 使用 base64 编码，并没有加密，不能存放机密数据，而session在服务端，可以放敏感数据，更安全</p>
-</li>
-<li><p>性能</p>
-<p>jwt 太长，cookie 一般限制 4k，一般放在 localstorge 里面，放置在 HTTP 的请求头中，就导致 Header 可能比 Body 还大</p>
-<p>「超过了tomcat允许的最大值。默认情况下，tomcat（8.0版本）允许的http请求header的最大值是8024个字节（8KB）」</p>
-</li>
-<li><p>一次性</p>
-<p>无法废弃，续签</p>
-</li>
-</ol>
-<p>   因此，最好设置的有效时间短一点，只希望被使用 1次。网上看到的例子，激活账户的邮件，几小时内有效，标识该用户，无法篡改。</p>
+        <div class="al_sidebar">
 
-      
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Mmddb</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>Zhang Penghe</h4>
+                <img class="al_sidebar_avatar" src="https://github.com/mmddb">
+                <p></p>
+            </div>
+
+            
+                <div class="al_sidebar_contact_info">
+                    <h4>GET IN TOUCH</h4>
+                    <p>一个迷茫的沙沙</p>
+
+                    <div class="dis_flex al_sidebar_social_widget">
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+                            <div class="al_social_icon_cnt" data_link="https://www.github.com/mmddb">
+                                <svg class="al_social_icon" id="github">
+                                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#icon_github"></use>
+                                </svg>
+                            </div>
+                        
+
+                        
+                        
+                    </div>
+                </div>
+            
+        </div>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/07/01/JWT/" data-id="ckqnxj92p0003tv9k59c681pc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
+</div>
 
-
-  
-    <article id="post-内存管理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
-  <time datetime="2020-11-30T21:08:59.589Z" itemprop="datePublished">2020-12-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。</p>
-<h3 id="无存储器抽象"><a href="#无存储器抽象" class="headerlink" title="无存储器抽象"></a>无存储器抽象</h3><p>最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会互相影响。</p>
-<h3 id="一种存储器抽象：地址空间"><a href="#一种存储器抽象：地址空间" class="headerlink" title="一种存储器抽象：地址空间"></a>一种存储器抽象：地址空间</h3><p>地址空间是一个进程可用于寻址内存的一套地址集合，每一个进程都有一个自己的地址空间，并且不同进程的地址空间相互独立。</p>
-<p>那么如何保证两个进程在访问它们地址空间中的相同位置（如进程1的地址28和进程2的地址28）不会冲突呢？</p>
-<p>我们需要使用<strong>动态重定位</strong>，简单地把每个进程的地址空间映射到物理内存的不同部分，可以简单的给每个CPU配置 <strong>基址寄存器</strong> 和 <strong>界限寄存器</strong>。当一个程序运行时，将他的起始物理地址装载到基址寄存器中，程序的长度装载到界限寄存器中，在进行寻址时，将地址空间的地址加上基址寄存器的值，就可以得到真实的物理地址，如果大于程序的最大长度，就会产生错误并中止访问。</p>
-<p>这种方式的缺点是每次访问内存都要进行加法和比较运算。加法运算由于进位传递时间的问题，会比较耗费时间。</p>
-<p><strong>交换技术</strong></p>
-<p>当计算机的内存不够使用时，我们可以使用<strong>交换技术</strong>，把运行一段时间的进程存到磁盘里，让他们进入睡眠状态，然后从磁盘中唤醒一些进程放入内存。</p>
-<p>因为进程在运行过程中所占用的内存空间有可能增长，在换入进程时要为他分配一些额外的内存，以免他增长的空间影响到其他进程；而将进程移动到磁盘里进入睡眠时，应仅仅分配内存实际使用的内存，将额外的内存交换出去是一种浪费。</p>
-<p><strong>空闲内存分配</strong></p>
-<p>我们可以使用 <strong>位图</strong> 进行存储管理，位图将存储空间分为一个个存储单元，对存储单元进行编码，0代表空虚，1代表占用（也可相反），如下图所示，ABCDE为5个进程，刻度代表内存单位，阴影部分表示空闲区域，编码为0。也可以采用链表的方式表示同样的信息。</p>
-<img src="../images/memoryAllocation.png" alt="截屏2020-11-30 下午10.20.30" style="zoom:50%;" />
-
-<p>位图的大小取决于内存空间的大小以及内存单元的粒度（细腻程度，也就是大小），这种方法主要问题是，在寻找空闲空间时要在位图中搜索连续 k 个 0 的串，这将十分耗时，并且该串还可能跨越字的边界。</p>
-<p>另一种记录内存的方法是，维护记录已分配内存和空闲 <strong>内存段链表</strong>。链表中的节点为进程或者空闲区。段链表可以按照地址排序，这样更新起来非常直接，如图所示，在进程x终止后，内存段链表的更新就只是相邻节点的合并或连接。</p>
-<img src="../images/linkedListMap.png" />
-
-<p>当按照地址顺序分配内存时，有几种算法，第一个是<strong>首次适配</strong>算法，沿着链表遍历，直到第一次找到合适的空闲位置，就分配。将每次找到的空闲位置都记录下来，下次就接着结束的位置找，叫做<strong>下次适配</strong>算法；</p>
-<p>另一个著名并广泛应用的是<strong>最佳适配</strong>算法，搜索整个链表，找出能容纳进程的最小空间，他趋向于找到一个最接近实际需要的空闲区，而不是随便找到一个就用，不会把潜在的较大空闲区拆分。但是这种方法较慢，并且比以上两种更浪费内存，因为他会产生很多非常小的空闲区。为避免这种问题，可以采用<strong>最差适配</strong>，即总是分配最大的可用空闲区，使新的空闲区比较大而可以继续使用。</p>
-<p>还有一种分配算法称为<strong>快速适配</strong>，它为那些常用大小的空闲区维护单独的链表。这样可以快速的找到制定大小的空闲区，但是问题在于当进程被换出时，寻找它相邻块并查看是否可以合并的过程是非常费时的。</p>
-<h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>当一个程序占用的内存大于计算机内存时，我们需要把该程序分割成许多个片段，每次只加载重要的一些片段，系统对内存中的片段和硬盘中的片段时不时的进行换入换出操作。这种方法叫做<strong>虚拟内存</strong>。这些独立的块或者片段称为页或 <strong>页面</strong>。</p>
-<p><strong>分页</strong></p>
-<p>大部分虚拟内存系统中都使用一种叫做<strong>分页</strong>的技术。在程序中产生的地址称为<strong>虚拟地址</strong>，它们构成了一个虚拟地址空间。在使用虚拟内存时，CPU获得一个地址后，不直接把地址送到内存总线上（因为并不是真正的物理地址），而被送到内存管理单元（MMU），由它来映射至物理内存地址。物理内存中的 *<em>页框 *</em>对应着虚拟内存中的页面。RAM和磁盘直接的交换总是以整个页面为单位进行的。</p>
-<img src="../images/分页.png" />
-
-<p>MMU 的内部维护着一个<strong>页表</strong>，其中包含了虚拟地址和物理地址的映射关系，如下图所示，虚拟页面1-7分别对应着几个物理内存（这些程序片段已经被加载进内存，因此有物理地址）。需要注意的是，因为不是所以页面都被加载进内存，这里并不是所有虚拟页面都有物理内存与其对应，例如 所有的虚拟内存片段 x。</p>
-<p>那么如果现在我们想寻找某个虚拟页面X的物理地址，MMU会注意到这个地址没有被映射，于是CPU陷入到操作系统，称为<strong>缺页中断</strong>，OS选择一个很少被使用的页框，将他的内容写进磁盘，然后把需要访问的页面放到刚刚回收的页框里，修改映射关系，然后重新启动引起陷阱的指令。</p>
-<img src="../images/对应.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
-
-
-
-<p>下面是MMU的具体工作原理，下图的最下方是输入的虚拟内存指令，高4位是代表页号，低12位代表偏移量。而页表中每个表项的高三位代表对应的物理地址中最高的三位，最低的一位代表该地址是否在内存中。首先根据寻找对应页号的页表项，如下图所示找到 2 号表项，将虚拟地址的最高三位替换，保留剩下的位，即可得到物理地址。</p>
-<img src="../images/缺页中断.png" alt="截屏2020-12-01 下午9.41.03" style="zoom: 50%;" />
-
-<p>页表项中还可以加入其他含有特定信息的位，如</p>
-<ul>
-<li>保护位：指出该页是否允许读，写和执行。</li>
-<li>修改位：当一个表项被修改过时，将该位标记，当表框被换出时，OS可以决定是简单的丢弃还是重新写入磁盘。</li>
-<li>访问位：在发生缺页中断时帮助OS选择该淘汰的页面，不再使用的页面更适合淘汰。</li>
-<li>高速缓存禁止位：在一些情况下保证硬件不断的从设备中读取数据，而不是访问高速缓存中旧的数据。</li>
-</ul>
-<p><img src="../images/%E9%A1%B5%E8%A1%A8%E9%A1%B9.png" alt=""></p>
-<p><strong>加速分页过程</strong></p>
-<p>在实现虚拟内存以及分页时，我们需要考虑映射速度，以及页表大小的问题。现代计算机至少有32位的虚拟地址，假设页面大小位4KB，32位的地址空间将有100万页，如何在这么大的页表里进行查询是个问题。</p>
-<p>一种方法是我们把每个进程的页表放到寄存器中，这样查询起来很快，但是在每次上下文切换也就是进程切换时会重新装载整个页表，代价高昂。另一种方法，那就放内存里白，但是这样速度又太慢。</p>
-<p>因此，还是那个老办法，缓存吧，给计算机加一个小硬件，<strong>转化检测缓冲区</strong>（Translation Lookaside Buffer），也叫<strong>快表</strong>，通常在MMU中，他存储少量但是经常被查询的表项，工作原理和高速缓存类似。也可以使用软件来模拟TLB，通过 TLB 找不到物理内存时称为TLB失效。</p>
-<ul>
-<li><strong>软失效</strong>：该页面不在TLB中，在内存中。这时更新一下TLB即可，耗时10—20个机器指令，几纳秒。</li>
-<li><strong>硬失效</strong>：不在TLB也不在内存中，这时需要通过磁盘中存取页面，并且需要页表遍历，耗时往往时软失效的百万倍。</li>
-<li><strong>次要缺页错误</strong>：所需页面就在内存中，但是没有记录在该进程的页表中，如该页面可能由其他进程从硬盘中调用内存，这时需要把所需页面正确映射到页表，不在从硬盘中调入。</li>
-<li><strong>严重缺页错误</strong>：需要从硬盘重新调入页面。</li>
-<li><strong>段错误</strong>：程序访问了一个非法地址，OS一般会报告段错误来终止程序。</li>
-</ul>
-<h4 id="针对大内存的页表"><a href="#针对大内存的页表" class="headerlink" title="针对大内存的页表"></a>针对大内存的页表</h4><p>针对非常大的内存，我们可以使用<strong>多极页表</strong>的形式，高级页表的表项指向低级页表的地址，类似套娃的形式，这样可以避免把全部页表一直保持在内存中。</p>
-<img src="../images/多级页表.png" />
-
-
-
-<p>不使用套娃的方法是<strong>倒排页表</strong>，这种设计中。实际内存的每个页框对应一个表项（而不是虚拟内存页对应表项），由于虚拟内存一般都比实际内存大很多，这样的方式可以节省大量的空间。</p>
-<p>但是问题是这样查询起来比较麻烦，当进程 n访问虚拟页面 p 时，不能仅仅通过 p 来找物理地址了，而需要遍历页表来查询表项 (n,p)。解决方法还是 TLB，把频繁使用的页面存起来，查的就快一点。还可以对整个页表建立散列表，当TLB失效时，查询起来就很快。</p>
-<h4 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h4><p>当发生缺页中断时，我们需要选择一个页面将其换出内存，以便腾出空间分配给新页面。当我们需要考虑到底选择换出哪些页面，需要考虑到页面在一段时间内还会被访问的可能性，如果换出被频繁访问的页面，就会降低系统性能，接下来介绍一些算法。</p>
-<p><strong>最优页面置换</strong></p>
-<p>最理想的情况是我们知道内存中各个页面下一次访问的时间，有些页面可以几条指令后就会被访问，有些则要经过几百万次，因此我们每次都换出下一次访问时间最长的。但是这种方法是不可能实现的，我们无法预知页面的下一次访问时间。</p>
-<p><strong>最近未使用页面置换</strong> NRU</p>
-<p>在页面被读取或者写入时设置 R 位，如果页面被修改，再设置 M 位。因此系统可以得知哪些页面在短时间内可能再被访问，避免置换出去。当发生缺页中断时，操作系统检测所有页面，根据它们 R 位和 M 位的值，把它们分为 4 类：</p>
-<ol>
-<li>没有被访问，没有被修改</li>
-<li>没有被访问，已被修改</li>
-<li>被访问，没有被修改</li>
-<li>被访问，被修改</li>
-</ol>
-<p>NRU（Not Recently Used）算法随机从类编号最小的页面中挑选一个页面淘汰，这种方法易于理解并且能够有效的实现。</p>
-<p><strong>先进先出页面置换算法</strong></p>
-<p>另一种开销较小的页面置换算法是 FIFO，原理是找到存在时间最长的页面并淘汰他，操作系统维护一个页面链表（或者是队列），将新进入的放在表尾，老的就被挤到表头，每次淘汰表头的页面，但是这样做可能会把频繁使用的页面置换出去。</p>
-<p><strong>第二次机会页面置换算法</strong></p>
-<p>这种算法对FIFO进行优化，检测最老的页面的R位，如果R位是0，代表又老又没人访问，就立刻置换出去，如果是1就把R位清零，并把该页面放到链表的尾端，也就是给他第二次机会。</p>
-<p><strong>时钟页面置换算法</strong></p>
-<p>第二次机会算法虽然不错，但是每次移动页面会降低效率，完全可以用循环链表完成，使用一个表针指向最老的页面，当发生缺页中断时，检测表针指向的页面，如果是 0 ，就淘汰，如果是 1，就清零并向前移动一格，重复这个过程知道找到一个 R 为0的页面为止。</p>
-<img src="../images/时钟页面置换算法.png" />
-
-
-
-<p><strong>最近最少使用页面置换算法</strong></p>
-<p>LRU（Least Recently Used）致力于实现最优置换方法，通过记录各个页面在前几条指令中频繁使用的页面，这些页面很可能在之后的指令还要访问，这样每次置换时就淘汰那些<strong>未访问时间最长</strong>的页面。</p>
-<p>但是这种方法实现代价很高，在内存中维护一个所有页面的链表，最近使用最多的在表头，最少的在表位，而每次访问内存时都要更新整个链表。</p>
-<p>一种解决方式是在硬件中加入一个64位的计数器，每次执行一条指令都加1，页面项中加入一个域都记录这个值，发生缺页中断时，选择值最小，也就是最老的那个页面淘汰。</p>
-<p><strong>NFU</strong></p>
-<p>大部分电脑都没有这种硬件，一直软件解决方案 NFU（Not Frequently Used）给每个页面分配一个计数器，在每次缺页中断时，如果页面的 R 位为1，就给他的计数器加1。这样系统就大致掌握了每个页面被访问的频繁程度，发生中断时，置换计数器值最小的页面。</p>
-<p>对其的一种优化方法称为<strong>老化</strong>算法，在 R位加进计数器之前先将计数器右移一位，再将 R 位加到计数器最左边，发生缺页中断时还是置换值最小的页面。相比于之前的算法，这样的好处是，在两个页面访问次数相同时，可以判断哪个访问时间较早，</p>
-<p><strong>工作集页面置换算法</strong></p>
-<p>一个进程<strong>正在使用的页面</strong>的集合称为它的工作集，不少分页系统都会跟踪进程的工作集，以确保让进程运行前，它的工作集就已在内存中，这样可以大大减少缺页中断的概率。</p>
-<p>将每一个页面项设置上次访问时间和 R 位，发生缺页中断时，先扫描 R位如果等于 1，更新页面访问时间位当前时间，如果R位0，并且页面项纪录的访问时间和当前时间之差大于预设的一个数，就淘汰，如果小于等于，就把这一项作为候选项，整个扫描完成后如果没有淘汰页面，就在这些候选项中选一个未访问时间最长的。</p>
-<p><strong>工作集时钟页面置换算法</strong></p>
-<p>还是老问题，每次都扫描一个效率太低了，还是基于时钟算法。每次缺页中断时，首先检查R位，如果是1，该页面刚刚就被访问过，不适合淘汰，把R置0，指针移动一个，如果是0，如果页面的生存时间大于一个值，并且他没有被访问过，并在磁盘上有一个有效的副本，就把他置换出去，而如果被修改过，则不适合被置换，因为还要修改其磁盘上的副本，这时指针继续向前走，重复该过程。</p>
-<img src="../images/工作集时钟置换.png"/>
-
-
-
-<p>总之，最好的两种算法是老化算法和工作集时钟算法，它们分别基于 LRU 和 工作集，一种纪录页面被访问的总次数，另一种直接纪录短时间内是否被访问，都具有良好的页面调度性能也可以有效的实现。</p>
-<h3 id="分页系统中的设计问题"><a href="#分页系统中的设计问题" class="headerlink" title="分页系统中的设计问题"></a><strong>分页系统中的设计问题</strong></h3><p>上面的内容仅仅讲述了一些基本的页面置换算法和如何实现它们，但是分页系统还要考虑一些事情。</p>
-<p><strong>局部分配与全局分配</strong></p>
-<p>内存中运行着不止一个进程，因此我们在进行页面置换时，完全可以分配那些其他进程中可以淘汰掉的页面，分配给每个进程的页框数是随时间 <strong>动态</strong> 变化的，这类算法称为 <strong>全局</strong> 页面置换算法。</p>
-<p>全局算法通常比局部算法更好，在工作集大小动态变化的过程中，即使有大量空闲页框存在，工作集的增长也会导致颠簸，如果分配的页框较多，也会造成空间浪费。</p>
-<p>在我们之前介绍过的算法中，大部分都适合于这两种方法，而工作集和WSClock算法只有采用局部策略才有意义。</p>
-<p><strong>页面大小</strong></p>
-<p>页面的大小需要平衡，如果分配的页面太大，那么进程的正文段，数据段或者堆栈段可能填不满一整个页面；并且在 TLB空间中，使用大页面可以占用更少的TLB表项，节省空间，小页面则更加精确。操作系统有时会位系统中不同部分使用不同的页面大小，内核使用大页面，用户进程使用小页面。</p>
-<p>如果分配的页面太小，则会生成更大的页表，并且内存于磁盘会产生更多的交互，而传输的大部分时间会花费在寻道和旋转延迟上，所以传输大页面和小页面花费时间基本相同。</p>
-<h3 id="分段"><a href="#分段" class="headerlink" title="分段"></a>分段</h3><p>目前为止讨论的虚拟内存都是一维的，虚拟地址连续的从0到最大，而对于内存动态变化的多进程来说，这可能会导致表与表之间发生碰撞。并且多个进程之间会产生一些闲置空间，造成浪费。因此引出了<strong>分段</strong>的思想。</p>
-<p>在机器上提供多个互相独立的称为段的地址空间，每个段从0到最大的线性地址序列构成，段的大小在运行期间可以动态改变。</p>
-<p>这样做的好处有3点，首先是段和段之间是独立增长和减小的，不会影响到其他的段，并且如果一个段被修改并重新编译，其他使用该段的段并不会受到影响，如果它们被放在一个连续的空间，则程序整体都要重新编译。并且分段有助于在不同进程间共享过程和数据。这样也有助于在几个进程间共享数据，一个常见的例子是<strong>共享库</strong>，可以把一些庞大的库放到一个单独的进程中由各个进程共享，从而不需要在各个进程的地址空间中都保存一份。其次，不同的段可以应用不同的保护模式，例如读写执行等权限。</p>
-
-      
+    <div class="al_index_background dis_flex_center al_full_cover">
+        <div class="al_pos_ab al_letter al_index_background_letter">
+            W
+        </div>
+        <h2 class="al_index_background_bio">
+            We don’t really know anything, do we?
+        </h2>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" data-id="ckqnxj92r0005tv9k04cb32a8" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
+
+    <div class="al_index_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow">
+            <div class="al_section_container dis_flex_jcenter">
+                <div class="section_header">
+                    LATEST PAGES
+                </div>
+            </div>
+
+            <ul class="al_post_list">
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                H
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/03/Https/">
+                                    Https
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-03 22:30:17
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                HTTP 的问题
+从 HTTP 协议本身来看，其存在几大问题：
+
+可能被窃听
+HTTP 本身不具备加密的功能，在互联网的线路上传输时，可能会被人收集，这样就会看到通信内容。
+
+解决： 对信道加密（结合 SSL 和 TLS）； 对内容加密
+
+内容可能被篡改
+HTTP 请求或响应在传输途中，可能遭到攻击者拦截并篡改，这种方式称为中间人攻击（Man-In-Middle attack). 
+
+不验证身份
+只要知道 IP 和端口，任何人都可以发起请求，服务器也会响应。解决：使用 SSL ，查看证书 CA， 证书由第三方颁发，客户端通信前先确认证书。
+
+HTTPS
+https 的出现正是解决了这些问题，h
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/03/Https/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                J
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/01/JWT/">
+                                    JWT
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-01 19:52:23
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                是什么
+JSON Web Token （JWT）是一个 开放的 标准，以紧凑且 self-contained 的方式，使用 JSON 对象在 parties 间安全的传输信息。这些信息是可以被验证且信任的，JWT 可以使用一个 secret （借助HMAC算法）或者一个 public/private 钥匙 （借助 RSA 或者 ECDSA）
+
+JWT 主要用于 签名 token，签名 token 可以供他人验证其中包含的信息（claims）的完整性
+
+什么时候用
+1. 用户授权
+因为 HTTP 是开放的，且无状态，server 不知道用户的身份，就要做访问权限的控制，认证用户后，才允许调用 A
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/01/JWT/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                内
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2020/12/01/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                                    内存管理
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2020-12-01 05:08:59
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        17 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                内存管理
+内存是计算机中需要认真管理的重要资源，尤其是分层存储器体系中空间较小且昂贵的资源，如高速缓存，RAM，操作系统中管理分层存储器体系的部分称为存储管理器。他的主要任务是记录空闲的和正在使用的内存，为用户分配内存，用户使用完后及时释放内存。
+
+无存储器抽象
+最简单的存储器抽象就是没有抽象，每一个程序都直接访问物理内存。如果用户可以寻址内存的每个字节，就很可能破坏操作系统，并且多个程序运行过程中也会互相影响。
+
+一种存储器抽象：地址空间
+地址空间是一个进程可用于寻址内存的一套地址集合，每一个进程都有一个自己的地址空间，并且不同进程的地址空间相互独立。
+
+那么如何保证两个进程在访问它们地址空
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2020/12/01/内存管理/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                进
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2020/11/19/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
+                                    进程与线程
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2020-11-19 04:39:16
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        30 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                进程与线程
+进程
+进程的理解
+
+现代计算机中，经常会在同一时间中做许多事，比如我们可以一边登陆 team 上着网课，一边开着微信与女朋友聊天，还可以使用 Chrome 访问各种商城的官网查看黑色星期五的活动信息，等等。只要内存够用，我们可以无限进行多任务并行。这些正在运行的软件就是我们创建的一个个的进程，他们之间是相互独立的。
+
+但是为什么是伪并行呢，因为严格意义上来说，对于单CPU的电脑来说，在某一瞬间，CPU只能运行一个进程，但是他可以非常快速的在多个进程之间切换，堪称时间管理的鼻祖，因此在1秒中内，它可能运行多个进程，给人们产生并行的错觉。这种快速切换也称为多道程序设计。
+
+进程的出生到
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2020/11/19/进程与线程/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                计
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2020/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/">
+                                    计算机系统组成
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2020-11-16 05:35:13
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        12 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                第二章 计算机组成
 
 
-  
-    <article id="post-进程与线程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/19/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="article-date">
-  <time datetime="2020-11-18T20:39:16.311Z" itemprop="datePublished">2020-11-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">进程与线程</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><p><strong>进程的理解</strong></p>
-<p>现代计算机中，经常会在同一时间中做许多事，比如我们可以一边登陆 team 上着网课，一边开着微信与女朋友聊天，还可以使用 Chrome 访问各种商城的官网查看黑色星期五的活动信息，等等。只要内存够用，我们可以无限进行多任务并行。这些正在运行的软件就是我们创建的一个个的进程，他们之间是相互独立的。</p>
-<p>但是为什么是伪并行呢，因为严格意义上来说，对于单CPU的电脑来说，在某一瞬间，CPU只能运行一个进程，但是他可以非常快速的在多个进程之间切换，堪称时间管理的鼻祖，因此在1秒中内，它可能运行多个进程，给人们产生并行的错觉。这种快速切换也称为<strong>多道程序设计</strong>。</p>
-<img src="../images/multiprog.png" />
+现代计算机是由处理器，存储器以及输入/输出设备组成的互连系统，连接他们的设备叫做总线。
 
-<p><strong>进程的出生到灭亡</strong></p>
-<p>进程的创建有4种方式，</p>
-<p>1、系统初始化：启动操作系统时，通常会创建一些进程，一些是前台进程，与用户进行交互，例如我们的整个桌面，一些是后台进程，例如邮件系统，通知系统，这些进程停留在后台运行，也称为<strong>守护进程</strong>（daemon）大部分时间都在睡眠，只有来新通知了才会被唤醒。</p>
-<p>其余三种是正在运行的程序执行了创建进程的系统调用，用户请求创建新进程，以及在批处理系统中一个批处理作业的初始化。</p>
-<p>这几种方式都是因为一个已存在的进程执行了一个用于创建新进程的系统调用，在UNIX中，只有一个系统调用——fork 来创建新进程。他会创建一个与调用进程相同的 <strong>副本</strong>，（不同的地址空间，不可写的内存区可以共享）也就是子进程，这两个进程拥有相同的内存映像，环境字符串和同样的打开文件。子进程的叛逆性较强，通常接下来他会调用 execve 或一个类似的系统调用以修改内存映像并运行一个新的程序，不和他爹父进程一样。</p>
-<p><strong>进程的层次机构</strong>：一个父进程可以创建多个子进程，一个父进程和他的多个子进程组成一个进程组，而一个子进程只能有一个父进程。这种结构类似树，而UNIX中，系统发出的信号可以一层一层在所有进程中传递。例如在UNIX在启动过程中，一个叫做 init 的进程出现在启动映像中，他读入一个说明终端数量的文件，然后为每个终端创建一个登陆进程（用来等待用户登陆），用户登陆成功之后，该登陆进程就启动一个新进程 shell来接受命令，所接受的命令会启动更多进程，以此类推，所有的进程都属于 init 为根的那一棵树。</p>
-<p><strong>进程的状态</strong>：进程有三种状态分别是，就绪（可以运行，但是因为其他进程正在运行而暂时停止），阻塞（出问题了，除非某种外部事件发生，不然没办法运行），运行（正常，正在占用CPU）；</p>
-<img src="../images/lifecycle.png">
+2.1 处理器
+处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。
 
-<p>因为CPU在某时刻只能运行一个进程，加上很多进程都有运行的需求，以及运行过程中会发生各种各样的问题，进程在活着的时候就不停的在这三种状态来回切换。</p>
-<p>一个进程在运行过程中会遇到数不清次的中断，那么如何在中断后的下一次运行时还能保持正常呢？重点是，保存中断时刻进程的信息，包括。。。。</p>
-<p>系统中那么那么多的进程，操作系统老师维护这一张 <strong>进程表</strong> 来进行管理，表中包含了进程状态的重要信息，下图为进程表中的保存的一些字段。</p>
-<p><strong>多道程序设计模型</strong></p>
-<p>假设一个进程在生命中只有20%的时间被CPU执行，如果提高进程的数量，那么就可以提高 CPU的利用率，可以用公式 1 - p^n 表示，p为等待时间占比，n为进程数量，如下图所示，如果进程 80% 的时间都在等待，那么进程数量在10个以上时，CPU利用率才能达到80%。</p>
-<img src="../images/IOefficiency.png" alt="截屏2020-11-18 下午9.51.20" style="zoom:67%;" />
+2.1.1 CPU 组成
+CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。
 
-<p>虽然这种预测只是大致的，但是我们可以用来预测 CPU 的性能，假设我们电脑现在内存有8G，我们日常指使用微信，team，Chrome，他们各占2g 内存，加上操作系统运行过程中占2g内存，我们的8g就用完了，加上这些进程80%的时间都在等待，此时CPU利用率 大约是 1 - 0.8^3 = 49%。现在我们觉得电脑有卡，并且CPU买亏了，于是花了半个月的生活费买了一块8g内存条，现在不加操作系统可以运行7个占用2g内存的进程了。还按80%的等待时间算，我们CPU的利用率以及已经是1 - 0.8^7 = 79%了，提高了30%的利用率，嗯，感觉不错。这时如果有大哥追求完美，想尽量的榨干 CPU，他又花了半个月生活费买了一条8g内存条，这时候的CPU利用率为91%，只增加了12%的利用率，性价比明显降低。</p>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><h3 id="线程的理解"><a href="#线程的理解" class="headerlink" title="线程的理解"></a><strong>线程的理解</strong></h3><p>举个栗子，在微信的运行过程中，我们在查看朋友圈的过程中，微信的消息接收功能还是正常运行的，展示朋友圈和消息接收就是两个独立的线程，他们运行在微信这个进程当中，负责各自的任务。</p>
-<h3 id="线程的特点"><a href="#线程的特点" class="headerlink" title="线程的特点"></a><strong>线程的特点</strong></h3><p>为什么我们需要在一个进程中再创建线程呢，这是因为大部分应用的功能不是单一的，在其运行过程中同时发生着许多活动，通过将应用分解成许多准并行的线程，分而治之，会简化程序设计模型。</p>
-<p>与进程非常不同的一点是：线程之间是 <strong>共享地址空间</strong>的，这意味着他们可以便利的进行合作，并且创建线程更加轻量级，创建时间比一个进程要快10～100倍；还有一个优点是性能方面的，如果存在大量的I/O处理以及计算，90%的时间花在I/O交互中，拥有多个线程意味着活动可以重叠进行（也就是并行），加快执行速度，如果大量的活动都是 CPU 密集型（大部分时间都占用CPU，而CPU在一个时刻只能被一个任务占用）的，就获得不了性能提升。</p>
-<p>一个进程中的多个线程拥有其自己的信息，包括程序计数器，寄存器，堆栈，以及状态，每个线程会调用不同的过程，拥有各自不同的执行历史，用其自己的堆栈记录。</p>
-<h3 id="线程的使用"><a href="#线程的使用" class="headerlink" title="线程的使用"></a><strong>线程的使用</strong></h3><p>操作系统进行资源管理的单位是进程，IEEE定义了线程包 pthread，大部分的 UNIX 系统都支持该标准，所有 pthread 线程都含有一个标识符，一组寄存器（包括程序计数器）和一组属性（堆栈大小，调度参数等）</p>
-<img src="../images/threadCalls.png" />
+控制器用于从主存中取指令和分析（decode）指令。
 
-<p>创建一个新线程需要调用 Pthread_create，返回新线程的标识符， Pthread_exit 用于在线程完成任务后结束线程， Pthread_join 调用来等待别的特定线程的终止。 Pthread_yield 用于当自己执行时间过长，希望让其他线程运行而主动停止自己，让出 CPU。 Pthread_attr_init 和  Pthread_attr_destory 分别用于初始化和结束线程的属性结构。</p>
-<h3 id="线程的实现地点"><a href="#线程的实现地点" class="headerlink" title="线程的实现地点"></a>线程的实现地点</h3><p><strong>在用户空间实现</strong>：</p>
-<p>线程在操作系统的用户空间的进程中实现时，每个进程需要有其专有的<strong>线程表</strong>，存放了每个线程的程序计数器，堆栈指针，寄存器，状态等。线程表由运行时系统管理维护。</p>
-<p>在用户空间中线程的切换十分快捷，在一个线程执行 Pthread_yield 让出控制权时，保存该线程的状态以及调度下一个线程执行都只是本地过程，执行它们不用陷入内核和上下文切换，也不需要对高速缓存进行刷新。此外，不同的线程可以执行不同的调度算法，例如具有垃圾调度算法的线程就不用担心在不合适的时间被停止。相比于内核空间的线程（受限于内核中内存大小，如果线程数量很大，就会出现问题），用户空间的线程具有良好的扩展性。</p>
-<p>但是这样也存在一些问题，首先是<strong>如何实现阻塞系统调用</strong>，因为我们不能让一个线程的调用阻塞系统，因为这样会停止其他所有正常运行的线程。一种方案是，改变系统调用，使得全部系统调用都是非阻塞的，但是这样很麻烦，也会影响其他用户程序。另一种方案是，在线程的某个调用会导致阻塞，就提前通知，由系统来审核，只有在安全情况下才进行线程要求的调用，不然就放一边，先运行别的线程，下次该线程取得控制权后在进行检测。系统周围从事检查的这类代码成为<strong>包装器</strong>（wrapper）。类似的问题是<strong>缺页中断</strong>问题，因为不是所有的程序都一次性放在内存中，当一个线程调用跳转到了一个不在内存上存储的指令时，CPU就要去访问别的地方（可能是磁盘），然后进行I/O操作，这会吧整个进程阻塞起来，指导磁盘I/O完成。</p>
-<p><strong>在内核空间</strong>：</p>
-<p>内核支持和管理线程时，无需使用运行时系统了，内核中有用来记录系统中所有线程的线程表，保存的信息和用户空间中每个进程的线程表一样。</p>
-<p>内核中实现线程的一个优点是，内核中的线程的所有阻塞系统调用都以系统调用的形式实现，这样当一个线程阻塞时，内核可以选择运行其他线程（自己进程或者其他进程的）。而在用户空间中，运行时系统始终运行自己进程中的线程，直到内核剥夺他的CPU为止。</p>
-<p>由于在内核中创建和撤销一个线程的代价较大，某些系统在线程被撤销时，将其标记为不可运行状态，稍后在需要创建新线程时就重新启动某个旧线程，节省一部分开销。</p>
-<p><strong>调度程序激活机制</strong></p>
-<p>即使内核级线程在某些点优于用户级线程，但是内核级线程的速度慢，科学家提出了调度程序激活机制来解决用户级线程的阻塞调用问题。</p>
-<p>其基本思路是，内核给每个进程安排一些虚拟处理器，运行时系统分配线程到处理器上，当内核了解到一个线程被阻塞后，内核通知该进程的运行时系统，并在堆栈中传递一些线程编号和事件描述，然后运行时系统就重新调度其线程。通常，运行时系统把该线程标记为阻塞状态，然后再其线程表中取出另一个线程启动。当内核知道原来的线程又可以运行时，再一次通知运行时系统，运行时系统再进行判断是否立即重启线程。</p>
-<p>在这个过程中，内核通过在一个地址上启动运行时系统，从而传送一些信息，这个机制称为<strong>上行调用</strong>，这违反分层系统内在结构的概念，通常 底层提供高层可调用的服务，而不调用高层中的服务。</p>
-<h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>进程之间经常要进行通信，正确通信需要解决三个问题，首先是进程如何把信息传递给另外一个进程，第二是通信过程中如何避免碰撞（例如两个进程对同一资源进行读写），第三是如何确保顺序。这三个问题也同样适用于线程间通信。</p>
-<p><strong>进程冲突</strong></p>
-<p><strong>临界区</strong></p>
-<p>为了避免进程间的冲突，我们找到一些方法组织多个进程同时读写共享的数据。引入临界区的概念，我们将那些访问共享内存的程序片段称为<strong>临界区</strong>，在一个进程进入临界区后，就不允许别的进程进入临界区，这样在一定程度上可以保证避免冲突。</p>
-<img src="../images/interProcess.png"  />
+Arithmetic Logic Unit 接受来自寄存器中的数据，对数据进行加减法，逻辑运算等简单运算，并将结果存入寄存器中。A
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2020/11/16/计算机系统组成/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                H
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2020/05/05/Hello-miaomiao/">
+                                    Hello, miaomiao~
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2020-05-05 14:41:29
+                                </div>
 
-<p>一个好的解决方案应满足以下几点：</p>
-<ul>
-<li>任何两个进程不能同时处于临界区</li>
-<li>临界区外的进程不能阻塞其他进程</li>
-<li>不能让进程无限期等待进入临界区</li>
-<li>不应对CPU的速度和数量做任何假设</li>
-</ul>
-<h3 id="忙等待的互斥"><a href="#忙等待的互斥" class="headerlink" title="忙等待的互斥"></a>忙等待的互斥</h3><p>首先介绍忙等待的解决方案，忙等待是指临界区外的进程不断检查是否可以进入。</p>
-<p><strong>屏蔽中断</strong></p>
-<p>我们可能在一个进程进入临界区后，立即屏蔽所有中断（CPU装聋），在进程将要离开时再打开中断，允许其他进程来访问共享内存。</p>
-<p>信任问题，将屏蔽中断的权利交给用户不安全（如果进入后再也不打开中断就GG了），但是在操作系统本身是一项很有用的技术。</p>
-<p>多核处理器中，屏蔽中断不会屏蔽所有的CPU，其他进程可能会使用没有别屏蔽的CPU操作共享资源。</p>
-<p><strong>使用锁变量</strong></p>
-<p>这是一种软件层面的方案，在进程中设置一个锁变量，当一个进程想进入临界区时，查看锁变量的值，如果是1（代表有进程以及进入）就等待直到值变为0。进程进入临界区后再将锁变量设置为1。</p>
-<p>但是其实这个方案啥也没解决，当一个进程刚进入临界区后，还没来得及更改锁变量为 1，另外一个变量一看锁变量还是 0，一下子就进来了，这样临界区里面就有两个进程了，Boom。</p>
-<p><strong>严格轮换法</strong></p>
-<p>这个方案借用了轮换的帮助，对共享资源的操作是轮流的。定义一个锁变量 turn，turn 为 0 时代表进程 0 可以进入操作，进程 0 操作完之后，再将 turn 改为 1，然后退出。这个过程中进程 1 一直在检查 turn的值，发现变为 1 之后就进入，完成后再改为 0，让进程 0 进入。</p>
-<p>这种方法中，等待的进程连续测试一个变量直至一个值出现为止，称为<strong>忙等待</strong>。用于忙等待的锁，称为<strong>自旋锁</strong>。</p>
-<p>但是，当进程 0 在临界区完成操作后将 turn 置为 1，并退出临界区，此时按理说应该进程1 进去临界区表演了，但是进程 1 还在忙别的，等了好久才进入临界区。这不是耽误事嘛，该你了你还在忙别的。</p>
-<p>因此，当两个进程的速度相差甚远时，轮流进入并不是一个好办法。</p>
-<p><strong>Peterson解法</strong></p>
-<p>这种耽误事的情况荷兰科学家 Perterson在 1965 年解决了，最早提出了不严格轮换的互斥算法。他将一个 interested 数组结合了进去，这个数组中存储了进程们是否想进入临界区。</p>
-<p>例如一开始没有进程希望进入临界区，现在进程 0 想进入临界区，它将 interested[0] 设置为 true 并且 把 turn 设置为 0，只有当 interested[1] = false（别人没兴趣进来） 并且 turn = 0 时，进程0才能进入成功；进程 0 离开时将 interested[0] 设置为 false。</p>
-<p>当两个进程 0 和 1都想进入时，它们将分别设置 interested[0] = true, interested[1]=true, 并将自己的进程号 存入 turn，假设进程 0 先存了 0 ，然后就进去了，接着进程 1 有把 1 存入 trun，此时因为 interested[0] = true ，他就无法进入，只能在外面一直等待，直到进程 0 退出（退出前设置 interested[0] = false）进程 1 才能进入。</p>
-<p><strong>TSL指令</strong></p>
-<p>现在我们考虑硬件层面的指令，在一些多处理器的 计算机中，会有一条指令 TSL RX，LOCK 称为测试并加锁，它将一个内存字 LOCK 读到寄存器中，然后在该内存地址上存入一个非零值。</p>
-<p>执行 TSL 指令的CPU将 <strong>锁住总线</strong>，禁止其他 CPU在指令结束前访问内存。而前面讲到的屏蔽中断，并不能屏蔽别的处理器。</p>
-<p>一个可替代 TSL 的指令是 XCHG，所有的 Intel x86 CPU在底层同步中使用该指令，本质上和 TSL 一样，它原子性的交换两个位置内容，例如一个寄存器与一个存储字。</p>
-<h3 id="睡眠与唤醒"><a href="#睡眠与唤醒" class="headerlink" title="睡眠与唤醒"></a>睡眠与唤醒</h3><p>以上方案虽然不错，但还是没有解决忙等待的问题，为了避免资源浪费，我们可以先让等待者进行睡眠（调用 sleep），先将他挂起，直到另一个进程将其唤醒（调用 wakeup）。</p>
-<p>举一个生产者- 消费者问题，也称为有界缓冲区问题，两个进程共享一个缓冲区，一个是生产者，负责将消息放入缓冲区，另一个是消费者，负责将取出消息。它们两个可以同时再缓冲区运行，当缓冲区存在的消息达到上限之后，生产者就会睡眠，等消费者从中取出一个或多个消息后再将其唤醒；同样的，如果缓冲区一个消息也没有了，就将消费者睡眠，等到生产者生产几个消息后再唤醒他。</p>
-<p>这种方式在一定程度上解决了忙等待的问题，现在如果不需要进程的话，他就可以先睡一会了。但是现在考虑一种情况。现在缓冲区消息数量为 0，消费者准备睡眠，此时生产者启动，发现现在是 0，他推测消费者正在睡觉，于是生产一个消息之后，调用 wakeup想要唤醒消费者，但是消费者此时并未睡眠（准备睡，但是还没闭眼），因此唤醒失败，过了一会消费者就睡了，而生产者稍后将缓冲区填埋后自己也睡了，这样两个进程都将永远睡眠下去。</p>
-<p>解决这个问题，可以引入一个<strong>唤醒等待位</strong>，当一个 wakeup 信号发送给一个清醒进程时，将该位置 1，随后当线程准备睡眠时，如果这个位置是 1，就取消睡眠，保持清醒。</p>
-<p><strong>互斥量</strong>    </p>
-<p>如果不需要信号量的计数功能，可以使用他的一个简化版本，称为互斥量，可以用来管理共享资源，或者一小段代码。</p>
-<p><strong>快速用户区互斥量</strong> <strong>futex</strong></p>
-<p>在进程进行一些同步操作时，需要陷入内核完成，在开始时和退出时都要陷入内核去检查是否有进程在里面或者是等待。当并行进程的数量增加，有效的同步和锁机制对性能而言非常重要。在竞争激烈，等待时间较短时，使用自旋锁会很快，这时阻塞等待进程，仅当锁被释放时让内核解除阻塞会很有效。而竞争的激烈程度是难以预测的，如果刚开始竞争并不激烈，那么频繁的内核切换将花销很大，我们需要减少不必要的内核陷入。</p>
-<p>Futex 实现了基本的锁，并且除非在迫不得已的情况下才会陷入内核，这样做改善了性能。Futex 包含内核服务和一个用户库，内核服务提供一个等待队列，允许多个进程在一个锁上等待（将进程放到等待队列中需要系统调用），这些进程均被阻塞。因此，在没有竞争时，futex 完全在用户空间工作。而这些进程共享一个锁变量，线程通过减少并检验来夺取锁，如果发现锁被人持有，就使用一个系统调用将线程放在内核的等待队列上。而进程使用完锁后会通过原子操作“增加并检验”来释放锁，并检查结果，看是否仍有进程阻塞在系统队列上，如果有就会通知内核可以对队列中的进程接触阻塞。</p>
-<p>总的来说，在没有锁竞争时，完全不需要陷入内核。</p>
-<p><strong>pthread 中的互斥量</strong></p>
-<p>pthread （POSIX的线程标准）提供了许多可以用来同步线程的函数。其基本机制是用一个可以被锁定和解锁的互斥量来保护每个临界区。线程如果想进入临界区，首先要尝试锁住相关互斥量，如果发现互斥量已被加锁，就被阻塞，直到该互斥量解锁。与互斥量相关的函数有 pthread_mutex_init （创建互斥量） pthread_mutex_destory（销毁），    pthread_mutex_lock（加锁，失败的话阻塞调用者）pthread_mutex_trylock( 尝试锁住互斥量，失败就返回错误码)</p>
-<p>除了互斥量之外，pthread 还提供了 <strong>条件变量</strong>，用于线程由于一些条件未达到而被阻塞，pthread_cond_wait 用于阻塞线程以等待另一个信号，pthread_cond_signal 和pthread_cond_broadcast 分别向另一个或多个线程发送信号来唤醒。</p>
-<p>互斥量和条件变量经常一起使用，互斥量用于锁住或解锁一个互斥量，而条件变量用于使线程阻塞以等待信号以及发送信号唤醒线程。</p>
-<h3 id="管程"><a href="#管程" class="headerlink" title="管程"></a>管程</h3><p>即使有了信号量和互斥量，还是不能完全保证进程间通信完全不冲突，在一些情况下，会发生死锁。</p>
-<p>一个管程是由过程，变量，数据结构等组成的一个集合。进程可以在任何需要的时候调用管程，但不能之间访问管程内部。管程的一个重要特性是在任意时刻，<strong>只接受一个活跃进程</strong>，这样可以有效的保证互斥。</p>
-<p>典型的处理方法是，当一个进程调用管程后，管程的前几行代码检查是否有活跃进程正在管程内部，有的话调用线程被挂起，如果没有就进入。但是只解决互斥问题并不足够，还要保证管程中的进程在无法运行后被阻塞，解决的方法是引入<strong>条件变量</strong> 以及相关的两个操作 wait 和 signal，当一个管程过程发现它无法继续运行时，就在 某个条件变量上执行 wait 操作将自身阻塞，然后将一个在管程之外等待的进程放入管程中。而那个进程可以在完成任务后，调用 signal 通知另一个阻塞进程，signal 语句可以简单的放在管程过程的最后一条语句。</p>
-<p>wait / signal 和 sleep / wakeup 虽然很像，但是有一个关键的区别，后者之所以失败是因为一个进程唤醒另一个还未睡眠的进程，导致信号丢失，而管程的互斥性保证这一点不会发生。</p>
-<p>但是管程只是一个编程概念，是编程语言的组成部分，编译器知道它们的特殊性，因此可以使用不同的方法来处理对管程的调用，写管程的人只用将所有临界区过程转化为管程过程即可，无需担心别的。管程的应用是较为局限的，因为大多数编程语言都<strong>没有</strong>管程。</p>
-<p>与管程和信号量有关的另一个问题是，这些机制都是用来访问公共内存的一个或多个 CPU 上的互斥问题的，而现在企业级应用都是具有多个 CPU 分布式系统，每个 CPU 有自己的私有内存，它们之间通过局域网连接，那么这些原语将失效。可以得出结论，信号量太低级了，而管程只能用于少数几个编程语言，这些原语均为提供机器间的通信方法，所以需要其他手段。</p>
-<p><strong>消息传递</strong></p>
-<p>上面提到的其他手段就是消息传递，使用两条原语 send (dest, &amp;msg) 和 recieve(src, &amp;msg)。前一个调用向一个给定的目标发送消息，后一个负责从一个指定的源接收消息。</p>
-<h2 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h2><p>当计算机是多道程序设计系统时，通常会有多个进程或进程同时竞争CPU，选择去执行哪一个进程叫做<strong>调度</strong>。</p>
-<p><strong>进程行为</strong></p>
-<p>几乎所有进程的 I/O 请求和计算都是交替发生的，如下图所示，将多数时间用于计算的称为<strong>计算密集型</strong>，用于I/O操作的称为 <strong>I/O密集型</strong>。随着 CPU和内存速度差异的增加，未来对 I/O密集型进程的调度似乎更为重要。</p>
-<p>如果运行I/O密集型进程，应让其尽快得到计算机会，以便发出磁盘请求并保持磁盘始终忙碌。</p>
-<img src="../images/planning.png" />
+                                
+                                    <div class="al_index_post_read_time">
+                                        1 Min Read
+                                    </div>
+                                
 
-<p><strong>何时调度</strong></p>
-<p>第一，当进程完成工作退出时。</p>
-<p>第二，当一个进程阻塞在I/O和信号量上，或由于其他原因阻塞时。</p>
-<p>第三，在一个I/O中断发生时。</p>
-<p><strong>调度算法</strong></p>
-<p>如果硬件时钟提供一定时间间隔的中断，可以在每个时钟中断时进行调度。</p>
-<p>根据如何处理时钟中断，可以将调度算法分为抢占式调度算法和非抢占式调度算法，前者挑选一个进程，并设定一个进程运行的最大时间，如果超过这个时间进程还在运行就将其挂起，挑选另一个进程运行。后者挑选一个进程运行，直至该进程被阻塞（阻塞在I/O上或等待另一个进程），或者直到进程自动释放 CPU，在时钟中断发生时不会进行调度，</p>
-<p>不同的环境需要不同的调度算法，这里的环境可以划分为3类：</p>
-<h4 id="批处理系统"><a href="#批处理系统" class="headerlink" title="批处理系统"></a><strong>批处理系统</strong></h4><p>批处理系统中不会有很多时效性要求高的用户请求，非抢占式算法通常是可以接受的。设计调度算法主要需要考虑系统的吞吐量（单位时间作业数），周转时间（批处理任务从提交到终止的时间），CPU利用率。</p>
-<p><strong>先来先服务</strong></p>
-<p>按照进程请求CPU的先后顺序来决定运行次序，这种方法简单易行，也具有一定的公平性。但是，这种方式有一个很大的缺点，现在假设有一个计算密集型的进程1，他运行1s然后去读1次磁盘（花费1s），接着很多I/O密集型的进程运行了，它们每个需要读1000次硬盘；过了1s之后，进程1又开始使用CPU运行1s，紧跟着I/O密集型的进程再运行。这样一来，每个I/O密集型进程需要花费1000s才能完成操作。此时如果有一个抢占式调度，每10ms抢占计算密集型的CPU，那么I/O进程将在10s内完成。</p>
-<p>这就好比一堆人吃饼，每个人先拿一个，吃完了再拿，大多数人拿饼1s，吃饼1分钟，而有个哥们拿饼1s，吃饼也1s，吃完就拿，吃完就拿，吃的比其他人多的多。</p>
-<p><strong>最短作业时间</strong></p>
-<p>适用于运行时间可以预知的另一个非抢占式的批处理调度算法。当队列中有多个进程等待运行时，调度程序选择预计运行时间最短的作业来运行。</p>
-<p>这种方法的优点是可以减小平均等待时间，假设现在有4个作业，分别用时8，4，4，4。如果按照先来先服务运行，它们的周转时间分别为8，12，16，20，平均为14分钟。如果这种方法，将次序变为4，4，4，8,它们的周转时间将变为4，8，12，20，平均为11分钟。</p>
-<p>这种方法的局限是参加比较的所以进程应当是已经准备好的，同时可以运行的情况下。</p>
-<p><strong>最短剩余作业时间</strong></p>
-<p>这种方法是最短作业时间的抢占式版本，将当前运行的进程剩余时间也拿来比较，如果存在某个等待的进程其运行时间比当前运行的进程剩余时间还短，就把当前进程挂起，运行该进程。</p>
-<h4 id="交互式系统"><a href="#交互式系统" class="headerlink" title="交互式系统"></a><strong>交互式系统</strong></h4><p>交互式系统经常会有多个用户发送请求，为避免进程霸占CPU太久而影响其他进程使用，抢占式调度是必须的，在设计算法时要考虑响应时间，以及均衡性（尽量满足用户的期望）</p>
-<p><strong>轮转调度</strong></p>
-<p>最古老，简单，公平的调度算法，给每个进程分配一个时间段，称为<strong>时间片</strong>，允许进程在该时间段中运行，如果在该时间段内进程完成或者阻塞，CPU立即进行切换，如果超过时间段还未结束，就剥夺CPU分配给另一个进程。调度程序所做的就是维护一张可运行进程表，当一个进程用完他的时间片后就被移动到队尾。</p>
-<p>而进程的切换，也叫上下文切换是需要时间的，假设时间片为4ms，上下文切换为1ms，则CPU 20%的时间浪费在管理开销上。因此，适当的增加时间片长度会提高CPU效率。但是如果时间片太长，一些短的交互请求的等待时间会增加，通常20-50ms是一个比较合理的折中。</p>
-<p><strong>优先级调度</strong></p>
-<p>轮转调度的假设是每个进程的优先级相同，但是现实中总有一些比较重要的进程需要先被执行。根据情况的不同，进程执行过程中可以采用抢占式或者非抢占式的方法进行调度，可以将进程根据优先级分为几类，在每一类上采用轮转法分配时间片。</p>
-<p><img src="../images/priority.png" alt=""></p>
-<p><strong>多级队列</strong></p>
-<p>为CPU密集型的进程设置较长的时间片比频繁给他们分配很短的时间片更为高效。而另一方面，长时间的时间片又会影响响应时间。解决的方法是设立优先级类，属于最高优先级类的运行1个时间片，一次类推，优先级越低，时间片越长。进程运行一次就降低一个优先级。</p>
-<p>举个例子，假设一个进程需要计算100个时间片，起初被分配1个时间片，第二次被分配2个，然后4个，8个，16个，32个，最后一次他只使用64个时间片中的37个即可完成作业。该进程需要7次交换，远远低于轮转调度的100次。而且，随着运行频度变慢，可以为短的交互进程让出CPU。</p>
-<p><strong>最短进程优先</strong></p>
-<p>类似批处理系统中的最短进程优先调度，降低进程的平均调度时间，这里的问题是如何估计进程的运行时间，一种办法是根据进程过去的行为进行推测，执行预计时间最短的那个。</p>
-<p>通过测量当前值和先前估计值进行加权平均而得到下一个估计值的 aT0 +(1-a)T1 ,这种技术称为<strong>老化</strong>。适用于许多预测值必须基于先前值的情况。</p>
-<p><strong>保证调度</strong></p>
-<p>这种算法，保证n个进程运行的情况下，每个进程获得CPU处理能力的 1/n。系统必须跟踪每一个进程自创建以来已经使用CPU的时间与CPU运行时间的比值，根据这个比值与1/n的差距来调度进程。</p>
-<p><strong>彩票调度</strong></p>
-<p>上述保证调度虽然挺好，但是难以实现，可以采用更为简单的彩票调度来实现。每个进程拥有一些彩票，CPU在做调度决策时，随机抽取彩票，拥有该彩票的进程就获得CPU资源。这样在很长的一段时间内，进程得到CPU的概率是几乎一样的。</p>
-<p><strong>公平分享调度</strong></p>
-<p>当我们把进程的归属（用户）也考虑进去时，如果一个系统有两个用户，每个用户都保证有50%的CPU时间，用户1启动9个进程，用户2启动1个进程，我们就不能简单的使用以上方法。</p>
-<h4 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a><strong>线程调度</strong></h4><p>用户级线程：内核并不知道有线程的存在，还是对进程进行调度，而进程内部的线程调度程序来对线程进行调度，可以是以上任何一种。</p>
-<p>内核级线程：内核选择特定的线程运行，不是必须考虑该线程属于哪一个进程，</p>
-<p>区别：</p>
-<p>1、性能，用户级线程切换需要少量的机器指令，内核级线程切换时需要完整的上下文切换，修改内存映像，使高速缓存失效。但是好处是，内核级线程阻塞时不需要像用户级线程一样将整个进程挂起。</p>
-<p>2、用户级线程可以定制线程调度程序，选择更适合应用的调度策略。</p>
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                我的第一篇 Blog
+安装 hexo 遇到的问题
+使用 install -g hexo-cli 无法安装 hexo
+错误代码大概意思是没权限这样做。The operation was rejected by your operating system.
 
-      
+最后去 hexo 官网查找, 解决代码如下：
+
+1
+2
+3
+
+
+mkdir ~/.npm-global // create a directory for global installations in home directory
+npm config set prefix '~/.npm-global' // configure npm 
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2020/05/05/Hello-miaomiao/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                H
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2020/05/05/hello-world/">
+                                    Hello World
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2020-05-05 10:32:51
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        1 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+
+Quick Start
+Create a new post
+1
+
+
+$ hexo new "My New Post"
+
+
+More info: Writing
+
+Run server
+1
+
+
+$ hexo s
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2020/05/05/hello-world/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+            </ul>
+
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/page/2/">
+                    
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
+                        </svg>
+                        <span>Newer Posts</span>
+                    
+                </a>
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
+                    
+                </a>
+            </nav>
+        </div>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/11/19/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" data-id="ckqnxj92s0006tv9k61tpa0ok" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-计算机系统组成" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/" class="article-date">
-  <time datetime="2020-11-15T21:35:13.796Z" itemprop="datePublished">2020-11-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/">计算机系统组成</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第二章-计算机组成"><a href="#第二章-计算机组成" class="headerlink" title="第二章 计算机组成"></a>第二章 计算机组成</h1><hr>
-<p>现代计算机是由处理器，存储器以及输入/输出设备组成的互连系统，连接他们的设备叫做总线。</p>
-<h2 id="2-1-处理器"><a href="#2-1-处理器" class="headerlink" title="2.1 处理器"></a>2.1 处理器</h2><p>处理器就是我们常说的 CPU，英文是 (Central Processing Unit)，可以认为是计算机的大脑 🧠，其功能是从主存储器中一条一条取指令，解码分析指令，最终执行指令。</p>
-<h3 id="2-1-1-CPU-组成"><a href="#2-1-1-CPU-组成" class="headerlink" title="2.1.1 CPU 组成"></a>2.1.1 CPU 组成</h3><p>CPU 由三部分组成，控制器，算数逻辑部件（ALU）以及寄存器。</p>
-<p>控制器用于从主存中取指令和分析（decode）指令。</p>
-<p>Arithmetic Logic Unit 接受来自寄存器中的数据，对数据进行加减法，逻辑运算等简单运算，并将结果存入寄存器中。ALU将两个操作数进行计算并返回结果的过程叫做<strong>数据通路周期</strong>（Data Path Cycle），DPC越小，计算机运行起来就越快。</p>
-<p>寄存器是小容量高速度的存储器，用来暂存一些控制信息，中间结果，CPU中包含多个寄存器，每个寄存器都有固定的容量和相应的功能，其中最重要的寄存器叫做 PC（Program Counter），并不像英文字面意思一样，他的任务是存贮下一条将要被取出执行的指令，同样重要的一个寄存器叫做 IR（Instruction Register）存贮当前正在执行的指令。</p>
-<p><img src="../images/components.png" alt=""></p>
-<p><img src="../images/ALU.png" alt=""></p>
-<h3 id="2-1-2-指令执行"><a href="#2-1-2-指令执行" class="headerlink" title="2.1.2 指令执行"></a>2.1.2 指令执行</h3><p>CPU中一个指令的执行大致分为取指令，解码，执行，三个部分，根据是否要用到主存单元，较为具体的步骤如下：</p>
-<ol>
-<li>从主存中获取指令 </li>
-<li>将PC指向后面一条指令</li>
-<li>判断该指令类型 （计算，移动数据等等）</li>
-<li>若用到主存单元，对主存单元进行寻址（如果指令中的数据不在寄存器中）</li>
-<li>从主存中取数据到寄存器中</li>
-<li>执行指令 </li>
-<li>返回第一步准备执行下一条指令</li>
-</ol>
-<p>从这里可以看出（书上说的，虽然很难想到），程序不一定需要一大堆电子器件的硬件CPU执行，完全可以通过另一个程序通过取指令，分析和执行指令的过程来执行一个程序的指令。第一个程序称为解释器，它做的事情叫做解释（Interpretation）。</p>
-<p>在制作一台计算机时，需要确定其使用的机器语言 L，我们需要决定是研制一个硬件处理器直接执行语言L的程序，还是设计一款解释器，我们可以通过使用对人类较为友好的语言编写程序，然后将程序通过解释器执行，解释器对我们写的代码进行分析，并转换为机器可以接受的语言输入机器进行执行。</p>
-<p>在第二个方法中，机器语言的规则可以做到十分简单，只用作类似数字的加减，把数据从一个位置移动到另一个位置，判断数据是否为0的工作。</p>
-<p>这样的好处是，在解释指令的过程中可以更改指令实现中的错误，甚至补偿基础硬件中的设计缺陷；结构化设计，以最小的代价增加新指令（通过对机器指令进行新的组合实现），</p>
-<p>翻译（translation）是与解释相对应的一种指令执行方式，它是指将L1语言编写的程序，将其转化为一个机器使用的L0语言的程序供计算机执行。</p>
-<p><strong>RISC / CISC</strong></p>
-<p>RISC（Reduced Instruction Set Computer）是指精简指令计算机, 与之对应的 CISC（Complex Instruction Set Computer ）复杂指令计算机。RISC的指令集（也就是CPU能干的事）约为50条左右，而CISC大约200～300条，RISC支持者认为如果通过好几条指令快速完成CISC中一条指令完成的事情，RISC是占优势的，并且当时主存的速度以及很快，可以快速的取指令。但是RISC并没有击败CISC，原因是向后兼容的问题，很多公司已经在CISC架构的计算机软件上投入大量资金，难以轻易放弃。并且 Intel 的在其CISC的体系中也加入了RISC的思想，Intel 的 CPU 可以在一个 DPU 中执行一些最简单的指令，对复杂指令才使用 CISC 方式。</p>
-<p><strong>现代计算机设计原则</strong></p>
-<p>所有指令由硬件直接执行：对于常用的指令不要再解释一遍，节省时间，</p>
-<p>最大限度提高指令启动速度：启动速度远高于执行速度</p>
-<p>指令应该容易解码：从主存中获取指令后，译码过程时间过长严重影响指令启动时间</p>
-<p>只允许读写主存指令访问主存：因为访问主存的延时远远大于访问寄存器</p>
-<p>尽量多的寄存器：从主存中缓存尽量多的数据</p>
-<p>并行可以加快CPU的运行速度，分为指令级并行和处理器级别并行</p>
-<p><strong>指令级并行</strong></p>
-<p>一条指令的执行单元可以分为5个部分：取指单元，译码单元，取操作数单元，指令执行单元，以及数据输出单元。将每个指令看作生产线上的产品，各个单元作为工作台，在第一个指令通过取指单元传递给译码单元后，取指单元可以进行下一条指令的取指，译码单元分析完第一条指令后可以接受来自取指单元的第二条指令，就像工厂的生产线一样，几乎每时每刻每个单元都在工作，减少了大量的等待时间，提升处理速度。</p>
-<p>在此基础上可以对生产线进行平衡，如取指单元操作较快，译码单元操作较慢，一个取指对应一个译码的话，取指单元会存在等待时间，因此我们可以对一个取指单元分配多个译码单元，减少其等待时间，再次提升处理速度。这种方式叫做<strong>超标量体系结构</strong>。</p>
-<p><strong>处理器级并行</strong></p>
-<p>在CPU处理速度增加的同时，其产生的热量页越多，限制了单个CPU的发展，因此处理器并行出现了。</p>
-<p>数据并行计算机：在如物理学，工程学，计算机图形学等领域，经常要重复完成对不同数据集合的相同运算。数据的高度规则使得通过并行执行指令加速执行变得容易。SIMD（Single Instruction-stream Multiple Data-stream）处理器应运而生，如图所示，只有一个取指单元，非常多的运算核心（每个都包含ALU）组成。</p>
-<p><img src="../images/parallel.png" alt=""></p>
-<p>多处理器：多个处理器可以共享一块内存，同时对一个任务进行处理，实现更高的效率。</p>
-<h2 id="2-2-主存储器"><a href="#2-2-主存储器" class="headerlink" title="2.2 主存储器"></a>2.2 主存储器</h2><p>存储器是计算机用来存储程序和数据的地方，</p>
-<p><strong>1 存储位</strong></p>
-<p>存储的最基本单元是二进制数字，一个存储位可以存放一个0或者1，对计算机来说，这是最有效的方法。因为计算机可以区分电压的高低或者电流的大小来确定应存储0还是1，比如说小于0.5V的电压就算作0，大于的就算作1。如果想用人类常用的10进制来存储，就需要对电压的大小做更细致的区分，对硬件的要求会更高，降低存储器的稳定性。</p>
-<p><strong>2 内存编址</strong></p>
-<p>存储器的理论结构类似单元楼的信箱，由许多可存放一段信息的单元组成。下面三个图表示了一个96位存储器的不同组织形式，每一行代表一个存储单元，每个单元有独立的地址，程序可以通访问单元的地址来获取数据。在a图中，一个单元有8位数字，那么每个单元可以存放 2^8 个不同位组合中的一种。相邻单元的地址是连续的。</p>
-<p>存储单元是计算机最小的可编址单位。8位是一个字节，两个字节组成一个字（word），32位计算机的寄存器为32位，指令的操作对象也是32位，也就是4个字节。</p>
-<p>地址位数表示我们需要一个几位的数字来表示内存地址。若地址为m位，我们则可以表示2^m个地址；a有12个地址，因此最少需要一个4位的地址来表达（4位最多可以表达16个数），b和c则只需要一个3位的地址。</p>
-<p><img src="../images/memorycells.png" alt=""></p>
-<p><strong>3 字节顺序</strong></p>
-<p>如下图所示，每个字（32位字中有4个字节）中的字节地址可以从左到右或者从右到左编排，分别叫做大端法和小端法，两种编排方式中对于数字的编码其实是一致的，例如数字6，110都是存放在最小地址位（大端法放在格子3，7，11，小端法放在0，4，8中），其余的0放在高位上。</p>
-<p><img src="../images/byteOrder.png" alt=""></p>
-<p>目前大部分计算机使用小端法存储，在不同编排方式的计算机之间传输信息需要注意一些问题。下图a,b表示大端法小端法存储的员工数据（字符串与整数混合），当数据从大端法机器按存储地址传输到小端法机器中，对字符串来说是正确的，但是数字却进行了颠倒（图c所示），如果将c中的数据全部转置（图d），但是这样以来字符串又不对了。</p>
-<p><img src="../images/orderProblems.png" alt=""></p>
-<p>一个解决方案是将每个数据项前加入额外的位说明数据类型，但是这样会增加额外的空间，</p>
-<p><strong>4 纠错码</strong></p>
-<p>由于硬件偶尔也会有不靠谱的时候，内存单元中的数据可能会被改变，如0变成了1，1变成了0；我们可以在数据中增加额外的纠错位来进行检测和纠正。</p>
-<p>两个码字中所有对应位置中含不同数据的位置个数称为海明码距（Hamming），如 10001001 和 10110001 有 3 位不同，他们的码距就为 3。 </p>
-<p>下面介绍海明算法对任意字长对内存建立纠错码，对于一个16位的数据，需要加入5位校验位（原因我还没搞懂。。）。成为21位字长的新字，所有2的整数幂位是校验位，这5个校验位的分别负责检查特定位置的数据的正确性。</p>
-<p>1、校验位检查谁：一般来说，第b位，由b代表的二进制数来检验，如第7位（0111），由第一个，第二个，第三个校验位来检验；第10位（1010），由第1个和第4个校验位来检验，每个校验位检查的位置如下图所示；</p>
-<p><img src="../images/parityCode.png" alt=""></p>
-<p>2、到底那些位置错了：在校验的位置中 1 的个数为偶数，就是正确的，反正说明这些位置中存在错误。</p>
-<p>3、如何确定哪个位置错了：以数据 001011100000101101110为例，根据上面的方法，可以确定是校验位 1 和 4 中的错误，因此错误一定是校验位1和4中共有的位置，也就是5，7，13，15，21。又因为校验位2，8，16校验的位置都是正确的，保证了7，13，15，21的正确。因此出错的一定是第 5 位，对他进行反转，就完成了纠错。</p>
-<p><strong>5 高速缓存</strong></p>
-<p>长久以来，CPU的执行速度一直比存储器快。CPU通过在芯片上放置更多的电路，进行流水线设计以及超标量运算，使CPU运算的更快，但是存储器的设计者却利用这些技术提高芯片的容量，而不是速度。这种不平衡越来越严重，导致CPU要经过多个CPU周期才能读到存储器的内容。</p>
-<p>工程师完全可以造出和CPU一样快的存储器，但是经济代价太高。因此使用高速缓存（cache）来平衡速度与价格，cache的速度仅次于CPU内部的寄存器，通常只需要几个CPU周期，但是造价远低于寄存器，高速缓存工作原理十分简单，将存储器中经常被CPU访问的内容存储在高速缓存中，当CPU需要读入存储器内容时，先在高速缓存中找，找到了就直接拿去用（称作缓存命中）找不到再去读内存。当cache中内容足够多时，CPU在大部分时间内就不用和存储器打交道了。</p>
-<p>【CPU周期：完成一个基本动作（取指令，解码指令，执行指令，）所耗时间】</p>
-<p>但是要把哪些内容放入高速缓存呢，这是个问题，科学家发现，在一小段时间内，CPU对存储器的访问总是局限在存储器的一小部分中，称为局部性原理。他构成了所有cache系统的基础。应用就是，在CPU访问存储器的某个字后，将该字和他的相邻单元存入cache，这样下次访问时就会快一些。CPU，Cache和主存的逻辑结构关系如下：</p>
-<p><img src="../images/cache.png" alt=""></p>
-<h2 id="2-3-层次存储结构"><a href="#2-3-层次存储结构" class="headerlink" title="2.3 层次存储结构"></a>2.3 层次存储结构</h2><p>由于人们期望存储的数据十分巨大，主存造价昂贵，难以存储所有的文件，因此计算机内也使用其他速度没有那么快但是较为经济的存储器来满足信息存储的要求，如下图的层次存储结构，从顶向下有以下特点：</p>
-<p>访问时间增加：CPU中的寄存器访问时间是1纳秒或者更少，高速缓存访问时间是寄存器的几倍，主存储器是10纳秒左右；固态硬盘的访问时间比主存至少慢10倍，磁盘则要慢数百倍；而磁带和光盘的访问时间几乎要以秒来计量。</p>
-<p>容量增大：寄存器也许有128个字节就很合适，高速缓存可以是几十M，主存可以是8g，16g，32g等，固态硬盘是数百G，而磁盘容量是TB级。</p>
-<p>单位造价降低：随着级别的下降，存储器每Mb的造价也显著降低。</p>
-<img src="../images/memorystructure.png"  style="zoom:50%;" />
-      
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        Zhang Penghe
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/" data-id="ckqnxj92q0004tv9k704fforb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-Hello-miaomiao" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/05/Hello-miaomiao/" class="article-date">
-  <time datetime="2020-05-05T06:41:29.000Z" itemprop="datePublished">2020-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/05/Hello-miaomiao/">Hello, miaomiao~</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="我的第一篇-Blog"><a href="#我的第一篇-Blog" class="headerlink" title="我的第一篇 Blog"></a>我的第一篇 Blog</h1><h2 id="安装-hexo-遇到的问题"><a href="#安装-hexo-遇到的问题" class="headerlink" title="安装 hexo 遇到的问题"></a>安装 <code>hexo</code> 遇到的问题</h2><h3 id="使用-install-g-hexo-cli-无法安装-hexo"><a href="#使用-install-g-hexo-cli-无法安装-hexo" class="headerlink" title="使用 install -g hexo-cli 无法安装 hexo"></a>使用 <code>install -g hexo-cli</code> 无法安装 <code>hexo</code></h3><p>错误代码大概意思是没权限这样做。<code>The operation was rejected by your operating system.</code></p>
-<p>最后去 <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally" target="_blank" rel="noopener">hexo</a> 官网查找, 解决代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~&#x2F;.npm-global &#x2F;&#x2F; create a directory for global installations in home directory</span><br><span class="line">npm config set prefix &#39;~&#x2F;.npm-global&#39; &#x2F;&#x2F; configure npm to use the new directory</span><br><span class="line">export PATH&#x3D;~&#x2F;.npm-global&#x2F;bin:$PATH &#x2F;&#x2F; add npm-global to PATH environmental varibles</span><br></pre></td></tr></table></figure>
-<p>前几步可以用下面一行代替:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NPM_CONFIG_PREFIX&#x3D;~&#x2F;.npm-global</span><br></pre></td></tr></table></figure>
-<p>测试新配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.profile &#x2F;&#x2F; update system varibles</span><br><span class="line">npm install -g jshint &#x2F;&#x2F; test new configuration</span><br></pre></td></tr></table></figure>
-
-<h3 id="Hexo-command-not-found"><a href="#Hexo-command-not-found" class="headerlink" title="Hexo command not found"></a><code>Hexo command not found</code></h3><p>安装过程中每一步都好好的，在部署插件 <code>hexo-delplyer-git</code> 时不正常了，输入命令得到</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command not found</span><br></pre></td></tr></table></figure>
-<p>反复重装 hexo 还是没有效果，最后在 hexo 命令前加入 npx 才可以</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx hexo init myBlog</span><br></pre></td></tr></table></figure>
-<p>查了一些 npx 可以让任何 command 在 machine 的任何位置使用。</p>
-
-      
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a href="https://github.com/iGuan7u/Acetolog" target="_blank" rel="noopener">AcetoLog</a>
+         · Power By 
+        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/Hello-miaomiao/" data-id="ckqnxj92h0000tv9k4oeldrkn" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/05/hello-world/" class="article-date">
-  <time datetime="2020-05-05T02:32:51.309Z" itemprop="datePublished">2020-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/05/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/hello-world/" data-id="ckqnxj92o0002tv9kbesz76ya" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
+</div>
 
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
-
-</section>
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
         
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
         
-          <li>
-            <a href="/2021/10/05/DAG%20%E6%A3%80%E6%B5%8B/">DAG 检测</a>
-          </li>
         
-          <li>
-            <a href="/2021/09/30/HSBC%20job%20simulation%20test/">HSBC job simulation test</a>
-          </li>
         
-          <li>
-            <a href="/2021/09/25/DISTINCT%20&%20GROUP%20BY/">DISTINCT &amp; GROUP BY</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/18/%E4%BA%A4%E6%8D%A2%E7%B1%BB%E6%8E%92%E5%BA%8F/">交换类排序</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/17/%E9%80%89%E6%8B%A9%E7%B1%BB%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">选择类排序算法</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2021 Zhang Penghe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+    </body>
 </html>
+        
