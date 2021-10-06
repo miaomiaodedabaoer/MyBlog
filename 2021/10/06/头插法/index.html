@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Mybatis</title>
+        <title>头插法</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
@@ -102,22 +102,22 @@
             <article class="al_article">
                 <header>
                     <h1 class="al_page_title">
-                        Mybatis
+                        头插法
                     </h1>
                     <div class="al_page_info dis_flex">
                         <div class="al_page_content_info">
-                            Tue October 5, 2021 08:07 PM
+                            Wed October 6, 2021 09:49 PM
                         </div>
 
                         
                             <div class="al_page_content_info">
-                                0 words
+                                421 words
                             </div>
                         
 
                         
                             <div class="al_page_content_info">
-                                1 minutes read
+                                2 minutes read
                             </div>
                         
                         <span class="tags"></span>
@@ -128,7 +128,12 @@
 
                 
                 <section id="post-body">
-                    
+                    <p>今天做链表反转题，针对最普通的反转题，我们可以记录 pre，cur， next 节点用 <strong>迭代法</strong> 或者 <strong>递归</strong> 轻松的做出来；但是在遇到了反转 n - m 个节点，发现想套原来的方法较为困难，因为要记录几个关键的节点，在反转完成后再把他们接上，繁琐并且容易出错。翻看题解发现如果使用 <strong>头插法</strong> 可以简单的解决，而自己之前做的基本都是用 <strong>尾插法</strong>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs html">1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5, 假设反转 第 2 - 4 之间的节点，从而得到<br>1 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 5<br><br>尾插法，首先 定位到要反转的起点，用 p 指向; guard pointer 指向 p 的前驱节点<br>    1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5<br>    g    p<br>1⃣️  1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5     记录 要插到前面的点 rmv，也就是 p.next<br>    g    p    rmv<br>2⃣️  1 -&gt; 2    3 -&gt; 4 -&gt; 5     p 指向要 rmv 后驱节点<br>    g    |_________^<br>         V----|<br>3⃣️  1 -&gt; 2 -&gt; 3    4 -&gt; 5     rmv 指向 g.next<br>    g    p_________^<br><br>4⃣️  1 -&gt; 3 -&gt; 2 -&gt; 4 -&gt; 5     g -&gt; rmv<br>    g    rmv  p<br>****** 下一轮 *********    <br>                .---------V<br>1⃣️2⃣️  1 -&gt; 3 -&gt; 2    4 -&gt; 5     rmv = p.next; p.next = rmv.next;<br>      g        p   rmv<br>           V---------|                 <br>3⃣️    1 -&gt; 3 -&gt; 2    4   5     rmv.next = g.next;<br>     g         p   rmv<br>4⃣️   1 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 5     g.next = rmv;<br>     g         p   rmv<br><br>**** OKK ****<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 添加虚拟头节点，避免边界判断 </span><br><span class="hljs-function"><span class="hljs-keyword">public</span> ListNode <span class="hljs-title">reverseBetween</span><span class="hljs-params">(ListNode head, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right)</span> </span>&#123;<br>        ListNode dummy = <span class="hljs-keyword">new</span> ListNode(<span class="hljs-number">0</span>,head);<br>        ListNode g = dummy;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; left; i++)&#123;<br>            g = g.next;<br>        &#125;<br>        ListNode p = g.next;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = left; i &lt; right; i++)&#123;<br>            ListNode rmv = p.next;<br>            p.next = rmv.next;<br>            rmv.next = g.next;<br>            g.next = rmv;<br>        &#125;<br>        <span class="hljs-keyword">return</span> dummy.next;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
                 </section>
 
                 
@@ -139,17 +144,12 @@
 
             
             <nav class="dis_flex al_post_nav">
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/10/06/%E5%A4%B4%E6%8F%92%E6%B3%95/">
-                    
-                        <svg class="al_arrow">
-                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
-                        </svg>
-                        <span class="al_text_ellipsis al_post_nav_desc">头插法</span>
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
                     
                 </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/10/05/DAG%20%E6%A3%80%E6%B5%8B/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2021/10/05/Mybatis/">
                     
-                        <span class="al_text_ellipsis al_post_nav_desc">DAG 检测</span>
+                        <span class="al_text_ellipsis al_post_nav_desc">Mybatis</span>
                         <svg class="al_arrow">
                             <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
                         </svg>

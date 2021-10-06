@@ -115,6 +115,51 @@
                                 缓
                             </div>
                             <h2 class="al_index_post_title">
+                                <a href="/2021/08/12/%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/">
+                                    缓存的问题
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-08-12 09:21:26
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                缓存不一致
+redis 用作缓存时，可能会产生和数据库数据不一致的问题。缓存的一致性根据缓存是否命中分为两方面：当缓存中有数据时，需要和数据库中保持一致；当没有数据时，要保证数据库中存在最新数据。
+
+对读写缓存来说，这个问题比较好解决，使用 同步直写 策略，结合事务，保证更新操作的原子性，如果没有更新成功则进行重试。
+
+对于只读缓存，当业务需要 更新或者删除 一个值时，要做两件事，一是删除缓存中的值，二是更新数据库的值。这两件事的先后顺序并不限制。增，查。
+
+在并发的情况下，如果业务 2 在 业务1删完缓存数据后，更新数据库前查询该数据，业务 2 发现缓存中没有，那就去数据库里找，取出这个还没
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/08/12/缓存的问题/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                缓
+                            </div>
+                            <h2 class="al_index_post_title">
                                 <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">
                                     缓存
                                 </a>
@@ -515,65 +560,6 @@ AOF 也存在两个风险。首先，如果刚执行完一个命令，还没有�
                         </div>
                         <div class="al_index_post_button_cnt dis_flex">
                             <a class="al_button al_button_theme al_index_post_button" href="2021/07/08/Wireshark下HTTPS通信过程/">
-                                READ ON
-                            </a>
-                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
-                                READ LATER
-                            </a>
-                        </div>
-                    </li>
-                
-                    <li class="al_index_pageList_item al_index_page_seperator">
-                        <div class="al_index_post_title_cnt dis_flex">
-                            <div class="al_pos_ab al_letter al_index_post_title_letter">
-                                迭
-                            </div>
-                            <h2 class="al_index_post_title">
-                                <a href="/2021/07/04/%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91/">
-                                    迭代遍历二叉树
-                                </a>
-                            </h2>
-                            <div class="al_index_post_extra dis_flex">
-                                <div class="al_index_post_date al_index_post_extra_item">
-                                    2021-07-04 20:17:59
-                                </div>
-
-                                
-                                    <div class="al_index_post_read_time">
-                                        3 Min Read
-                                    </div>
-                                
-
-                            </div>
-                        </div>
-                        <div class="al_index_post_excerpt_cnt">
-                            <p class="al_index_post_excerpt">
-                                二叉树的遍历从深度遍历来看，分为前序遍历，中序遍历和后序遍历，其中的前中后指 根节点 在遍历时的相对位置，前序就是指 根 - 左 - 右，中序指 左 - 根 - 右；
-
-使用递归遍历二叉树十分简单, 中序遍历代码如下，前序和后序只需改变最后三行代码顺序即可。
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-
-
-class Solution {
-  	List list = new ArrayList<>();
-    private void inorderTree(TreeNode root) {
-        if (root == null) {
-         
-                            </p>
-                        </div>
-                        <div class="al_index_post_button_cnt dis_flex">
-                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/04/迭代遍历二叉树/">
                                 READ ON
                             </a>
                             <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
