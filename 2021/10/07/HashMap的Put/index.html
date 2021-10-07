@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>HashMap的Put</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="manifest" href="/site.webmanifest">
+
+        
+    
+    <link rel='stylesheet' href="/./css/dracula.css">
+
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Mmddb</a>
+            </div>
+        </div>
+
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+</header>
+
+        <div class="al_sidebar">
+
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Mmddb</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>Zhang Penghe</h4>
+                <img class="al_sidebar_avatar" src="https://github.com/mmddb">
+                <p></p>
+            </div>
+
+            
+                <div class="al_sidebar_contact_info">
+                    <h4>GET IN TOUCH</h4>
+                    <p>一个迷茫的沙沙</p>
+
+                    <div class="dis_flex al_sidebar_social_widget">
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+                            <div class="al_social_icon_cnt" data_link="https://www.github.com/mmddb">
+                                <svg class="al_social_icon" id="github">
+                                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#icon_github"></use>
+                                </svg>
+                            </div>
+                        
+
+                        
+                        
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+        
+    <div class="dis_flex_center al_lightbox_cnt al_full_cover">
+        <img class="al_lightbox_img"/>
+    </div>
+    <div class="al_page_background dis_flex_center al_full_cover"></div>
+    <div class="al_page_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow al_main_page_container">
+            <article class="al_article">
+                <header>
+                    <h1 class="al_page_title">
+                        HashMap的Put
+                    </h1>
+                    <div class="al_page_info dis_flex">
+                        <div class="al_page_content_info">
+                            Thu October 7, 2021 09:51 PM
+                        </div>
+
+                        
+                            <div class="al_page_content_info">
+                                699 words
+                            </div>
+                        
+
+                        
+                            <div class="al_page_content_info">
+                                3 minutes read
+                            </div>
+                        
+                        <span class="tags"></span>
+                    </div>
+                </header>
+
+                
+                    <div class="al_page_content_outline">
+                        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#HashMap-和-HashSet"><span class="toc-text">HashMap 和 HashSet</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#put过程"><span class="toc-text">put过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashSet"><span class="toc-text">HashSet</span></a></li></ol>
+                    </div>
+                
+
+                
+                <section id="post-body">
+                    <h3 id="HashMap-和-HashSet"><a href="#HashMap-和-HashSet" class="headerlink" title="HashMap 和 HashSet"></a>HashMap 和 HashSet</h3><p>当哈希函数使得元素分布均匀时，增加，移除，包含方法 时间复杂度可以达到常数级别。</p>
+<p>hashMap 允许 key 和 value 为 null，基本等同于 hashtable，除了 unsynchronised and permit NULL。不保证内部顺序，不保证顺序不变；</p>
+<p>遍历 hashmap 取决于 bucket 的数量，以及 buckets 的 大小，因此 <strong>初始容量</strong>，和 <strong>装填因子</strong>（0.75默认），</p>
+<p>fast-fail 机制，如果 iterator 创建后，hashmap 出现 <strong>结构性变化</strong>（增加或删除），除非 iterator.remove() , iterator 会 throw <code>ConcurrentModificationException</code></p>
+<h4 id="put过程"><a href="#put过程" class="headerlink" title="put过程"></a>put过程</h4><ol>
+<li>计算hash值，获取到该位置 bin 的第一个元素</li>
+<li>是 null 的话就直接插入</li>
+<li>否则，判断是否 key 一样，hash一样，看是不是更新操作； 再看是不是 treenode 的instance，是的话就插入到红黑树中；如果不是，那就还是普通 node，就找到最后一个 node，尾插，过程中记录 bincount，超过 threhold 就 treeifyBin()，转为红黑树，除非 table size 小于 MIN_TREEIFY_CAPACITY 64 默认</li>
+<li>如果是发现是更新操作，就更改并返回旧值</li>
+<li>modcount++, 由于是结构化更改；size++，有需要的话 resize</li>
+<li>return null</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">final</span> V <span class="hljs-title">putVal</span><span class="hljs-params">(<span class="hljs-keyword">int</span> hash, K key, V value, <span class="hljs-keyword">boolean</span> onlyIfAbsent,</span></span><br><span class="hljs-function"><span class="hljs-params">               <span class="hljs-keyword">boolean</span> evict)</span> </span>&#123;<br>    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="hljs-keyword">int</span> n, i;<br>    <span class="hljs-keyword">if</span> ((tab = table) == <span class="hljs-keyword">null</span> || (n = tab.length) == <span class="hljs-number">0</span>) <span class="hljs-comment">// 长度为 0 的话 resize</span><br>        n = (tab = resize()).length;<br>  	<span class="hljs-comment">// 得到应该插入点现存的 Node p</span><br>    <span class="hljs-keyword">if</span> ((p = tab[i = (n - <span class="hljs-number">1</span>) &amp; hash]) == <span class="hljs-keyword">null</span>) <span class="hljs-comment">// (n - 1) &amp; hash = n % hash; length = 2^n</span><br>        tab[i] = newNode(hash, key, value, <span class="hljs-keyword">null</span>); <span class="hljs-comment">// 该插入的地方没有，就生成一个放进去</span><br>    <span class="hljs-keyword">else</span> &#123;<br>        Node&lt;K,V&gt; e; K k;<br>        <span class="hljs-keyword">if</span> (p.hash == hash &amp;&amp;<br>            ((k = p.key) == key || (key != <span class="hljs-keyword">null</span> &amp;&amp; key.equals(k)))) <span class="hljs-comment">// 不仅 hash相等，key 也一样 （更新操作）</span><br>            e = p;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (p <span class="hljs-keyword">instanceof</span> TreeNode) <span class="hljs-comment">// 如果 p 是一个 treenode，也就是说已经变成红黑树了</span><br>            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="hljs-keyword">this</span>, tab, hash, key, value); <span class="hljs-comment">// 插入红黑树</span><br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> binCount = <span class="hljs-number">0</span>; ; ++binCount) &#123; <span class="hljs-comment">// 找到链表最后一个，然后插入</span><br>                <span class="hljs-keyword">if</span> ((e = p.next) == <span class="hljs-keyword">null</span>) &#123;<br>                    p.next = newNode(hash, key, value, <span class="hljs-keyword">null</span>);<br>                    <span class="hljs-keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="hljs-number">1</span>) <span class="hljs-comment">// -1 for 1st</span><br>                        treeifyBin(tab, hash); <span class="hljs-comment">// 长度大于 8 转换为红黑树</span><br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>                <span class="hljs-keyword">if</span> (e.hash == hash &amp;&amp;<br>                    ((k = e.key) == key || (key != <span class="hljs-keyword">null</span> &amp;&amp; key.equals(k))))<br>                    <span class="hljs-keyword">break</span>;<br>                p = e;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span>) &#123; <span class="hljs-comment">// existing mapping for key</span><br>            V oldValue = e.value;<br>            <span class="hljs-keyword">if</span> (!onlyIfAbsent || oldValue == <span class="hljs-keyword">null</span>)<br>                e.value = value;<br>            afterNodeAccess(e);   <span class="hljs-comment">// 留一个未实现的callback函数</span><br>            <span class="hljs-keyword">return</span> oldValue; <span class="hljs-comment">// 返回旧值，</span><br>        &#125;<br>    &#125;<br>    ++modCount;  <span class="hljs-comment">// modCound 增加</span><br>    <span class="hljs-keyword">if</span> (++size &gt; threshold) <span class="hljs-comment">// size 大于 threshold = length * load factor</span><br>        resize();<br>    afterNodeInsertion(evict);<span class="hljs-comment">// 留一个未实现的callback函数</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>借用美团技术团队的图</p>
+<p><img src="/images/HashMap.png" alt="HashMap"></p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>内部实现较为简单，充分利用了 HashMap， 内部维护一个 <code>HashMap&lt;E,Object&gt; map</code>; 只用到了 map 的 key，所有的 value 都是一个 叫做 Present 的 Object 。 </p>
+<p>常用方法，add -&gt;  map.put(e, PRESENT) == null ;  remove() –&gt; map.remove(o) == PRESENT; contains(O) –&gt; map.containsKey(o);</p>
+
+                </section>
+
+                
+                
+                
+
+            </article>
+
+            
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
+                    
+                </a>
+                <a class="al_post_nav_item dis_flex_acenter" href="/2021/10/06/%E5%A4%B4%E6%8F%92%E6%B3%95/">
+                    
+                        <span class="al_text_ellipsis al_post_nav_desc">头插法</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
+                    
+                </a>
+            </nav>
+        </div>
+    </div>
+
+
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        Zhang Penghe
+    </div>
+
+    
+    
+
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a href="https://github.com/iGuan7u/Acetolog" target="_blank" rel="noopener">AcetoLog</a>
+         · Power By 
+        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+    </div>
+
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
+    </div>
+</div>
+
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
+        
+        
+        
+        
+    </body>
+</html>
+        
