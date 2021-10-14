@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Https</title>
+        <title>HTTPS</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
@@ -102,7 +102,7 @@
             <article class="al_article">
                 <header>
                     <h1 class="al_page_title">
-                        Https
+                        HTTPS
                     </h1>
                     <div class="al_page_info dis_flex">
                         <div class="al_page_content_info">
@@ -137,7 +137,7 @@
 <p>解决： 对信道加密（结合 SSL 和 TLS）； 对内容加密</p>
 <h3 id="内容可能被篡改"><a href="#内容可能被篡改" class="headerlink" title="内容可能被篡改"></a>内容可能被篡改</h3><p>HTTP 请求或响应在传输途中，可能遭到攻击者拦截并篡改，这种方式称为中间人攻击（Man-In-Middle attack). </p>
 <h3 id="不验证身份"><a href="#不验证身份" class="headerlink" title="不验证身份"></a>不验证身份</h3><p>只要知道 IP 和端口，任何人都可以发起请求，服务器也会响应。解决：使用 SSL ，查看证书 CA， 证书由第三方颁发，客户端通信前先确认证书。</p>
-<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><p>https 的出现正是解决了这些问题，https 并不是一种新的协议，只是 HTTP 通信接口部分用 <strong>SSL</strong>（Secure Socket Layer）和 <strong>TLS</strong><br>( Transport Layer Security)，其和 http 的区别简单来说就是：</p>
+<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><p>https 的出现正是解决了这些问题，https 并不是一种新的协议，只是 HTTP 通信接口部分用 <strong>SSL</strong>（Secure Socket Layer）和 <strong>TLS</strong> ( Transport Layer Security)，其和 http 的区别简单来说就是：</p>
 <p><strong>HTTP + 加密 + 完整性保护 + 身份认证 = HTTPS</strong></p>
 <h3 id="SSL-的加密"><a href="#SSL-的加密" class="headerlink" title="SSL 的加密"></a>SSL 的加密</h3><p>SSL 的加密结合了 <strong>共享密钥</strong> 和 <strong>公开密钥</strong>。公开密钥更安全，但是通信效率比较低；因此 SSL 先使用 公开密钥加密方式来传输在后面的共享密钥加密使用的密钥，确保交换的密钥安全后，使用共享密钥加密方式进行通信。</p>
 <p>但是，在第一次通信时，客户端无法证明公开密钥本身的真实性；为解决这种问题，服务器可以向数字证书认证机构申请一个数字签名，在通信时一并发给客户端，客户端拿着签名去验证即可。</p>
