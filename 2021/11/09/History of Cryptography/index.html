@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Thoughtworks</title>
+        <title>History of Cryptography</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
@@ -102,16 +102,16 @@
             <article class="al_article">
                 <header>
                     <h1 class="al_page_title">
-                        Thoughtworks
+                        History of Cryptography
                     </h1>
                     <div class="al_page_info dis_flex">
                         <div class="al_page_content_info">
-                            Thu October 14, 2021 05:02 PM
+                            Tue November 9, 2021 10:06 PM
                         </div>
 
                         
                             <div class="al_page_content_info">
-                                359 words
+                                253 words
                             </div>
                         
 
@@ -125,22 +125,54 @@
                 </header>
 
                 
+                    <div class="al_page_content_outline">
+                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Substitution-cipher"><span class="toc-text">Substitution cipher</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Caesar-Cipher-凯撒密码"><span class="toc-text">Caesar Cipher 凯撒密码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#破解方法"><span class="toc-text">破解方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vigener-Cipher-维吉尼亚密码"><span class="toc-text">Vigener Cipher 维吉尼亚密码</span></a></li></ol></li></ol>
+                    </div>
+                
 
                 
                 <section id="post-body">
-                    <p>这两天准备了 thoughtworks 的 presentation，主题关于 IoT，由于时间比较紧，并且不想做的过于宽泛，选择了之前做过pre，并且和本科专业相关的角度 – Transportation；结构上首先引出 IoT，其次从 3 个方面简述应用 — 分别是 <strong>作为一个独立系统的 Car</strong> 的意义 – 再是 <strong>把 car 和 traffic 其他参与者连接起组成网 **的好处，最后是他们赖以生存的</strong>基础设施<strong>，同样需要重视，并且可以用 IoT进行改革；最后提一下我们面临的</strong>挑战**；</p>
-<p>总体来说，pre 的过程还不错，头一次不看稿全英文过一遍；改进的话，面试官也有问到，现在想想，这三部分虽然有联系，但是逻辑性并不是特别强；还有就是 slide template 的选择，并没有找到很适合 tw的，尤其是想找的 tw 粉红色hhh；但是回答问题的情况，其实一般，问题主要是 答得有点乱，逻辑没有很清，这点还是需要多锻炼；其次就是因为时间较短，并且还有别的面试，对于问题的准备并没有很多；</p>
-<p>问的问题主要有：</p>
-<ul>
-<li>本次 pre 可以提升的点</li>
-<li>怎么向他人推销 idea</li>
-<li>。。。忘了</li>
-<li>对 tw 了解</li>
-<li>社会上积极变革的现象</li>
-<li>。。 忘了</li>
-</ul>
-<p>发现 基佬紫 的 PPT 也挺好看的。。。。</p>
-<p><img src="/images/twppt.png" alt="截屏2021-10-14 17.32.08"></p>
+                    <h1 id="Substitution-cipher"><a href="#Substitution-cipher" class="headerlink" title="Substitution cipher"></a>Substitution cipher</h1><p>比较古老的加密方法，简单的 map 映射，比较容易破解</p>
+<p>k := {a -&gt; c, b -&gt; w, ….}</p>
+<p>有效的 key 有 26！个</p>
+<h2 id="Caesar-Cipher-凯撒密码"><a href="#Caesar-Cipher-凯撒密码" class="headerlink" title="Caesar Cipher 凯撒密码"></a>Caesar Cipher 凯撒密码</h2><p>no key,  shift by 3; 映射关系： a -&gt;d, b -&gt; e, c -&gt; f;</p>
+<h3 id="破解方法"><a href="#破解方法" class="headerlink" title="破解方法"></a>破解方法</h3><p><strong>利用英语中字母出现的频率</strong>，<strong>以及固定 pair 出现的概率</strong></p>
+<p>The most common letter in English test is ‘E’ 大概 12.7%</p>
+<table>
+<thead>
+<tr>
+<th>e</th>
+<th>12.7%</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t</td>
+<td>9.1%</td>
+</tr>
+<tr>
+<td>a</td>
+<td>8.1%</td>
+</tr>
+<tr>
+<td>he</td>
+<td>…</td>
+</tr>
+<tr>
+<td>an</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<p>分析加密后文本中单词出现的频率，与之对应即可解密</p>
+<h2 id="Vigener-Cipher-维吉尼亚密码"><a href="#Vigener-Cipher-维吉尼亚密码" class="headerlink" title="Vigener Cipher 维吉尼亚密码"></a>Vigener Cipher <strong>维吉尼亚密码</strong></h2><p>16’th century, Rome</p>
+<p>选择某一关键词并重复而得到密钥</p>
+<p><strong>明文</strong> P：<strong>ATTACKATDAWN</strong><br><strong>密钥</strong> K：<strong>LEMONLEMONLE</strong><br><strong>密文</strong> C：<strong>LXFOPVEFRNHR</strong></p>
+<p><strong>加密：Ci = Pi + Ki (mod 26)</strong></p>
+<p><strong>解密：Pi = Ci - Ki (mod 26)</strong></p>
+<ol>
+<li>假设知道 k 的长度， 5</li>
+<li></li>
+</ol>
+<p>凯撒密码因为字母出现的’频率特征’易被统计分析<br>所以维吉尼亚密码加密的核心就在于:<br><strong>通过多套字符加密明文来混淆字母出现的频率</strong></p>
 
                 </section>
 
@@ -152,17 +184,12 @@
 
             
             <nav class="dis_flex al_post_nav">
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-                    
-                        <svg class="al_arrow">
-                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
-                        </svg>
-                        <span class="al_text_ellipsis al_post_nav_desc">设计模式</span>
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
                     
                 </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/10/07/HashMap%E7%9A%84Put/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
                     
-                        <span class="al_text_ellipsis al_post_nav_desc">HashMap的Put</span>
+                        <span class="al_text_ellipsis al_post_nav_desc">设计模式</span>
                         <svg class="al_arrow">
                             <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
                         </svg>

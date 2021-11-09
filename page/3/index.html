@@ -112,6 +112,103 @@
                     <li class="al_index_pageList_item al_index_page_seperator">
                         <div class="al_index_post_title_cnt dis_flex">
                             <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                R
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/22/RDB%20%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7/">
+                                    RDB 内存快照
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-22 21:39:47
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        2 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                AOF 的好处是，每次执行时只记录操作命令，需要持久化的数据量不大，对性能不会造成太大影响。问题是，在进行故障恢复时，redis 需要把日志上的命令逐一执行，如果操作日志很多，redis就会恢复的很慢，影响正常使用。
+
+而 redis 的另一种恢复机制 内存快照，相当于记录某一时刻内存中数据的状态，这个快照文件就称为 RDB （Redis Database）文件，在数据恢复时，直接把 RDB 文件读入内存，实现 快速恢复；
+
+但是这张快照的拍摄要注意：
+
+拍多少
+
+提供所有数据的可靠性保证，reids 执行的是全量快照，redis 提供两个命令来生成 （阻塞主线程与否）
+
+​ save： 主线
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/22/RDB 内存快照/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                R
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/20/Redis%20AOF%20%E6%97%A5%E5%BF%97%20/">
+                                    Redis AOF 日志 
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-20 22:10:40
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                为了避免宕机后 Redis 数据丢失， redis 使用了 AOF 和 RDB 两种机制。
+
+AOF 日志 （append only file）
+写后日志 
+
+不像其他数据库的写前日志，Redis 是先执行命令，把数据写入 内存，然后才把 操作命令 记录日志（以文件的形式）。这样一来可以避免记录错误日志，并且操作完成后再记录可以 避免阻塞线程。
+
+风险
+
+AOF 也存在两个风险。首先，如果刚执行完一个命令，还没有来得及记日志就宕机了，那么这个命令和相应的数据就有 丢失 的风险。 
+
+其次，AOF 可能会给下一个操作带来阻塞。这是因为，AOF 日志也是在主线程中执行的，如果在把日志文件写入磁盘时
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/20/Redis AOF 日志 /">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
                                 A
                             </div>
                             <h2 class="al_index_post_title">
@@ -507,111 +604,6 @@ Arithmetic Logic Unit 接受来自寄存器中的数据，对数据进行加减�
                         </div>
                     </li>
                 
-                    <li class="al_index_pageList_item al_index_page_seperator">
-                        <div class="al_index_post_title_cnt dis_flex">
-                            <div class="al_pos_ab al_letter al_index_post_title_letter">
-                                H
-                            </div>
-                            <h2 class="al_index_post_title">
-                                <a href="/2020/05/05/Hello-miaomiao/">
-                                    Hello, miaomiao~
-                                </a>
-                            </h2>
-                            <div class="al_index_post_extra dis_flex">
-                                <div class="al_index_post_date al_index_post_extra_item">
-                                    2020-05-05 14:41:29
-                                </div>
-
-                                
-                                    <div class="al_index_post_read_time">
-                                        1 Min Read
-                                    </div>
-                                
-
-                            </div>
-                        </div>
-                        <div class="al_index_post_excerpt_cnt">
-                            <p class="al_index_post_excerpt">
-                                我的第一篇 Blog
-安装 hexo 遇到的问题
-使用 install -g hexo-cli 无法安装 hexo
-错误代码大概意思是没权限这样做。The operation was rejected by your operating system.
-
-最后去 hexo 官网查找, 解决代码如下：
-
-1
-2
-3
-
-
-mkdir ~/.npm-global // create a directory for global installations in home directory
-npm config set prefix '~/.npm-global' // configure npm 
-                            </p>
-                        </div>
-                        <div class="al_index_post_button_cnt dis_flex">
-                            <a class="al_button al_button_theme al_index_post_button" href="2020/05/05/Hello-miaomiao/">
-                                READ ON
-                            </a>
-                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
-                                READ LATER
-                            </a>
-                        </div>
-                    </li>
-                
-                    <li class="al_index_pageList_item al_index_page_seperator">
-                        <div class="al_index_post_title_cnt dis_flex">
-                            <div class="al_pos_ab al_letter al_index_post_title_letter">
-                                H
-                            </div>
-                            <h2 class="al_index_post_title">
-                                <a href="/2020/05/05/hello-world/">
-                                    Hello World
-                                </a>
-                            </h2>
-                            <div class="al_index_post_extra dis_flex">
-                                <div class="al_index_post_date al_index_post_extra_item">
-                                    2020-05-05 10:32:51
-                                </div>
-
-                                
-                                    <div class="al_index_post_read_time">
-                                        1 Min Read
-                                    </div>
-                                
-
-                            </div>
-                        </div>
-                        <div class="al_index_post_excerpt_cnt">
-                            <p class="al_index_post_excerpt">
-                                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-
-Quick Start
-Create a new post
-1
-
-
-$ hexo new "My New Post"
-
-
-More info: Writing
-
-Run server
-1
-
-
-$ hexo s
-                            </p>
-                        </div>
-                        <div class="al_index_post_button_cnt dis_flex">
-                            <a class="al_button al_button_theme al_index_post_button" href="2020/05/05/hello-world/">
-                                READ ON
-                            </a>
-                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
-                                READ LATER
-                            </a>
-                        </div>
-                    </li>
-                
             </ul>
 
             <nav class="dis_flex al_post_nav">
@@ -623,7 +615,12 @@ $ hexo s
                         <span>Newer Posts</span>
                     
                 </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/page/4/">
+                    
+                        <span>Older Posts</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
                     
                 </a>
             </nav>
