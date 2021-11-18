@@ -112,6 +112,49 @@
                     <li class="al_index_pageList_item al_index_page_seperator">
                         <div class="al_index_post_title_cnt dis_flex">
                             <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                主
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/23/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%93%A8%E5%85%B5/">
+                                    主从同步与哨兵
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-23 22:59:38
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        3 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                为了保证高可靠，redis 增加了一些从库与主库配合使用，确保在主库宕机时不过大影响服务。主从库之间采用的是读写分离的方式。主库、从库都可以接收 读操作; 而 写操作 要先到主库执行，然后主库将写操作同步给从库，从而确保主从库数据的一致性，如果都能写容易乱套，加锁的话会带来很大开销。
+
+主从同步
+首先，建立连接，从库向发送主库 psync 命令，参数包含 runID（主库id，不知道就是 ？） 和复制进度 offset（第一次为 -1，断连恢复时设置为其他值） ；主库收到后 回复 FULLRESYNC，全量复制命令，带上主库 runID 和 主库目前复制进度。
+
+然后，主库执行 bgsave 
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/23/主从同步与哨兵/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
                                 R
                             </div>
                             <h2 class="al_index_post_title">
