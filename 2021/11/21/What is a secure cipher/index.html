@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Attacks on Stream Ciphers and The One Time Pad</title>
+        <title>What is a secure cipher</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
@@ -102,22 +102,22 @@
             <article class="al_article">
                 <header>
                     <h1 class="al_page_title">
-                        Attacks on Stream Ciphers and The One Time Pad
+                        What is a secure cipher
                     </h1>
                     <div class="al_page_info dis_flex">
                         <div class="al_page_content_info">
-                            Wed November 17, 2021 08:51 PM
+                            Sun November 21, 2021 07:48 PM
                         </div>
 
                         
                             <div class="al_page_content_info">
-                                520 words
+                                0 words
                             </div>
                         
 
                         
                             <div class="al_page_content_info">
-                                2 minutes read
+                                1 minutes read
                             </div>
                         
                         <span class="tags"></span>
@@ -125,55 +125,10 @@
                 </header>
 
                 
-                    <div class="al_page_content_outline">
-                        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-two-time-pad-is-insecure"><span class="toc-text">1 two time pad is insecure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-不保证完整性！！-no-integrity-OTP-is-malleable"><span class="toc-text">2 不保证完整性！！ no integrity, OTP is malleable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Real-World-Stream-Cipher"><span class="toc-text">Real-World Stream Cipher</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RC4-1987"><span class="toc-text">RC4 1987</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#weakness"><span class="toc-text">weakness</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSS"><span class="toc-text">CSS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CSS-破译"><span class="toc-text">CSS 破译</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#eStream-2008"><span class="toc-text">eStream 2008</span></a></li></ol></li></ol>
-                    </div>
-                
 
                 
                 <section id="post-body">
-                    <h3 id="1-two-time-pad-is-insecure"><a href="#1-two-time-pad-is-insecure" class="headerlink" title="1 two time pad is insecure"></a>1 two time pad is insecure</h3><p>M1 XOR PRG(k) -&gt;  C1</p>
-<p>M2 XOR PRG(k) -&gt;  C2</p>
-<p>如果截获用同样 key 生成的 cipher， C1，C2； 那么 <em>C</em>1 ⨁ <em>C</em>2 -&gt; M1 ⨁ M2, 由于英语的特性，可以还原出两段密文的信息。</p>
-<p>Real world example</p>
-<ol>
-<li>Project Venona (1941 - 1946) 俄罗斯人用相同密钥加密明文，几年后美国已经可以解密3000+密文</li>
-<li>MS-PPTP （windows NT）</li>
-<li>802.11b WEP：  </li>
-<li>disk encryption: 一次性密码本，会加密改变部分，只有改变部分的密文发生变化；潜在攻击点</li>
-</ol>
-<p>总结：</p>
-<p>永远不要重复利用密钥；</p>
-<p>对于网络流量：每个 session 尽量协商密钥</p>
-<p>对于硬盘：不要使用 stream cipher</p>
-<h3 id="2-不保证完整性！！-no-integrity-OTP-is-malleable"><a href="#2-不保证完整性！！-no-integrity-OTP-is-malleable" class="headerlink" title="2 不保证完整性！！ no integrity, OTP is malleable"></a>2 <strong>不保证完整性</strong>！！ no integrity, OTP is malleable</h3><p> 导致可被修改</p>
-<h3 id="Real-World-Stream-Cipher"><a href="#Real-World-Stream-Cipher" class="headerlink" title="Real-World Stream Cipher"></a>Real-World Stream Cipher</h3><h4 id="RC4-1987"><a href="#RC4-1987" class="headerlink" title="RC4 1987"></a>RC4 1987</h4><p>可变长度的 128bits 种子作为密钥， 然后扩展为 2048 bits，接着进行循环 每次 1 byte，这样就可以无限运行这个生成器；</p>
-<p>Used in HTTPS and WEP</p>
-<h5 id="weakness"><a href="#weakness" class="headerlink" title="weakness"></a>weakness</h5><ol>
-<li><p>Bias in initial output: Pr[2nd byte = 0] = 2/256;  (推荐忽略产出的前256个字节)</p>
-</li>
-<li><p>密钥循环产生，related key attacks</p>
-</li>
-</ol>
-<h3 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h3><p>content scrambling system 内容加扰系统 ；used in DVD； easy in hardware </p>
-<p>基于 linear feedback shift register LFSR, 线性反馈移位寄存器 的机制</p>
-<p><img src="/images/lfsr.png" alt="LFSR">选出一些cell 进行 XOR，每个时钟周期右移，产出最右端，最左端由异或结果填充；seed 就是 LSFR 的初始状态</p>
-<p>DVD encryption (CSS): 2 LFSRs</p>
-<p>GSM encryption (A5/1,2): 3 LFSRs</p>
-<p>Bluetooth (E0): 4 LFSRs</p>
-<p>all broken</p>
-<h4 id="CSS-破译"><a href="#CSS-破译" class="headerlink" title="CSS 破译"></a>CSS 破译</h4><p>CSS: seed = 5 bytes = 40 bits  very short</p>
-<p><img src="/images/css.png" alt="css"></p>
-<p>两个 LFSR 8 个 cycle 后产生两个 byte，然后相加 mod 256 得到一个 byte 来加密影片的一个 byte。</p>
-<p>but easy to break</p>
-<ol>
-<li><p>知道明文的MEPG文件前缀和密文，可以推出前 20个 byte 的输出</p>
-</li>
-<li><p>遍历第一个 LFSR 所有可能值，每轮生成 20 个byte，用前20byte密文减去这些 byte，如果对了的话，就可以得到第二个 LFSR 的前20个byte； 然后用猜测的两个  20 byte相加并对 我们知道的前 20 bytes明文加密，看是不是正确的密文即可；</p>
-<p> <img src="/images/decryption.png" alt="截屏2021-11-18 21.38.18"></p>
-</li>
-</ol>
-<h4 id="eStream-2008"><a href="#eStream-2008" class="headerlink" title="eStream 2008"></a>eStream 2008</h4>
+                    
                 </section>
 
                 
@@ -184,17 +139,17 @@
 
             
             <nav class="dis_flex al_post_nav">
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/21/What%20is%20a%20secure%20cipher/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2022/01/11/MyBatis-Plus%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
                     
                         <svg class="al_arrow">
                             <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
                         </svg>
-                        <span class="al_text_ellipsis al_post_nav_desc">What is a secure cipher</span>
+                        <span class="al_text_ellipsis al_post_nav_desc">MyBatis-Plus 基本使用</span>
                     
                 </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/09/History%20of%20Cryptography/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/17/Attacks%20on%20Stream%20Ciphers%20and%20The%20One%20Time%20Pad/">
                     
-                        <span class="al_text_ellipsis al_post_nav_desc">History of Cryptography</span>
+                        <span class="al_text_ellipsis al_post_nav_desc">Attacks on Stream Ciphers and The One Time Pad</span>
                         <svg class="al_arrow">
                             <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
                         </svg>
