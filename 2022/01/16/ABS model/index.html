@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>MyBatis-Plus 基本使用</title>
+        <title>ABS model</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 <link rel="stylesheet" href="/css/style.css">
@@ -102,16 +102,16 @@
             <article class="al_article">
                 <header>
                     <h1 class="al_page_title">
-                        MyBatis-Plus 基本使用
+                        ABS model
                     </h1>
                     <div class="al_page_info dis_flex">
                         <div class="al_page_content_info">
-                            Tue January 11, 2022 08:29 PM
+                            Sun January 16, 2022 05:39 PM
                         </div>
 
                         
                             <div class="al_page_content_info">
-                                338 words
+                                137 words
                             </div>
                         
 
@@ -126,47 +126,34 @@
 
                 
                     <div class="al_page_content_outline">
-                        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MyBatis-特点"><span class="toc-text">MyBatis 特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JPA-（标准-hibernate-Spring-Data-JPA）"><span class="toc-text">JPA （标准 hibernate, Spring Data JPA）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MyBatis-Plus"><span class="toc-text">MyBatis-Plus</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSM-传统编程模式"><span class="toc-text">SSM 传统编程模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本使用"><span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MP-如何解决"><span class="toc-text">MP 如何解决</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通用-Mapper"><span class="toc-text">通用 Mapper</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#覆盖了常用的-CRUD-方法"><span class="toc-text">覆盖了常用的 CRUD 方法</span></a></li></ol></li></ol>
+                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Agent-Based-Simulation"><span class="toc-text">Agent-Based Simulation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#State-chart"><span class="toc-text">State chart</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-text">Analysis</span></a></li></ol></li></ol>
                     </div>
                 
 
                 
                 <section id="post-body">
-                    <h4 id="MyBatis-特点"><a href="#MyBatis-特点" class="headerlink" title="MyBatis 特点"></a>MyBatis 特点</h4><p>SQL 语句自由控制</p>
-<p>代码分离</p>
-<p>提供 XML 标签，编写动态 SQL</p>
-<p>简单的 CURD 也要写 SQL</p>
-<p>XML 中大量SQL维护</p>
-<p>自身功能有限（物理分页也没有，），</p>
-<h4 id="JPA-（标准-hibernate-Spring-Data-JPA）"><a href="#JPA-（标准-hibernate-Spring-Data-JPA）" class="headerlink" title="JPA （标准 hibernate, Spring Data JPA）"></a>JPA （标准 hibernate, Spring Data JPA）</h4><p>移植性好 ( JPQL )语句</p>
-<p>提供很多 CRUD 方法，不用写 SQL</p>
-<p>对象化程度高</p>
-<h4 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h4><p>只增强，不改变</p>
-<p>无侵入，损耗小（启动时就注入），强大的 CRUD</p>
-<p>支持 Lambda 形式调用，多种数据库</p>
-<p>主键自动生成，支持 ActiveRecor</p>
-<p>全局通用操作，支持关键词自动转译</p>
-<p>代码生成器，内置分页，性能分析插件</p>
-<p>全局拦截插件，内置 Sql 注入剥离器</p>
-<h4 id="SSM-传统编程模式"><a href="#SSM-传统编程模式" class="headerlink" title="SSM 传统编程模式"></a>SSM 传统编程模式</h4><ol>
-<li>接口中写抽象方法</li>
-<li>XML 或者 注解中写 SQL</li>
-<li>Service 中调用接口</li>
-<li>Controller 中调用</li>
-</ol>
-<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h4 id="MP-如何解决"><a href="#MP-如何解决" class="headerlink" title="MP 如何解决"></a>MP 如何解决</h4><h4 id="通用-Mapper"><a href="#通用-Mapper" class="headerlink" title="通用 Mapper"></a>通用 Mapper</h4><h5 id="覆盖了常用的-CRUD-方法"><a href="#覆盖了常用的-CRUD-方法" class="headerlink" title="覆盖了常用的 CRUD 方法"></a>覆盖了常用的 CRUD 方法</h5><p><strong>常用注解</strong></p>
-<p>不允许 null 的字段就不写在MP内置的 sql 语句中</p>
-<p>默认数据库下划线，对应驼峰命名；</p>
-<p>默认主键叫 id；</p>
-<p>@TableName(“XXX”) 指定表名</p>
-<p>@TableId 指定主键</p>
-<p>@TableField(“name”) 指定属性</p>
-<p><strong>排除非表字段的三种方式</strong>（临时数据等）</p>
-<ol>
-<li><strong>transient</strong> 标识，不参与序列化过程</li>
-<li><strong>static</strong> 标志为静态变量</li>
-<li>@TableField(exist=false) 表示不是数据库中字段，默认是 true</li>
-</ol>
+                    <h1 id="Agent-Based-Simulation"><a href="#Agent-Based-Simulation" class="headerlink" title="Agent-Based Simulation"></a>Agent-Based Simulation</h1><p>Use <strong>known micro</strong> to <strong>investigate</strong> <strong>unknown macro</strong></p>
+<p><img src="/images/abs1.png" alt="2"></p>
+<p>Investigate <strong>unknown micro to explain known macro</strong></p>
+<p><img src="/images/abs2.png" alt="1"></p>
+<h2 id="State-chart"><a href="#State-chart" class="headerlink" title="State chart"></a>State chart</h2><p>Comprises states and transitions</p>
+<p>A <strong>transition</strong> occurs when:</p>
+<p>​     • A <strong>trigger happens</strong> and<br>     • <strong>Guard condition</strong> is true</p>
+<p> <strong>Trigger types</strong>:</p>
+<ul>
+<li><strong>Rate</strong>: like timeout but distributed exponentially with the parameter “Rate” (rate=5 means on average 5 times per time unit)</li>
+<li><strong>Condition</strong>: when the specified condition is true</li>
+<li><strong>Message</strong>: when a message arrives</li>
+<li><strong>Timeout</strong>: after the specified timeout elapses (det / stoch)</li>
+</ul>
+<p><img src="/images/stateChart.png" alt="2"></p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p><strong>Risk Analysis</strong></p>
+<p>Most ABS models are <strong>stochastic</strong>: agents’ characteristics, behaviours, environment  —-  run the model multiple times</p>
+<p><strong>Sensitivity Analysis</strong></p>
+<p>• Needed when there are uncertainty about the value of a parameter</p>
+<p>• Done by varying the uncertain parameter from min to max • Fixed steps</p>
+<p>• Random points in between (Monte Carlo) • If more than one uncertain parameters:</p>
+<p>• OFAT (varying one parameter while keeping other parameters constants)</p>
 
                 </section>
 
@@ -178,17 +165,12 @@
 
             
             <nav class="dis_flex al_post_nav">
-                <a class="al_post_nav_item dis_flex_acenter" href="/2022/01/16/ABS%20model/">
-                    
-                        <svg class="al_arrow">
-                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
-                        </svg>
-                        <span class="al_text_ellipsis al_post_nav_desc">ABS model</span>
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
                     
                 </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/2021/11/21/What%20is%20a%20secure%20cipher/">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2022/01/11/MyBatis-Plus%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
                     
-                        <span class="al_text_ellipsis al_post_nav_desc">What is a secure cipher</span>
+                        <span class="al_text_ellipsis al_post_nav_desc">MyBatis-Plus 基本使用</span>
                         <svg class="al_arrow">
                             <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
                         </svg>

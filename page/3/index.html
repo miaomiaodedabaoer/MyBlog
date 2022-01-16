@@ -112,6 +112,50 @@
                     <li class="al_index_pageList_item al_index_page_seperator">
                         <div class="al_index_post_title_cnt dis_flex">
                             <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                 
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/07/30/%20Redis%20%E5%86%85%E9%83%A8%E7%9A%84%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%93%8D%E4%BD%9C/">
+                                     Redis 内部的阻塞式操作
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-07-30 08:49:28
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        1 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                Redis 变慢的原因主要有 5 大方面：
+
+复杂度高的 CRUD 操作 （客户端交互）
+复杂度高（大于 O(N) ）的键值对增删改查会阻塞 Redis，主要包括全量查询，聚合统计操作其次，删除键值对时，系统需要把释放掉的内存插入空闲内存链表，以便后续分配和管理，这个过程这个过程会阻塞当前释放内存的应用程序，如果一下子释放大量内存，也就是 Big key 删除，redis 的主线程会被阻塞；同时，由于涉及大量的删除，*清空数据库 *（flushdb 和 flushall）也是一个阻塞点。
+
+AOF 日志同步写， RDB 文件加载（磁盘交互）
+redis 在 AOF 日志同步写 时，如果一个时间
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/30/ Redis 内部的阻塞式操作/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
                                 L
                             </div>
                             <h2 class="al_index_post_title">
@@ -539,51 +583,6 @@ https 的出现正是解决了这些问题，h
                         </div>
                         <div class="al_index_post_button_cnt dis_flex">
                             <a class="al_button al_button_theme al_index_post_button" href="2021/07/03/HTTPS/">
-                                READ ON
-                            </a>
-                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
-                                READ LATER
-                            </a>
-                        </div>
-                    </li>
-                
-                    <li class="al_index_pageList_item al_index_page_seperator">
-                        <div class="al_index_post_title_cnt dis_flex">
-                            <div class="al_pos_ab al_letter al_index_post_title_letter">
-                                J
-                            </div>
-                            <h2 class="al_index_post_title">
-                                <a href="/2021/07/01/JWT/">
-                                    JWT
-                                </a>
-                            </h2>
-                            <div class="al_index_post_extra dis_flex">
-                                <div class="al_index_post_date al_index_post_extra_item">
-                                    2021-07-01 19:52:23
-                                </div>
-
-                                
-                                    <div class="al_index_post_read_time">
-                                        3 Min Read
-                                    </div>
-                                
-
-                            </div>
-                        </div>
-                        <div class="al_index_post_excerpt_cnt">
-                            <p class="al_index_post_excerpt">
-                                是什么
-JSON Web Token （JWT）是一个 开放的 标准，以紧凑且 self-contained 的方式，使用 JSON 对象在 parties 间安全的传输信息。这些信息是可以被验证且信任的，JWT 可以使用一个 secret （借助HMAC算法）或者一个 public/private 钥匙 （借助 RSA 或者 ECDSA）
-
-JWT 主要用于 签名 token，签名 token 可以供他人验证其中包含的信息（claims）的完整性
-
-什么时候用
-1. 用户授权
-因为 HTTP 是开放的，且无状态，server 不知道用户的身份，就要做访问权限的控制，认证用户后，才允许调用 A
-                            </p>
-                        </div>
-                        <div class="al_index_post_button_cnt dis_flex">
-                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/01/JWT/">
                                 READ ON
                             </a>
                             <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
