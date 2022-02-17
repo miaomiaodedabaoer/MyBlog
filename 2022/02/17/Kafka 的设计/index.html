@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Kafka 的设计</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="manifest" href="/site.webmanifest">
+
+        
+    
+    <link rel='stylesheet' href="/./css/dracula.css">
+
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Mmddb</a>
+            </div>
+        </div>
+
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+</header>
+
+        <div class="al_sidebar">
+
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Mmddb</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>Zhang Penghe</h4>
+                <img class="al_sidebar_avatar" src="https://github.com/mmddb">
+                <p></p>
+            </div>
+
+            
+                <div class="al_sidebar_contact_info">
+                    <h4>GET IN TOUCH</h4>
+                    <p>一个迷茫的沙沙</p>
+
+                    <div class="dis_flex al_sidebar_social_widget">
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+                            <div class="al_social_icon_cnt" data_link="https://www.github.com/mmddb">
+                                <svg class="al_social_icon" id="github">
+                                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#icon_github"></use>
+                                </svg>
+                            </div>
+                        
+
+                        
+                        
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+        
+    <div class="dis_flex_center al_lightbox_cnt al_full_cover">
+        <img class="al_lightbox_img"/>
+    </div>
+    <div class="al_page_background dis_flex_center al_full_cover"></div>
+    <div class="al_page_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow al_main_page_container">
+            <article class="al_article">
+                <header>
+                    <h1 class="al_page_title">
+                        Kafka 的设计
+                    </h1>
+                    <div class="al_page_info dis_flex">
+                        <div class="al_page_content_info">
+                            Thu February 17, 2022 09:27 PM
+                        </div>
+
+                        
+                            <div class="al_page_content_info">
+                                2.7k words
+                            </div>
+                        
+
+                        
+                            <div class="al_page_content_info">
+                                9 minutes read
+                            </div>
+                        
+                        <span class="tags"></span>
+                    </div>
+                </header>
+
+                
+                    <div class="al_page_content_outline">
+                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#初衷"><span class="toc-text">初衷</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#持久化"><span class="toc-text">持久化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#性能"><span class="toc-text">性能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常量时间就足够"><span class="toc-text">常量时间就足够</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#端到端批量压缩"><span class="toc-text">端到端批量压缩</span></a></li></ol>
+                    </div>
+                
+
+                
+                <section id="post-body">
+                    <h1 id="初衷"><a href="#初衷" class="headerlink" title="初衷"></a>初衷</h1><p>Kafka 被设计为一个能处理 <strong><a href="http://kafka.apache.org/documentation.html#introduction" target="_blank" rel="noopener">大公司可能存在的</a></strong> 所有 <strong>实时数据流</strong> 的统一平台。</p>
+<ol>
+<li><p>它必须有<strong>很高</strong>的 <strong>吞吐量</strong> 来支撑像实时日志合并这类大规模的事件流。</p>
+</li>
+<li><p>它必须能很好的处理 <strong>大规模数据积压</strong> 问题来支撑像线下系统周期性的导入数据的场景。</p>
+</li>
+<li><p>胜任 <strong>低延迟</strong> 的消息分发来支撑与传统消息机制类似的应用场景。</p>
+</li>
+<li><p>支持 <strong>分区、分布式、消息流</strong> 的实时创建、分发处理 这些需求促成了我们现在的分区和消费者模型。</p>
+</li>
+<li><p>主机故障时的 <strong>容错</strong> 担保</p>
+</li>
+</ol>
+<p>为了实现对上述应用场景的支持最终导致我们设计了一系列更相似于 <strong>数据库日志</strong> 而不是传统消息系统。</p>
+<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><p>Kafka 在消息的存储和缓存中<strong>重度依赖文件系统</strong>。</p>
+<p>磁盘性能的核心指标已经从磁盘的<strong>寻道延迟</strong>变成了<strong>硬件驱动的吞吐量</strong>。磁盘的线性操作会比随机操作快 6000 倍以上。这也被操作系统进行了高度的优化。现在的操作系统都提供了<strong>预读取</strong>和<strong>写合并</strong>技术、即预读取数倍于数据的大文件块和将多个小的逻辑写操作合并成一个大的物理写操作的技术。</p>
+<p>为了填补这个性能的差异，现在操作系统激进地使用<strong>主内存</strong>来作为磁盘的缓冲。所有的磁盘的读写操作都会经过这块统一的缓存。即使一个进程在进程内维护了数据的缓存，实际上这些数据依旧在操作系统的页缓存上存在一个副本，实际上所有的数据都被存储了两次。</p>
+<p>另外我们是基于 JVM 进行建设， Java 内存模型中：</p>
+<ol>
+<li><strong>对象的内存占用是非常高</strong>，常常是数据存储空间的两倍以上（甚至更差）</li>
+<li>Java 的<strong>内存回收</strong>随着堆内数据的增长会变得更加<strong>繁琐和缓慢</strong></li>
+</ol>
+<p>综上所述，使用<strong>文件系统</strong>和<strong>页缓存</strong>相较于维护一个内存缓存或者其它结构更占优势 – 我们通过自动化的访问所有空闲内存的能力将缓存的空间扩大了至少两倍，之后又因为保存压缩的字节结构而不是单独对象结构又将此扩充了两倍以上。最终这使我们在一个 32G 的主机之上拥有了一个高达 28-30G 的没有 GC 问题的缓存。而且这个缓存即使在服务重启之后也能保持热度，相反进程内的缓存要么还需要重建预热（10G 的缓存可能耗时 10 分钟）要么就从一个完全空白的缓冲开始服务（这意味着初始化期间性能将很差）。同时这也很大的简化了代码，因为所有的维护缓存和文件系统之间正确性逻辑现在都在操作系统中了，这常常比重复造轮子更加高效和正确。如果你的磁盘使用方式更倾向与线性读取，预读取技术将在每次磁盘读操作时将有效的数据高效的预填充到这些缓存中。</p>
+<p>相对于竭尽所能的维护内存内结构而且要时刻注意在空间不足时谨记要将它们 flush 到文件系统中，我们可以颠覆这种做法。<strong>所有的数据被直接写入文件系统上一个可暂不执行磁盘 flush 操作的持久化日志文件中</strong>。<strong>实际上这意味着这些数据是被传送到了内核的页缓存上</strong>。</p>
+<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>一旦消除了磁盘访问模式不佳的情况，该类系统性能低下的主要原因就剩下了两个：<strong>大量的小型 I/O 操作</strong>（小包问题），以及过多的<strong>字节拷贝</strong>（译者注：<strong>ZeroCopy需求</strong>）</p>
+<p>小型的 I/O 操作发生在客户端和服务端之间以及服务端自身的持久化操作中。</p>
+<p>为了避免这种情况，我们的协议是建立在一个 “<strong>消息块</strong>” 的抽象基础上，<strong>合理将消息分组</strong>。 这使得网络请求将多个消息打包成一组，而不是每次发送一条消息，从而使整组消息分担网络中往返的开销。服务器一次性的<strong>将多个消息快依次追加到日志文件中</strong>， Consumer 也是<strong>每次获取多个大型有序的消息块</strong>。</p>
+<p>这个简单的优化对速度有着数量级的提升。批处理允许更大的网络数据包，更大的顺序读写磁盘操作，连续的内存块等等，所有这些都使 KafKa 能将随机性突发性的消息写操作变成顺序性的写操作最终流向消费者。</p>
+<p>另一个低效率的操作是字节拷贝，在消息量少时，这不是什么问题。但是在高负载的情况下，影响就不容忽视。为了避免这种情况，我们让 producer ，broker 和 consumer 都<strong>共享的标准化的二进制消息格式</strong>，这样数据块不用修改就能在他们之间传递。</p>
+<p>broker 维护的消息日志本身就是一个文件目录，每个文件都由一系列以相同格式写入到磁盘的消息集合组成，这种写入格式被 producer 和 consumer 共用。保持这种通用格式可以对一些很重要的操作进行优化：持久化日志块的网络传输。 现代的 unix 操作系统提供了高度优化的数据路径，用于将数据从 pagecache 转移到 socket 网络连接中；在 Linux 中系统调用 <a href="http://man7.org/linux/man-pages/man2/sendfile.2.html" target="_blank" rel="noopener">sendfile</a> 做到这一点。</p>
+<p>为了理解 sendfile 的意义，首先要了解数据从文件到套接字的一般数据传输路径：</p>
+<ol>
+<li>操作系统从<strong>磁盘</strong>读取数据到内核空间的 <strong>pagecache</strong></li>
+<li>应用程序读取<strong>内核空间的数据</strong>到<strong>用户空间的缓冲区</strong></li>
+<li>应用程序将数据（<strong>用户空间的缓冲区</strong>）写回内核空间的<strong>套接字缓冲区</strong>（内核空间）</li>
+<li>操作系统将数据从<strong>套接字缓冲区</strong>（内核空间）复制到通过<strong>网络发送的 NIC 缓冲区</strong></li>
+</ol>
+<p>这显然是低效的，有四次 copy 操作和两次系统调用。使用 <strong>sendfile</strong> 方法，可以允许操作系统<strong>将数据从 pagecache 直接发送到网络</strong>，这样避免重复数据复制。所以这种优化方式，只需要最后一步的 copy 操作，将数据复制到 NIC 缓冲区。</p>
+<p>我们预期的使用场景是一个 topic 被多个消费者消费。使用 zero-copy （零拷贝）优化，<strong>数据仅仅会被复制到 pagecache 一次</strong>，在后续的消费过程中都可以复用，<strong>而不是保存在内存中在每次消费时再复制到内核空间</strong>。这使得消息能够以接近网络连接的速度被消费。</p>
+<p><strong>pagecache</strong> 和 <strong>sendfile</strong> 的组合使用意味着，在一个 Kafka 集群中，<strong>大多数的(紧跟生产者的)consumer 消费时，将看不到磁盘上的读取活动，因为数据完全由缓存提供。</strong></p>
+<h1 id="常量时间就足够"><a href="#常量时间就足够" class="headerlink" title="常量时间就足够"></a>常量时间就足够</h1><p>消息系统使用的持久化数据结构通常是和 BTree 相关联的消费者队列或者其他用于存储消息元数据的通用随机访问数据结构。BTree 是最通用的数据结构选择，它可以在消息系统中支持各种事务性和非事务性语义。虽然 BTree 的操作复杂度是 O(logN) ，但是成本也很高。通常我们认为 <strong>O(logN)</strong> 基本等同于常数时间，但这条<strong>在磁盘操作中不成立</strong>。磁盘寻址是每 10ms 一跳，并且每个磁盘<strong>同时只能够执行一次寻址</strong>，因此并行受到了限制。因此即使是少量的磁盘寻址也会有很高的开销。由于存储系统将非常快的缓存操作和非常慢的物理磁盘操作混在一起，在确定缓存大小的情况下树结构的实际性能随着数据的增长是非线性的 – 比如数据翻倍时性能下降不止两倍。</p>
+<p>所以直观来看，持久化队列可以建立在<strong>简单的读取</strong>和<strong>向文件后追加</strong>两种操作之上，<strong>这和日志解决方案相同</strong>。这种结构的优点在于所有的<strong>操作复杂度都是 O(1)</strong>，<strong>而且读操作不会阻塞写操作</strong>，<strong>读操作之间也不会互相影响</strong>。这有着明显的性能优势，由于性能和数据大小完全不相关 – 服务器现在可以充分利用大量廉价、低转速的 1+TB SATA 硬盘。 虽然这些硬盘的寻址性能很差，但他们在大规模读写方面的性能是可以接受的，而且价格是原来的三分之一、容量是原来的三倍。</p>
+<p><strong>在不产生任何性能损失的情况下能够访问几乎无限的硬盘空间</strong>，这意味着我们可以提供一些其它消息系统不常见的特性。例如：在 Kafka 中，<strong>我们可以让消息保留相对较长的一段时间</strong>（比如一周），而不是试图在被消费后立即删除。</p>
+<h1 id="端到端批量压缩"><a href="#端到端批量压缩" class="headerlink" title="端到端批量压缩"></a>端到端批量压缩</h1><p>某些情况下，数据传输的瓶颈并不是 CPU或者磁盘，而是<strong>网络带宽</strong>。尤其是当数据消息通道需要在数据中心通过广域网进行传输时。当然用户可以在不需要 Kafka 支持下一次一个压缩消息，但这样会造成非常差的压缩率和消息重复类型冗余，比如 JSON 中字段名称或者是 Web 日志中用户代理或者是公共字符串值。高性能的压缩是一次压缩多个消息，而不是单独压缩。</p>
+<p>Kafka 以高效的<strong>批处理格式</strong>支持<strong>一批消息可以压缩在一起发送到服务器</strong>。<strong>这批消息将以压缩格式写入，并且在日志中保持压缩，只会在 consumer 消费时解压缩。</strong></p>
+
+                </section>
+
+                
+                
+                
+
+            </article>
+
+            
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/">
+                    
+                </a>
+                <a class="al_post_nav_item dis_flex_acenter" href="/2022/01/16/ABS%20model/">
+                    
+                        <span class="al_text_ellipsis al_post_nav_desc">ABS model</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
+                    
+                </a>
+            </nav>
+        </div>
+    </div>
+
+
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        Zhang Penghe
+    </div>
+
+    
+    
+
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a href="https://github.com/iGuan7u/Acetolog" target="_blank" rel="noopener">AcetoLog</a>
+         · Power By 
+        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+    </div>
+
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
+    </div>
+</div>
+
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
+        
+        
+        
+        
+    </body>
+</html>
+        

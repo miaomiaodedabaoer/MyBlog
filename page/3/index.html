@@ -112,6 +112,50 @@
                     <li class="al_index_pageList_item al_index_page_seperator">
                         <div class="al_index_post_title_cnt dis_flex">
                             <div class="al_pos_ab al_letter al_index_post_title_letter">
+                                缓
+                            </div>
+                            <h2 class="al_index_post_title">
+                                <a href="/2021/08/08/%E7%BC%93%E5%AD%98/">
+                                    缓存
+                                </a>
+                            </h2>
+                            <div class="al_index_post_extra dis_flex">
+                                <div class="al_index_post_date al_index_post_extra_item">
+                                    2021-08-08 21:53:16
+                                </div>
+
+                                
+                                    <div class="al_index_post_read_time">
+                                        2 Min Read
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="al_index_post_excerpt_cnt">
+                            <p class="al_index_post_excerpt">
+                                redis 自带数据淘汰策略和高速读写的功能，可以被用于实现缓存。redis 不同于操作系统的 LLC 和 page cache，应用想使用的话需要在程序中加入缓存读写代码，这种缓存类型也被称为 旁路缓存。
+
+redis 缓存可以被分为两种，只读缓存 和 读写缓存。
+
+只读缓存可以只负责读取数据，所有的数据写请求会直接发往后端的数据库。对于删改操作，应用需要先删除 redis 已有的数据，下次再读这些数据时，会发生缓存缺失，此时应用把这些数据再从数据库存储到 redis 中。只读缓存的好处是所有数据都在数据库中，不会有丢失的风险。
+
+对于读写缓存，读写删改都在缓存中完成，这样虽然更快，但是数据
+                            </p>
+                        </div>
+                        <div class="al_index_post_button_cnt dis_flex">
+                            <a class="al_button al_button_theme al_index_post_button" href="2021/08/08/缓存/">
+                                READ ON
+                            </a>
+                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
+                                READ LATER
+                            </a>
+                        </div>
+                    </li>
+                
+                    <li class="al_index_pageList_item al_index_page_seperator">
+                        <div class="al_index_post_title_cnt dis_flex">
+                            <div class="al_pos_ab al_letter al_index_post_title_letter">
                                  
                             </div>
                             <h2 class="al_index_post_title">
@@ -530,59 +574,6 @@ class Solution {
                         </div>
                         <div class="al_index_post_button_cnt dis_flex">
                             <a class="al_button al_button_theme al_index_post_button" href="2021/07/04/迭代遍历二叉树/">
-                                READ ON
-                            </a>
-                            <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
-                                READ LATER
-                            </a>
-                        </div>
-                    </li>
-                
-                    <li class="al_index_pageList_item al_index_page_seperator">
-                        <div class="al_index_post_title_cnt dis_flex">
-                            <div class="al_pos_ab al_letter al_index_post_title_letter">
-                                H
-                            </div>
-                            <h2 class="al_index_post_title">
-                                <a href="/2021/07/03/HTTPS/">
-                                    HTTPS
-                                </a>
-                            </h2>
-                            <div class="al_index_post_extra dis_flex">
-                                <div class="al_index_post_date al_index_post_extra_item">
-                                    2021-07-03 22:30:17
-                                </div>
-
-                                
-                                    <div class="al_index_post_read_time">
-                                        3 Min Read
-                                    </div>
-                                
-
-                            </div>
-                        </div>
-                        <div class="al_index_post_excerpt_cnt">
-                            <p class="al_index_post_excerpt">
-                                HTTP 的问题
-从 HTTP 协议本身来看，其存在几大问题：
-
-可能被窃听
-HTTP 本身不具备加密的功能，在互联网的线路上传输时，可能会被人收集，这样就会看到通信内容。
-
-解决： 对信道加密（结合 SSL 和 TLS）； 对内容加密
-
-内容可能被篡改
-HTTP 请求或响应在传输途中，可能遭到攻击者拦截并篡改，这种方式称为中间人攻击（Man-In-Middle attack). 
-
-不验证身份
-只要知道 IP 和端口，任何人都可以发起请求，服务器也会响应。解决：使用 SSL ，查看证书 CA， 证书由第三方颁发，客户端通信前先确认证书。
-
-HTTPS
-https 的出现正是解决了这些问题，h
-                            </p>
-                        </div>
-                        <div class="al_index_post_button_cnt dis_flex">
-                            <a class="al_button al_button_theme al_index_post_button" href="2021/07/03/HTTPS/">
                                 READ ON
                             </a>
                             <a class="al_button al_button_transparent al_index_post_button" href="//getpocket.com/edit?url=http://yoursite.com/" target="_blank" rel="noopener">
